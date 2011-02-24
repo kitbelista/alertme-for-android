@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center_horizontal"
+    android:padding="3dip"
+	android:stretchColumns="*"
+    android:background="@color/page_background">
+    <LinearLayout
+		android:minHeight="45dip">
+    	<ImageView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:src="@drawable/icon" />
+        <TextView        
+        	android:id="@+id/events_housename"        
+            android:text="@string/systemname_default"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+		    android:layout_marginLeft="10dip"
+		    android:layout_marginRight="5dip"
+            android:padding="3dip" />
+   	</LinearLayout>
+    <ListView
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent"
+	    android:id="@+id/events_list"
+	    android:layout_marginTop="4dip"
+	    android:divider="@android:color/transparent"
+	    android:cacheColorHint="@android:color/transparent"
+	/>
+</TableLayout>

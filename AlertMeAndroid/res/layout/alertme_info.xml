@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_gravity="center_horizontal"
+    android:background="@color/page_background"
+    android:layout_width="fill_parent"
+    android:id="@+id/layout_info_root"
+    android:layout_height="fill_parent">
+   	<ImageView
+        android:layout_gravity="center"
+        android:layout_width="fill_parent" 
+        android:layout_height="fill_parent" 
+        android:scaleType="center"
+		android:src="@drawable/splash" />
+	<ScrollView 
+		android:textColor="@color/page_text"
+    	android:background="#aaffffff"
+        android:layout_gravity="bottom"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent">
+		<TableLayout
+			android:layout_width="fill_parent"
+			android:layout_height="fill_parent">
+			<TextView        
+	            android:text="AlertMe for Android ALPHA"
+				android:textAppearance="?android:attr/textAppearanceLarge"
+		  		android:textColor="@color/page_text"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+	            android:padding="3dip" />
+	
+			<TextView        
+	            android:text="A simple tool to interact with AlertMe accounts"
+		  		android:textColor="@color/page_text"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+	            android:padding="3dip" />
+	            
+			<TextView        
+	            android:text="Fixes"
+				android:textAppearance="?android:attr/textAppearanceLarge"
+		  		android:textColor="@color/page_text"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="10dip"
+	            android:padding="3dip" />
+			<TextView        
+	            android:text="- Fix sync with power plug state (on/off)"
+		  		android:textColor="@color/page_text"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+	            android:padding="3dip" />
+			<TextView        
+	            android:text="- Add option to move to SD card (only for more recent phones, *should* be backwards compatible)"
+		  		android:textColor="@color/page_text"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+	            android:padding="3dip" />
+	            
+			<TextView        
+	            android:text="TODO"
+				android:textAppearance="?android:attr/textAppearanceLarge"
+		  		android:textColor="@color/page_text"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="10dip"
+	            android:padding="3dip" />
+	
+			<TextView        
+	            android:text="- Stabilize all applications when rotating screen (people section)"
+		  		android:textColor="@color/page_text"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+	            android:padding="3dip" />
+	
+			<TextView        
+	            android:text="- Interface look and feel improvements"
+		  		android:textColor="@color/page_text"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+	            android:padding="3dip" />
+	
+			<TextView        
+	            android:text="- Show hub if state is alarming (and enable disarm)"
+		  		android:textColor="@color/page_text"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+	            android:padding="3dip" />
+			<TextView        
+	            android:text="- Add refresh to all sub-applications"
+		  		android:textColor="@color/page_text"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+	            android:padding="3dip" />
+			<TextView        
+	            android:text="- Enable special behaviour if not connected (internet access)"
+		  		android:textColor="@color/page_text"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+	            android:padding="3dip" />
+		</TableLayout>
+
+	</ScrollView>
+</FrameLayout>

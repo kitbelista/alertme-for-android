@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AlertMe Android</string>
+    <string name="app_name_behaviour">AlertMe Android - Alarm Mode</string>
+    <string name="app_name_people">AlertMe Android - People</string>
+    <string name="app_name_sensors">AlertMe Android - Sensors</string>
+    <string name="app_name_settings">AlertMe Android - Settings</string>
+    <string name="app_name_history">AlertMe Android - History</string>
+    <string name="app_name_help">AlertMe Android - Help</string>
+
+    <string name="home_command_update_systemname">Updating details</string>
+    <string name="home_command_update_behaviour">Updating behaviour</string>
+    <string name="home_command_update_people">Updating people</string>
+    <string name="home_command_update_sensors">Updating sensors</string>
+    <string name="home_command_update_history">Updating event history</string>
+    
+    <string name="sensor_list_isempty">No sensors detected</string>
+    <string name="event_list_isempty">No events found in history</string>
+    <string name="keyfob_list_isempty">No keyfobs detected</string>
+
+    <string name="home_icontitle_behaviour">Behaviour</string>
+    <string name="home_icontitle_people">People</string>
+    <string name="home_icontitle_sensors">Sensors</string>
+    <string name="home_icontitle_settings">Settings</string>
+    <string name="home_icontitle_history">History</string>
+    <string name="home_icontitle_help">Help</string>
+    
+    <string name="behaviour_dialog_dismiss">Ok</string>
+    <string name="behaviour_dialog_message_offline">Sorry, I cannot connect to the hub at the moment. Please try again later.</string>
+    <string name="behaviour_dialog_message_home_ok">Current mode is At Home</string>
+    <string name="behaviour_dialog_message_away_ok">Current mode is Away</string>
+    <string name="behaviour_dialog_message_night_ok">Current mode is Night</string>
+    <string name="behaviour_dialog_message_change_mode">Change current mode to:</string>
+    <string name="behaviour_busy_message_home">Setting mode to At Home</string>
+    <string name="behaviour_busy_message_away">Setting mode to Away</string>
+    <string name="behaviour_busy_message_night">Setting mode to Night</string>
+    <string name="behaviour_dialog_message_home_fail">Could not set the mode to Home. Please try again later.</string>
+    <string name="behaviour_dialog_message_away_fail">Could not set the mode to Away. Please try again later.</string>
+    <string name="behaviour_dialog_message_night_fail">Could not set the mode to Night. Please try again later.</string>
+    <string name="behaviour_current_is_home">Currently set to HOME</string>
+    <string name="behaviour_current_is_away">Currently set to AWAY mode</string>
+    <string name="behaviour_current_is_night">Currently set to NIGHT mode</string>
+    <string name="behaviour_current_is_offline">Currently cannot reach the hub; try again later</string>
+    <string name="behaviour_update_canceled">Canceled: changes to settings abandoned</string>
+    <string name="behaviour_update_ok">Updated mode; loading details</string>
+    
+    <string name="systemname_default">AlertMe for Android</string>
+    <string name="behaviour_unavailable">Unavailable</string>
+    <string name="behaviour_home">Home</string>
+    <string name="behaviour_away">Armed</string>
+    <string name="behaviour_night">Night</string>
+    <string name="people_unavailable">No one home</string>
+    <string name="people_none_present">No one home</string>
+    <string name="people_all_present">All home</string>
+    <string name="people_count_tag">COUNT</string>
+    <string name="people_single_present">1 person home</string>
+    <string name="people_multiple_present">COUNT people home</string>
+    <string name="sensor_count_tag">COUNT</string>
+    <string name="sensor_single_missing">Not ok</string>
+    <string name="sensor_multiple_missing">Not ok</string>
+    <string name="sensor_none_missing">All ok</string>
+
+    <string name="login_title_add">Add new account details</string>
+    <string name="login_title_edit">Edit the current account details</string>
+    <string name="login_title_add_firsttime">AlertMe account details</string>
+
+    <string name="settings_update_fail">Failed to update the given account settings</string>
+    <string name="settings_update_ok">Saved account setting changes</string>
+    <string name="settings_create_ok">Saved account setting changes</string>
+    <string name="settings_update_canceled">Canceled: changes to settings abandoned</string>
+    <string name="settings_updating_values">Saving account details</string>
+    <string name="settings_login_username_label">Username</string>
+    <string name="settings_login_password_label">Password</string>
+    
+    <string name="hubchoice_invoke_change">Changing active hub</string>
+    <string name="hubchoice_select_wait">Loading hub data</string>
+    <string name="hubchoice_select_title">Select the hub to inspect</string>
+    <string name="hubchoice_invoke_select_ok">Changed the active hub to HUBNAME</string>
+    <string name="hubchoice_invoke_select_fail">Could not change active hub to inspect; please try again later</string>
+    <string name="hubchoice_invoke_select_nochange">No change required</string>
+    <string name="hubchoice_hubname_tag">HUBNAME</string>
+
+    <string name="accountchoice_invoke_change">Changing active account</string>
+    <string name="accountchoice_select_wait">Loading account data</string>
+    <string name="accountchoice_select_title">Select the account to inspect</string>
+    <string name="accountchoice_invoke_select_ok">Changed the active account to USERNAME</string>
+    <string name="accountchoice_invoke_select_fail">Could not change active account to inspect; please try again later</string>
+    <string name="accountchoice_invoke_select_nochange">No change required</string>
+    <string name="accountchoice_username_tag">USERNAME</string>
+
+    <string name="quit_dialog_title">Do you wish to quit?</string>
+    <string name="quit_dialog_ok">Ok</string>
+    <string name="quit_dialog_cancel">Cancel</string>
+    <string name="quit_dialog_wait">Logging off and closing connections</string>
+    
+    <string name="test_default_title">API Debugger</string>
+    <string name="test_complete_title">Test Results</string>
+    <string name="test_complete_failed_title">Test Results - Failed</string>
+    <string name="test_login_label">Account details</string>
+    <string name="test_list_label">Tests to perform</string>
+    <string name="test_run_label">START TESTS!</string>
+    <string name="test_run_wait">Running tests</string>
+    <string name="test_retry_label">Try another test</string>
+    <string name="test_login_username_label">Username</string>
+    <string name="test_login_password_label">Password</string>
+    <string name="test_1_label">Test 1</string>
+    <string name="test_1_description">Session key dependant tests. These are simple calls that mostly get values relevant to all AlertMe accounts.</string>
+    <string name="test_2_label">Test 2</string>
+    <string name="test_2_description">Hub-centric tests. Calls upon the API for hub details - and thus - the services a hub may have available.</string>
+    <string name="test_3_label">Test 3</string>
+    <string name="test_3_description">Device-centric tests. Stimulates the API for device details (based on existing devices on the first hub found)</string>
+    <string name="test_4_label">Test 3</string>
+    <string name="test_4_description">Event-centric tests. Stimulates the API for hub events (based on existing devices on the first hub found)</string>
+    
+    <string name="menu_refresh">Refresh</string>
+    <string name="menu_add_account">Add account</string>
+    <string name="menu_select_account">Select account</string>
+    <string name="menu_select_hub">Select hub</string>
+    <string name="menu_about">About</string>
+    <string name="menu_quit">Quit</string>
+    
+    <string name="infomation_dialog_dismiss">Ok</string>
+    
+    <string name="devicedetail_present">Currently present</string>
+    <string name="devicedetail_notpresent">Unavailable</string>
+    <string name="devicedetail_control_isoff">Press button to power on</string>
+    <string name="devicedetail_control_ison">Press button to power off</string>
+    
+    <string name="powercontroller_change_fail">Could not change the device state</string>
+    <string name="powercontroller_change_none">No action taken as that change was not necessary</string>
+    <string name="powercontroller_change_off">Changing device state: switching off</string> 
+    <string name="powercontroller_change_on">Changing device state: switching on</string>
+    
+    <string name="people_firstname_label">First name</string>
+    <string name="people_lastname_label">Surname</string>
+</resources>

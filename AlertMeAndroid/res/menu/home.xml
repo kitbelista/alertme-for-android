@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu_home_refresh"
+		android:icon="@drawable/ic_menu_refresh"
+        android:title="@string/menu_refresh" />
+    <item android:id="@+id/menu_home_select_hub"
+		android:icon="@drawable/ic_menu_goto"
+        android:title="@string/menu_select_hub"
+        android:visible="false" />
+    <item android:id="@+id/menu_home_add_new_system"
+		android:icon="@drawable/ic_menu_login_add"
+        android:title="@string/menu_add_account" />
+    <item android:id="@+id/menu_home_select_system"
+		android:icon="@drawable/ic_menu_account_list"
+        android:title="@string/menu_select_account" />
+    <item android:id="@+id/menu_home_about"
+		android:icon="@drawable/ic_menu_info_details"
+        android:title="@string/menu_about" />
+    <item android:id="@+id/menu_home_quit"
+		android:icon="@drawable/ic_menu_close_clear_cancel"
+        android:title="@string/menu_quit" />
+</menu>
+

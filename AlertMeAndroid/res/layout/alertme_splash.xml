@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center_horizontal"
+    android:padding="3dip"
+    android:background="#fff"
+    android:stretchColumns="0,2">
+    <LinearLayout
+    	android:gravity="right"
+		android:minHeight="35dip">
+        <TextView        
+        	android:id="@+id/splash_credits"        
+            android:text="exacat"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+		    android:layout_marginLeft="10dip"
+		    android:layout_marginRight="5dip"
+		    android:textColor="#999"
+            android:padding="3dip" />
+    </LinearLayout>
+    <TableRow android:gravity="bottom">
+    	<View />
+    	<ImageView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+    		android:gravity="center"
+			android:src="@drawable/splash" />
+    	<View />
+    </TableRow>
+</TableLayout>

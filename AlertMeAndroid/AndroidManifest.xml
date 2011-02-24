@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.darkgoddess.alertme"
+    android:versionCode="1"
+	android:installLocation="auto"
+    android:versionName="1.0">
+	<uses-sdk android:minSdkVersion="4" android:targetSdkVersion="8" />
+    <application android:icon="@drawable/icon" android:label="@string/app_name" android:debuggable="true">
+        <activity android:name=".AlertMe"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".AlertMeSettings" android:label="@string/app_name_settings" />
+        <activity android:name=".AlertMeSensors" android:label="@string/app_name_sensors" />
+        <activity android:name=".AlertMeEventHistory" android:label="@string/app_name_history" />
+        <activity android:name=".AlertMeBehaviour" android:label="@string/app_name_behaviour" />
+        <activity android:name=".AlertMePeople" android:label="@string/app_name_behaviour" />
+        <activity android:name=".AlertMeHelp" android:label="@string/app_name_help" />
+        <activity android:name=".AlertMeSplash" android:label="@string/app_name" />
+        <activity android:name=".AlertMeTest" android:label="@string/app_name" android:launchMode="singleTask"/>
+
+    </application>
+
+<uses-permission android:name="android.permission.INTERNET"></uses-permission>
+<uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
+</manifest> 

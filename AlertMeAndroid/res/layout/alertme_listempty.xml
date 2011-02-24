@@ -1,0 +1,13 @@
+<!-- list_item.xml -->
+<TextView
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/emptylist_text"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:paddingTop="50dip"
+	android:paddingBottom="10dip"
+	android:paddingLeft="15dip"
+	android:paddingRight="15dip"
+	android:textAppearance="?android:attr/textAppearanceLarge"
+	android:textColor="#555"
+	/>
