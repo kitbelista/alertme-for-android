@@ -1,3 +1,20 @@
+/**
+ * 
+ * Copyright 2011 Kathlene Belista
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.darkgoddess.alertme.api;
 
 import java.util.ArrayList;
@@ -621,18 +638,23 @@ public class AlertMeSession {
 	
 	public ArrayList<Event> getEventData() {
 		helperKeepAlive();
-
+		if (DEBUGOUT) Log.w(TAG, "getEventData()  START");
 		if (session!=null && session.id>=0) {
 			if (!timeIsWithinSpan(eventLastRefresh, ITEM_SPAN)) {
 				events = null;
 				helperGetEventLog();
 			} else {
 				if (events==null||events!=null&&events.isEmpty()) {
-					if (activeHubId!=1) events = db.getEvents(activeHubId);
+					if (activeHubId!=-1) events = db.getEvents(activeHubId);
 				}
 			}
 			lastActionTime = System.currentTimeMillis();
 		}
+		if (DEBUGOUT) {
+			if (events!=null) Log.w(TAG, "getEventData()  events size: "+events.size());
+			else Log.w(TAG, "getEventData()  events size 0 as NULL");
+		}
+		if (DEBUGOUT) Log.w(TAG, "getEventData()  END");
 		
 		return events;
 	}
@@ -893,7 +915,12 @@ public class AlertMeSession {
 	}
 	
 	public HashMap<String, String> getUserInfo() {
-		if (isSessionAlive()) return APIUtilities.getDeviceChannelValues(alertMe.getUserInfo(session.sessionKey));
+		if (isSessionAlive()) {
+			String userinfo = alertMe.getUserInfo(session.sessionKey);
+			HashMap<String, String> res = APIUtilities.getDeviceChannelValues(userinfo);
+			db.updateUserEntryInfo(session.id, userinfo);
+			return res;
+		}
 		return null;
 	}
 	
@@ -1074,6 +1101,7 @@ public class AlertMeSession {
 		}
 	}
 	private void helperGetEventLog() {
+		if (DEBUGOUT) Log.w(TAG, "helperGetEventLog()  START");
 		if (session!=null && session.id>=0) {
 			String service = "null";
 			int limit = 50;
@@ -1085,14 +1113,16 @@ public class AlertMeSession {
 				getAllCurrent = true;
 			}
 			if (getAllCurrent) {
+				if (DEBUGOUT) Log.w(TAG, "helperGetEventLog()  getAllCurrent: retrieving complete list");
 				events = APIUtilities.getEventLog(alertMe.getEventLog(session.sessionKey, service, limit, start, end));
-				if (activeHubId!=1) db.updateEvents(activeHubId, events);
+				if (activeHubId!=-1) db.updateEvents(activeHubId, events);
 				if (!events.isEmpty()) Collections.sort(events, Event.getComparator(true));
 			} else {
 				String currentStart = null;
 				String currentEnd = null;
 				int limitDiff = limit;
 				int eventSize = events.size();
+				if (DEBUGOUT) Log.w(TAG, "helperGetEventLog()  notAllCurrent: ammending list");
 				
 				if (eventSize>0) {
 					int lastI = (eventSize-1);
@@ -1108,7 +1138,7 @@ public class AlertMeSession {
 					// Appending the past
 					if (currentStart!=null) {
 						ArrayList<Event> append = APIUtilities.getEventLog(alertMe.getEventLog(session.sessionKey, service, limit, start, currentStart));
-						if (activeHubId!=1) db.updateEvents(activeHubId, append);
+						if (activeHubId!=-1) db.updateEvents(activeHubId, append);
 
 						if (!append.isEmpty()) {
 							Collections.sort(append, Event.getComparator(true));
@@ -1116,12 +1146,13 @@ public class AlertMeSession {
 								events.add(e);
 								limitDiff--;
 							}
+							if (DEBUGOUT) Log.w(TAG, "helperGetEventLog()  append past: ammending list size: "+append.size());
 						}
 					}
 					// Appending the future
 					if (currentEnd!=null && limitDiff>0) {
 						ArrayList<Event> append = APIUtilities.getEventLog(alertMe.getEventLog(session.sessionKey, service, limitDiff, currentEnd, null));
-						if (activeHubId!=1) db.updateEvents(activeHubId, append);
+						if (activeHubId!=-1) db.updateEvents(activeHubId, append);
 
 						if (!append.isEmpty()) {
 							Collections.sort(append, Event.getComparator(true));
@@ -1129,6 +1160,7 @@ public class AlertMeSession {
 								events.add(e);
 								limitDiff--;
 							}
+							if (DEBUGOUT) Log.w(TAG, "helperGetEventLog()  append current: ammending list size: "+append.size());
 						}
 						
 					}
@@ -1138,6 +1170,7 @@ public class AlertMeSession {
 			
 			eventLastRefresh = System.currentTimeMillis();
 		}
+		if (DEBUGOUT) Log.w(TAG, "helperGetEventLog()  END");
 	}
 	
 	private static boolean timeIsWithinSpan(long baseTimeMilli, long spanMilli) {
@@ -1319,7 +1352,7 @@ public class AlertMeSession {
 						device.setAttributesFromString(alertMe.getDeviceChannelValue(session.sessionKey, device.id));
 						devices.set(count++, device);
 					}
-					if (session.id>=0) {
+					if (session.id!=-1) {
 						db.updateDevices(activeHubId, devices);
 					}
 				}

@@ -1,3 +1,20 @@
+/**
+ * 
+ * Copyright 2011 Kathlene Belista
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.darkgoddess.alertme;
 
 import java.util.ArrayList;
@@ -30,7 +47,7 @@ import org.darkgoddess.alertme.api.utils.Hub;
 public class AlertMeTest extends Activity {
 	private static final String TAG = "AlertMeTest";
 	private AMViewItems screenStuff = null;
-	private AlertMeStorage db = null;
+	//private AlertMeStorage db = null;
 	private TextView title = null;
 	private TextView body = null;
 	private LinearLayout setup = null;
@@ -41,6 +58,7 @@ public class AlertMeTest extends Activity {
 	private String password = null;
 	private long sessionStart = 0;
 	private ArrayList<String> tests = null; 
+	private boolean isActive = false;
 
     // Handler to update the interface..        
 	final Handler handler = new Handler() {
@@ -55,22 +73,51 @@ public class AlertMeTest extends Activity {
     public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.alertme_debug);
-		restoreCurrentTestState();
+		//restoreCurrentTestState();
 		initView();
 		enableSetup();
+		isActive = true;
 	}
 	@Override
     public void onStart() {
 		super.onStart();
 		//DebugStarter starter;
 
-		restoreCurrentTestState();
-		screenStuff = new AMViewItems(this, this);
-		screenStuff.registerQuitDialog(quitClick, quitCancelClick);
-		screenStuff.initProgressDialog();
-		screenStuff.initQuitDialog();
+		boolean restored = restoreCurrentTestState();
+		initScreenStuff();
+		isActive = true;
 		
-		
+		if (restored) {
+			final CheckBox checkBox1 = (CheckBox) findViewById(R.id.test1);
+			final CheckBox checkBox2 = (CheckBox) findViewById(R.id.test2);
+			final CheckBox checkBox3 = (CheckBox) findViewById(R.id.test3);
+			final CheckBox checkBox4 = (CheckBox) findViewById(R.id.test4);
+			if (userText!=null) {
+				userText.setText(username);
+			}
+			if (passText!=null) {
+				passText.setText(password);			
+			}
+			if (tests!=null && !tests.isEmpty()) {
+				for (String t: tests) {
+					int i = getIntFromString(t);
+					switch (i) {
+						case 1:
+							if (checkBox1!=null) checkBox1.setChecked(true);
+							break;
+						case 2:
+							if (checkBox2!=null) checkBox2.setChecked(true);
+							break;
+						case 3:
+							if (checkBox3!=null) checkBox3.setChecked(true);
+							break;
+						case 4:
+							if (checkBox4!=null) checkBox4.setChecked(true);
+							break;
+					}
+				}
+			}
+		}
 		//starter = new DebugStarter(handler, username, password);
 		//starter.addTest("4");
 		//starter.start();
@@ -126,9 +173,13 @@ public class AlertMeTest extends Activity {
 	@Override
     protected void onDestroy() {
     	super.onDestroy();
+		isActive = false;
 		if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "onDestroy()  START");
-		if (db!=null) {
-			db.close();
+		//if (db!=null) {
+		//	db.close();
+		//}
+		if (screenStuff!=null) {
+			screenStuff.clean();
 		}
 		if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "onDestroy()  END");
     }
@@ -156,9 +207,12 @@ public class AlertMeTest extends Activity {
 		res.password = password;
 		res.sessionStart = sessionStart;
 		res.testList = "";
-		for (String s: tests) {
-			res.testList += (i++==0)? "": ",";
-			res.testList += s;
+		if (tests!=null) {
+			for (String s: tests) {
+				res.testList += (i++==0)? "": ",";
+				res.testList += s;
+			}
+			
 		}
 		
 		return res;
@@ -249,7 +303,8 @@ public class AlertMeTest extends Activity {
 		}
 
 	}
-	private void restoreCurrentTestState() {
+	private boolean restoreCurrentTestState() {
+		boolean res = false;
 		final Object data = getLastNonConfigurationInstance();
 		if (data!=null) {
 			final AMTestState state = (AMTestState) data;
@@ -265,7 +320,9 @@ public class AlertMeTest extends Activity {
 			for (String s: rawtests) {
 				tests.add(s);
 			}
+			res = (APIUtilities.isStringNonEmpty(username) && APIUtilities.isStringNonEmpty(password) && APIUtilities.isStringNonEmpty(state.testList));
 		}
+		return res;
 	}
 	/*
 	 * 
@@ -289,6 +346,16 @@ public class AlertMeTest extends Activity {
     	}
     }
 	 */
+	private static int getIntFromString(String s) {
+		int res = 0;
+		
+		try {
+			Integer i = new Integer(s);
+			res = i.intValue();
+		} catch (Exception e) {}
+		
+		return res;
+	}
 	
 	private void updateText(TextView textfield, String s) {
 		if (textfield!=null) {
@@ -296,12 +363,17 @@ public class AlertMeTest extends Activity {
 		}
 	}
 	private void performUpdate(int mesgType, String mesgData) {
+		if (!isActive) {
+			return;
+		}
+		
 		if (mesgData!=null) {
 			updateText(title, getString(R.string.test_complete_title));
 			updateText(body, mesgData);
 		} else {
 			updateText(body, getString(R.string.test_complete_failed_title));
 		}
+		initScreenStuff();
 		enableResults();
 		screenStuff.setNotBusy();
 	}
@@ -535,12 +607,40 @@ public class AlertMeTest extends Activity {
         	String nowFormat = (now*1000)+"";
         	String yestFormat = "";
         	int limit = 3;
+        	int elimit = 20;
         	long yesMilli = 1000*60*60*24;
         	yestTime.set(now-yesMilli);
         	yestFormat = (yestTime.toMillis(false)*1000)+"";
     		res = "--STARTING TEST 4 ["+sessionKey+"]--\n";
     		
     		
+			res += "getEventLog(null, limit:"+elimit+", start:"+start+", end:"+end+")>>\n";
+    		res += alertme.getEventLog(sessionKey, "null", elimit, start, end);
+    		res += "\n-------------------\n";    				
+			start = "1212131517";
+			res += "getEventLog(null, limit:"+elimit+", start:"+start+", end:"+end+")>>\n";
+    		res += alertme.getEventLog(sessionKey, "null", elimit, start, end);
+    		res += "\n-------------------\n";    				
+			start = "null";
+			end = nowFormat;
+			res += "getEventLog(null, limit:"+elimit+", start:"+start+", end:"+end+")>>\n";
+    		res += alertme.getEventLog(sessionKey, "null", elimit, start, end);
+    		res += "\n-------------------\n";    				
+			start = yestFormat;
+			end = nowFormat;
+			res += "getEventLog(null, limit:"+elimit+", start:"+start+", end:"+end+")>>\n";
+    		res += alertme.getEventLog(sessionKey, "null", elimit, start, end);
+    		res += "\n-------------------\n";    				
+			start = yestFormat;
+			end = nowFormat;
+			limit=-1;
+			res += "getEventLog(null, limit:"+elimit+", start:"+start+", end:"+end+")>>\n";
+    		res += alertme.getEventLog(sessionKey, "null", elimit, start, end);
+    		res += "\n-------------------\n";    				
+
+			limit = 3;
+        	start = "null";
+        	end = "null";
     		if (accServiceList==null) {
         		String serviceList = alertme.getAllServices(sessionKey);
         		setServiceList(serviceList);
@@ -560,14 +660,14 @@ public class AlertMeTest extends Activity {
     			start = "null";
     			end = nowFormat;
     			for (String service: accServiceList) {
-    				res += "getAllDeviceChannelValues("+service+", limit:"+limit+", start:"+start+", end:"+end+")>>\n";
+    				res += "getEventLog("+service+", limit:"+limit+", start:"+start+", end:"+end+")>>\n";
     	    		res += alertme.getEventLog(sessionKey, service, limit, start, end);
     	    		res += "\n-------------------\n";    				
     			}
     			start = yestFormat;
     			end = nowFormat;
     			for (String service: accServiceList) {
-    				res += "getAllDeviceChannelValues("+service+", limit:"+limit+", start:"+start+", end:"+end+")>>\n";
+    				res += "getEventLog("+service+", limit:"+limit+", start:"+start+", end:"+end+")>>\n";
     	    		res += alertme.getEventLog(sessionKey, service, limit, start, end);
     	    		res += "\n-------------------\n";    				
     			}
@@ -575,7 +675,7 @@ public class AlertMeTest extends Activity {
     			end = nowFormat;
     			limit=-1;
     			for (String service: accServiceList) {
-    				res += "getAllDeviceChannelValues("+service+", limit:"+limit+", start:"+start+", end:"+end+")>>\n";
+    				res += "getEventLog("+service+", limit:"+limit+", start:"+start+", end:"+end+")>>\n";
     	    		res += alertme.getEventLog(sessionKey, service, limit, start, end);
     	    		res += "\n-------------------\n";    				
     			}
@@ -583,23 +683,23 @@ public class AlertMeTest extends Activity {
 	    		res += "getEventLog(SERVICE)>>\n";
         		res += "FAILED:: could not retrieve a service list";        			
         		res += "\n-------------------\n";
-        		res += "FAILED getAllDeviceChannelValues(SERVICE, limit:"+limit+", start:"+start+", end:"+end+")>>\n";
+        		res += "FAILED getEventLog(SERVICE, limit:"+limit+", start:"+start+", end:"+end+")>>\n";
 	    		res += "\n-------------------\n";    				
     			start = "1212131517";
-				res += "getAllDeviceChannelValues(SERVICE, limit:"+limit+", start:"+start+", end:"+end+")>>\n";
+				res += "getEventLog(SERVICE, limit:"+limit+", start:"+start+", end:"+end+")>>\n";
 	    		res += "\n-------------------\n";    				
     			start = "null";
     			end = nowFormat;
-				res += "getAllDeviceChannelValues(SERVICE, limit:"+limit+", start:"+start+", end:"+end+")>>\n";
+				res += "getEventLog(SERVICE, limit:"+limit+", start:"+start+", end:"+end+")>>\n";
 	    		res += "\n-------------------\n";    				
     			start = yestFormat;
     			end = nowFormat;
-				res += "getAllDeviceChannelValues(SERVICE, limit:"+limit+", start:"+start+", end:"+end+")>>\n";
+				res += "getEventLog(SERVICE, limit:"+limit+", start:"+start+", end:"+end+")>>\n";
 	    		res += "\n-------------------\n";    				
     			start = yestFormat;
     			end = nowFormat;
     			limit=-1;
-				res += "getAllDeviceChannelValues(SERVICE, limit:"+limit+", start:"+start+", end:"+end+")>>\n";
+				res += "getEventLog(SERVICE, limit:"+limit+", start:"+start+", end:"+end+")>>\n";
 	    		res += "\n-------------------\n";    				    			
     		}
     		
@@ -607,6 +707,15 @@ public class AlertMeTest extends Activity {
         	return res;
         }
 
+	}
+	
+	private void initScreenStuff() {
+		if (screenStuff==null) {
+			screenStuff = new AMViewItems(this, this);
+			screenStuff.registerQuitDialog(quitClick, quitCancelClick);
+			screenStuff.initProgressDialog();
+			screenStuff.initQuitDialog();			
+		}
 	}
 	
 	public static class AMTestState {

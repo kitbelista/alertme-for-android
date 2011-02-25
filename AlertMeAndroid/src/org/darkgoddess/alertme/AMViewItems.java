@@ -1,3 +1,20 @@
+/**
+ * 
+ * Copyright 2011 Kathlene Belista
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.darkgoddess.alertme;
 
 import org.darkgoddess.alertme.api.utils.Device;
@@ -9,6 +26,8 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,6 +63,7 @@ public class AMViewItems {
 		
 	}
 	public void dismissActiveDialog(int id) {
+		currentDialog = -1;
         switch(id) {
 	    	case PROGRESS_DIALOG:
 	    		if (progressDialog!=null) progressDialog.dismiss();
@@ -69,7 +89,7 @@ public class AMViewItems {
     	Dialog res = null;
         switch(id) {
         	case PROGRESS_DIALOG:
-        		initProgressDialog();        			
+        		initProgressDialog();
         		res = progressDialog;
         		break;
         	case DEVICE_DIALOG:
@@ -103,6 +123,12 @@ public class AMViewItems {
         return res;
     }
 	public void clean() {
+		if (currentDialog!=-1) {
+			if (createdDialogs[currentDialog]) dismissActiveDialog(currentDialog);
+		}
+		if (isBusy) {
+			setNotBusy();
+		}
 		isActive = false;
 		progressDialog = null;
 		deviceDialog = null;
@@ -113,6 +139,8 @@ public class AMViewItems {
 	}
 	public void showDialog(int id) {
 		if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "showDialog("+id+")    START");
+		currentDialog = id;
+		if (id>=0 && id < 7) createdDialogs[id] = true;
 		activity.showDialog(id);
 		if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "showDialog()    END");
 	}
@@ -169,7 +197,8 @@ public class AMViewItems {
     public void setNotBusy() {
     	if (progressDialog!=null && isBusy) {
     		isBusy = false;
-    		activity.dismissDialog(PROGRESS_DIALOG);
+    		unlockFixedScreenRotation();
+    		if (createdDialogs[PROGRESS_DIALOG]) activity.dismissDialog(PROGRESS_DIALOG);
     	}
     }
     public void setSystemName(Hub hub) {
@@ -631,12 +660,32 @@ public class AMViewItems {
     		if (message!=null && message.length()!=0) { progressDialog.setMessage(message); }
     		if (!isBusy) {
         		isBusy = true;
-        		activity.showDialog(PROGRESS_DIALOG);
+        		lockScreenRotation();
+        		showDialog(PROGRESS_DIALOG);
         		//progressDialog.show(this, title, message);
     		}
     	}
     }
 
+    private void lockScreenRotation()
+    {
+    	if (activity!=null) {
+    		// Stop the screen orientation changing during an event
+    		switch (activity.getResources().getConfiguration().orientation) {
+				case Configuration.ORIENTATION_PORTRAIT:
+					activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+					break;
+				case Configuration.ORIENTATION_LANDSCAPE:
+					activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+					break;
+    		}
+    	}
+    }
+    
+    private void unlockFixedScreenRotation() {
+    	if (activity!=null) activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+    }
+    
     /*
      *
      // Never used
@@ -657,7 +706,9 @@ public class AMViewItems {
 		return res;
 	}*/
 
-
+    private int currentDialog = -1;
+    private boolean[] createdDialogs = {false, false, false, false, false, false, false};
+    
 	private TextView systemName = null;
 	private int systemNameResourceId = 0;
 	

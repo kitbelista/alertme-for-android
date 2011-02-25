@@ -1,3 +1,20 @@
+/**
+ * 
+ * Copyright 2011 Kathlene Belista
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.darkgoddess.alertme;
 
 
@@ -25,6 +42,8 @@ public class AlertMeBehaviour extends Activity {
 	private final String MHOME = "home";
 	private final String MAWAY = "away";
 	private final String MNIGHT = "night";
+	private String currentIntruderState = null;
+	private String currentEmergencyState = null;
 	private Bundle savedState = null;
 	private AMViewItems screenStuff = null;
 	private AlertMeSession alertMe = null;
@@ -102,6 +121,9 @@ public class AlertMeBehaviour extends Activity {
 		if (alertMe!=null) {
 			alertMe.clean();
 		}
+		if (screenStuff!=null) {
+			screenStuff.clean();
+		}
 		if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "onDestroy()  END");
     }
 	@Override
@@ -119,6 +141,8 @@ public class AlertMeBehaviour extends Activity {
 		saveState.currentHub = currentHub;
 		saveState.behaviour = behaviour;
 		saveState.currentView = currentView;
+		saveState.currentIntruderState = currentIntruderState;
+		saveState.currentEmergencyState = currentEmergencyState;
 		if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "onRetainNonConfigurationInstance()  END");
 		return saveState;
 	}
@@ -397,6 +421,9 @@ public class AlertMeBehaviour extends Activity {
 			}
 			if (saveState.currentView!=0) currentView = saveState.currentView;
 			if (saveState.behaviour!=null) behaviour = saveState.behaviour;
+			if (saveState.currentIntruderState!=null) currentIntruderState = saveState.currentIntruderState;
+			if (saveState.currentEmergencyState!=null) currentEmergencyState = saveState.currentEmergencyState;
+			
 			reloaded = alertMe.loadFromCachedState(this, oldState);
 			if (reloaded) {
 				restoreDetailsFromCache();
@@ -429,6 +456,8 @@ public class AlertMeBehaviour extends Activity {
 		public Hub currentHub = null;
 		public String behaviour = null;
 		public int currentView = 0;
+		public String currentIntruderState = null;
+		public String currentEmergencyState = null;
 	}
 
 	class BehaviourStarter extends Thread {

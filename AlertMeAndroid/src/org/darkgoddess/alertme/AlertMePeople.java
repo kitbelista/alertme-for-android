@@ -1,3 +1,20 @@
+/**
+ * 
+ * Copyright 2011 Kathlene Belista
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.darkgoddess.alertme;
 
 import java.util.ArrayList;
@@ -57,8 +74,8 @@ public class AlertMePeople extends Activity {
     public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		alertMe = (alertMe==null)? new AlertMeSession(this): alertMe;
-		loadFromRestoredState();
 		isActive = true;
+		loadFromRestoredState();
 		if (!hasCreated) {
 			hasCreated = true;
 			savedState = savedInstanceState;
@@ -69,6 +86,7 @@ public class AlertMePeople extends Activity {
     public void onStart() {
 		super.onStart();
 
+		isActive = true;
 		loadFromRestoredState();
 
 		initScreenStuff();
@@ -112,6 +130,9 @@ public class AlertMePeople extends Activity {
 		if (alertMe!=null) {
 			alertMe.clean();
 		}
+		if (screenStuff!=null) {
+			screenStuff.clean();
+		}
 		if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "onDestroy()  END");
     }
 	@Override
@@ -132,6 +153,8 @@ public class AlertMePeople extends Activity {
 		if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "onRetainNonConfigurationInstance()  START");
 		saveState.sessionState = alertMe.retrieveCurrentState();
 		saveState.keyFobs = keyFobs;
+		saveState.currentUser = alertMe.getCurrentSession();
+		if (saveState.currentUser!=null) if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "onRetainNonConfigurationInstance()  userdetails [id:"+saveState.currentUser.id+"; username:"+saveState.currentUser.username+"; info:"+saveState.currentUser.info+"]");
 		if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "onRetainNonConfigurationInstance()  END");
 		return saveState;
 	}
@@ -173,9 +196,13 @@ public class AlertMePeople extends Activity {
     private void performUpdate(int command, final String first, final String last) {
     	AlertMeStorage.AlertMeUser currentUser = alertMe.getCurrentSession();
     	Hub hub = alertMe.retrieveActiveHub();
+		if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "performUpdate("+command+", '"+first+"', '"+last+"')  START");
+
     	initScreenStuff();
+    	initView();
     	if (!isActive) {
     		screenStuff.setNotBusy();
+    		if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "performUpdate()  END  - failed isActive");
     		return;
     	}
     	
@@ -183,17 +210,20 @@ public class AlertMePeople extends Activity {
     		loadCurrentUserDetails(first, last);
     	}
     	if (currentUser!=null) {
+    		if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "performUpdate()  updating currentUser:"+currentUser.username);
         	if (accountUsername!=null) accountUsername.setText(currentUser.username);    		
     	}
     	if (hub!=null && accountHub!=null) {
     		accountHub.setText(hub.name);
     		screenStuff.setSystemName(hub);
+    		if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "performUpdate()  updating hub:"+hub.name);
     	}
     	// LOAD THE KEYFOB LIST
     	if (peopleList!=null) {
     		if (keyFobs!=null && !keyFobs.isEmpty()) {
     			KeyFobAdapter deviceAd = new KeyFobAdapter(this, R.layout.alertme_people_row, keyFobs);
         		peopleList.setAdapter(deviceAd);
+        		if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "performUpdate()  updating keyfob list size:"+keyFobs.size());
     		}
     		else {
      			// empty
@@ -201,9 +231,11 @@ public class AlertMePeople extends Activity {
      			String[] empty = { getString(R.string.keyfob_list_isempty) }; 
      			emptyList = new ArrayAdapter<String>(this, R.layout.alertme_listempty, empty);
      			peopleList.setAdapter(emptyList);
+        		if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "performUpdate()  updating keyfob list size: 0");
      		}
     	}
 		screenStuff.setNotBusy();
+		if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "performUpdate()  END");
     }
 	
 	private void loadFromRestoredState() {
@@ -220,7 +252,9 @@ public class AlertMePeople extends Activity {
 			reloaded = alertMe.loadFromCachedState(this, oldState);
 
 			if (reloaded) {
-				restoreDetailsFromCache();
+				AlertMeStorage.AlertMeUser currentUser = savedState.currentUser;
+				if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "loadFromRestoredState()  currentUser: "+currentUser+"; info:"+currentUser.info);
+				restoreDetailsFromCache(currentUser);
 			}
 			if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "loadFromRestoredState()  did reload from old state:"+reloaded);
 		}
@@ -293,7 +327,7 @@ public class AlertMePeople extends Activity {
         		AlertMeStorage.AlertMeUser currentUser = alertme.getCurrentSession();
         		alertme.getDeviceData();
         		keyFobs = alertme.retrieveDevices(Device.KEYFOB);
-        		if (!APIUtilities.isStringNonEmpty(currentUser.info)) {
+        		if (APIUtilities.isStringNonEmpty(currentUser.info)) {
         			attributes = APIUtilities.getDeviceChannelValues(currentUser.info);
         		}
         		if (alertme.hasSessionValues() && attributes == null) {
@@ -330,27 +364,32 @@ public class AlertMePeople extends Activity {
 			
 		}
 	}
-	private void restoreDetailsFromCache() {
-		HashMap<String, String> attributes = null;
+	private void restoreDetailsFromCache(AlertMeStorage.AlertMeUser currentUser) {
 		String firstname = null;
 		String lastname = null;
-		AlertMeStorage.AlertMeUser currentUser = alertMe.getCurrentSession();
-		if (!APIUtilities.isStringNonEmpty(currentUser.info)) {
-			attributes = APIUtilities.getDeviceChannelValues(currentUser.info);
-		}
-		if (attributes!=null) {
-			if (attributes.containsKey("firstname")) {
-				firstname = attributes.get("firstname");
+		if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "restoreDetailsFromCache()  START");
+		if (currentUser!=null) {			
+			HashMap<String, String> attributes = null;
+			if (APIUtilities.isStringNonEmpty(currentUser.info)) {
+	    		if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "restoreDetailsFromCache()  currentUser info: "+currentUser.info);
+				attributes = APIUtilities.getDeviceChannelValues(currentUser.info);
 			}
-			if (attributes.containsKey("lastname")) {
-				lastname = attributes.get("lastname");
+			if (attributes!=null) {
+				if (attributes.containsKey("firstname")) {
+					firstname = attributes.get("firstname");
+				}
+				if (attributes.containsKey("lastname")) {
+					lastname = attributes.get("lastname");
+				}
 			}
+			performUpdate(AlertMeConstants.UPDATE_ALL, firstname, lastname);
 		}
-		performUpdate(AlertMeConstants.UPDATE_ALL, firstname, lastname);
+		if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "restoreDetailsFromCache()  END");
 	}
 	
 	class PeopleState {
 		public AlertMeSession.SessionState sessionState = null;
 		public ArrayList<Device> keyFobs = null;
+		public AlertMeStorage.AlertMeUser currentUser = null;
 	}
 }

@@ -1,7 +1,26 @@
+/**
+ * 
+ * Copyright 2011 Kathlene Belista
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.darkgoddess.alertme.api.utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import android.util.Log;
 
 public class APIUtilities {
 	public static final int COMMAND_INVALID = -1;
@@ -131,7 +150,9 @@ public class APIUtilities {
 		Event event = null;
 		//"||" // timestamp and message
 		//"|"  // timestamp, zidlabel, loggedid, typelabel, logged type, message
-		if (input.contains("||")) {
+		if (input==null) {
+			// nothing..
+		} else if (input.contains("||")) {
 			String[] mesgL = input.split("\\|\\|");
 			if (mesgL.length>=2) {
 				long ts = 0;
@@ -143,12 +164,54 @@ public class APIUtilities {
 				}
 			}
 		} else {
-			String[] dmesgL = input.split("\\|");
-			if (dmesgL.length>=6) {
+			boolean parsed = false;
+			String timestamp = "";
+			String zid = "";
+			String lid = "";
+			String tl = "";
+			String tly = "";
+			String mesg = "";
+			if (input.contains("|[(")) {
+				// Capture the events 'id' in the format [(...)]
+				int isz = input.length();
+				int startPos = input.indexOf("|[(");
+				int endPos = input.indexOf(")]|");
+				if (startPos!=-1&& endPos!=-1) {
+					if (startPos+3<isz) {
+						String[] dmesgL = {};
+						String fixedInput = input;
+						zid = input.substring(startPos+3, endPos);
+						fixedInput = fixedInput.replace("|[("+zid+")]|", "|<ZID>|");
+						dmesgL = fixedInput.split("\\|");
+						if (dmesgL!=null && dmesgL.length>=6) {
+							timestamp = dmesgL[0];
+							lid = dmesgL[2];
+							tl = dmesgL[3];
+							tly = dmesgL[4];
+							mesg = dmesgL[5];						
+							parsed = true;							
+						}
+					}
+				}
+			} else {
+				String[] dmesgL = input.split("\\|");
+				if (dmesgL!=null && dmesgL.length>=6) {
+					timestamp = dmesgL[0];
+					zid = dmesgL[1];
+					lid = dmesgL[2];
+					tl = dmesgL[3];
+					tly = dmesgL[4];
+					mesg = dmesgL[5];
+					parsed = true;
+				}
+			}
+			
+			if (parsed) {
 				long ts = 0;
+				
 				try {
-					ts = Integer.parseInt(dmesgL[0].trim());
-					event = new DeviceEvent(ts, dmesgL[1], dmesgL[2], dmesgL[3], dmesgL[4], dmesgL[5]);
+					ts = Integer.parseInt(timestamp);
+					event = new DeviceEvent(ts, zid, lid, tl, tly, mesg);
 				} catch (NumberFormatException nfe) {
 					//Log.w(TAG, "getEventFromString ::Integer error for "+ts);
 				}

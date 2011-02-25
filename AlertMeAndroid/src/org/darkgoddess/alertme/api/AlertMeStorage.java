@@ -1,3 +1,20 @@
+/**
+ * 
+ * Copyright 2011 Kathlene Belista
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.darkgoddess.alertme.api;
 
 import org.darkgoddess.alertme.api.utils.Device;
@@ -174,6 +191,14 @@ public class AlertMeStorage {
 			args.put("session_id", sessId);
 			args.put("timestamp", timestamp);
 			if (isStringValid(data)) { args.put("info", data); }
+			return db.update(tableUser, args, KEY_ROWID + "=" + userId, null) > 0;
+		}
+		return false;
+	}
+	public boolean updateUserEntryInfo(final long userId, String info) {
+        if (isStringValid(info)) {
+            ContentValues args = new ContentValues();
+			args.put("info", info);
 			return db.update(tableUser, args, KEY_ROWID + "=" + userId, null) > 0;
 		}
 		return false;
@@ -690,11 +715,14 @@ public class AlertMeStorage {
 	public long addEvent(final long hubId, final String message, final long timestamp) {
 		long res = -1;
         if (hubId>-1) {
+    		if (DEBUGOUT) Log.w(TAG, "addEvent("+hubId+", '"+message+"', "+timestamp+")  START");
+
             ContentValues initialValues = new ContentValues();
             initialValues.put("hub_id", hubId);
             initialValues.put("message", message);
             initialValues.put("timestamp", timestamp);
             res = db.insert(tableEvent, null, initialValues);
+    		if (DEBUGOUT) Log.w(TAG, "addEvent()  END -- "+res);
         }
 		
 		return res;
@@ -708,16 +736,16 @@ public class AlertMeStorage {
 	public boolean updateEvents(long hubId, ArrayList<Event> events) {
 		boolean res = false;
 		Cursor entries = null;
-		if (DEBUGOUT) Log.w(TAG, "updateEvents()  START");
+		if (DEBUGOUT) Log.w(TAG, "updateEvents("+hubId+")  START");
 		if (events==null || events!=null && events.isEmpty()) {
 			if (DEBUGOUT) Log.w(TAG, "updateEvents()  END (FAIL:events empty/null)");
 			return res;	
 		}
 		// First, see if we have events..
 		try {
+			int rowsAdded = 0;
 			entries = db.query(true, tableEvent, eventTableColumns, "hub_id" + "=" + hubId, null, null, null, "timestamp desc", null);
 			if (entries!=null && entries.getCount()!=0) {
-				int rowsAdded = 0;
 				boolean startAdding = false;
 				EventCache lastEvent = null;
 				EventCache firstEvent = null;
@@ -733,10 +761,12 @@ public class AlertMeStorage {
 				for (Event e: events) {
 					if (startAdding) {
 						long newEvent = addEvent(hubId, e);
+						if (DEBUGOUT) Log.w(TAG, "updateEvents() adding ALL");
 						if (newEvent!=-1) {
 							rowsAdded++;
 						}
 					} else {
+						if (DEBUGOUT) Log.w(TAG, "updateEvents() adding FIRST/LAST");
 						if (lastEvent!=null && firstEvent!=null) {
 							if (e.epochTimestamp > lastEvent.timestamp) {
 								long newEvent = addEvent(hubId, e);
@@ -758,11 +788,25 @@ public class AlertMeStorage {
 									}									
 								}
 							}				
+						} else if (firstEvent!=null) {
+							// impossible if results exist: there would always be a first and last
+						} else if (lastEvent!=null) {
+							// impossible if results exist: there would always be a first and last
+							
 						}
 					}
 				}
-				res = (rowsAdded!=0);
+			} else {
+				// just add them all
+				for (Event e: events) {
+					long newEvent = addEvent(hubId, e);
+					if (DEBUGOUT) Log.w(TAG, "updateEvents() adding ALL");
+					if (newEvent!=-1) {
+						rowsAdded++;
+					}
+				}
 			}
+			res = (rowsAdded!=0);
 		} catch (SQLException se) {
 			if (DEBUGOUT) Log.w(TAG, "updateEvents() FAILED [SQLException] " + se.getMessage());
 		} catch (Exception e) {
