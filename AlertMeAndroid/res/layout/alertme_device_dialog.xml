@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+	android:id="@+id/layout_device_root">
+<TableLayout
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:gravity="center_horizontal"
     android:padding="3dip"
 	android:stretchColumns="*"
-	android:id="@+id/layout_device_root"
     android:background="@color/page_background">
     <TableRow android:gravity="center">
 		<TableLayout android:gravity="right"
@@ -121,6 +124,31 @@
 					android:textAppearance="?android:attr/textAppearanceSmall"
 					android:padding="3dip" />    		
     		</TableRow>
+    		<TableRow>	
+		    	<ImageView
+		    		android:gravity="center_vertical|right"	
+			        android:id="@+id/device_data_powerlevel_icon" 
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:src="@drawable/ic_sensor_powerlevel" />			
+    			<TextView        
+			     	android:id="@+id/device_data_powerlevel_label"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:gravity="left"
+					android:layout_marginLeft="7dip"     
+					android:text="Power" />        		
+    			<TextView        
+			     	android:id="@+id/device_data_powerlevel"        
+					android:text="0W"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:layout_marginLeft="7dip"
+					android:gravity="left"
+					android:textColor="@color/page_text"
+					android:textAppearance="?android:attr/textAppearanceSmall"
+					android:padding="3dip" />    		
+    		</TableRow>
 		</TableLayout>
    	</TableRow>
    	
@@ -178,3 +206,4 @@
         android:padding="5dip"
         android:text="Ok" />
 </TableLayout>
+</ScrollView>

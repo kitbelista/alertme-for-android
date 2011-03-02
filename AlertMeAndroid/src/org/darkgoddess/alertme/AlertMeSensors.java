@@ -58,6 +58,7 @@ public class AlertMeSensors extends Activity {
 	private boolean isActive = false;
 	private boolean hasCreated = false;
 	private Device viewDevice = null;
+	private int[] rowBg = null;
 
 	private final View.OnClickListener deviceControllerClick = new View.OnClickListener() {
 		public void onClick(View view) {
@@ -104,6 +105,7 @@ public class AlertMeSensors extends Activity {
 			hasCreated = true;
 			initView();
 		}
+		rowBg = AMViewItems.getRowColours(this);
 	}
 	@Override
     public void onStart() {
@@ -425,6 +427,10 @@ public class AlertMeSensors extends Activity {
                         //if (position%2==0) { v.setBackgroundColor(R.color.menu_even); }
                         //else { v.setBackgroundColor(R.color.menu_odd); }
                         v.setOnClickListener(new DeviceClicker(d));
+                }
+                if (rowBg!=null) {
+                	int colorPos = position % rowBg.length;
+                	v.setBackgroundColor(rowBg[colorPos]);
                 }
                 return v;
         }

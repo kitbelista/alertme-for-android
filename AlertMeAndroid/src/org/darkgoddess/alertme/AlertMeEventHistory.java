@@ -57,6 +57,7 @@ public class AlertMeEventHistory extends Activity {
 	private ArrayList<Event> events = null;
 	private boolean isActive = false;
 	private boolean hasCreated = false;
+	private int[] rowBg = null;
 
     // Handler to update the interface..        
 	final Handler handler = new Handler() {
@@ -80,6 +81,7 @@ public class AlertMeEventHistory extends Activity {
 			initView();
 			savedState = savedInstanceState;
 		}
+		rowBg = AMViewItems.getRowColours(this);
 		if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "onCreate()   END");
 	}
 	@Override
@@ -238,7 +240,10 @@ public class AlertMeEventHistory extends Activity {
     		Hub hub = alertMe.retrieveActiveHub();
 
     		if (events!=null && !events.isEmpty()) {
+    			Time currentTime = new Time();
+    			Time currentDate = new Time();
     			SeparatedListAdapter adapter;
+    			long currentDateTs = 0;
     			//EventAdapter eventAdapter;
     			//Collections.sort(events, getEventSort(false));
     			HashMap<String, ArrayList<Event>> dateStamps = getDatesFromEventList();
@@ -247,13 +252,15 @@ public class AlertMeEventHistory extends Activity {
     			// more complex plz...
     			//eventAdapter = new EventAdapter(this, R.layout.alertme_events_row, events);
     			//eventList.setAdapter(eventAdapter);
-    			
+    			currentTime.setToNow();
+    	    	currentDateTs = currentTime.toMillis(true) - (currentTime.second*1000) - (currentTime.minute*1000*60) - (currentTime.hour*1000*60*60) ;
+    	    	currentDate.set(currentDateTs);
     			adapter = new SeparatedListAdapter(this, R.layout.list_header);
     			if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "performUpdate()   command: update non-empty event list ("+events.size()+" entries) withint "+sortedDates.size()+" dates");
 				for(String date: sortedDates) {
     				ArrayList<Event> elist = dateStamps.get(date);
     				if (elist!=null && !elist.isEmpty()) {
-    					String title = elist.get(0).getTime().format("%Y%m%d");
+    					String title = AlertMeConstants.getDateTitle(currentDate, elist.get(0).getTime());
     					EventAdapter eventAdapter;
     					Collections.sort(elist, getEventSort(true));
     					eventAdapter = new EventAdapter(this, R.layout.alertme_events_row, elist);
@@ -357,6 +364,10 @@ public class AlertMeEventHistory extends Activity {
                     		time.setText("");
                     	}
                     }
+                }
+                if (rowBg!=null) {
+                	int colorPos = position % rowBg.length;
+                	v.setBackgroundColor(rowBg[colorPos]);
                 }
                 return v;
         }

@@ -59,6 +59,7 @@ public class AlertMePeople extends Activity {
 	private TextView accountSurname = null;
 	private TextView accountHub = null;
 	private ArrayList<Device> keyFobs = null;
+	private int[] rowBg = null;
 
 	// Handler to update the interface..        
 	final Handler handler = new Handler() {
@@ -81,6 +82,7 @@ public class AlertMePeople extends Activity {
 			savedState = savedInstanceState;
 			initView();
 		}
+		rowBg = AMViewItems.getRowColours(this);
 	}
 	@Override
     public void onStart() {
@@ -193,6 +195,36 @@ public class AlertMePeople extends Activity {
 			}	
 		}
 	}
+    private String getPeopleString() {
+    	// Call the client for the current people cached..
+    	String personValue = getString(R.string.people_unavailable);
+		String countTag = getString(R.string.people_count_tag);
+    	int personCount = 0;
+    	if (keyFobs!=null) {
+        	for(Device keyfob: keyFobs) {
+        		if (keyfob.attributes.containsKey("presence")) {
+        			String pres = (String) keyfob.attributes.get("presence");
+        			if (pres!=null) {
+        				pres = pres.trim().toLowerCase();
+            			personCount += (pres.equals("true"))? 1: 0;
+        			}
+        		}
+        	}
+        	if (personCount == 0) {
+        		personValue = getString(R.string.people_none_present);
+        	} else if (personCount == keyFobs.size()) {
+        		personValue = getString(R.string.people_all_present);
+        	} else if (personCount == 1) {
+        		personValue = getString(R.string.people_single_present);
+        	} else if (personCount > 1) {
+        		personValue = getString(R.string.people_multiple_present);
+        	}
+    	}
+		if (personValue.contains(countTag)) {
+			personValue = personValue.replace(countTag, personCount+"");
+		}    		
+		return personValue;
+    }
     private void performUpdate(int command, final String first, final String last) {
     	AlertMeStorage.AlertMeUser currentUser = alertMe.getCurrentSession();
     	Hub hub = alertMe.retrieveActiveHub();
@@ -213,11 +245,6 @@ public class AlertMePeople extends Activity {
     		if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "performUpdate()  updating currentUser:"+currentUser.username);
         	if (accountUsername!=null) accountUsername.setText(currentUser.username);    		
     	}
-    	if (hub!=null && accountHub!=null) {
-    		accountHub.setText(hub.name);
-    		screenStuff.setSystemName(hub);
-    		if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "performUpdate()  updating hub:"+hub.name);
-    	}
     	// LOAD THE KEYFOB LIST
     	if (peopleList!=null) {
     		if (keyFobs!=null && !keyFobs.isEmpty()) {
@@ -233,6 +260,12 @@ public class AlertMePeople extends Activity {
      			peopleList.setAdapter(emptyList);
         		if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "performUpdate()  updating keyfob list size: 0");
      		}
+    	}
+    	if (hub!=null && accountHub!=null) {
+    		String peopleString = getPeopleString();
+    		accountHub.setText(hub.name+ " - "+peopleString);
+    		screenStuff.setSystemName(hub);
+    		if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "performUpdate()  updating hub:"+hub.name);
     	}
 		screenStuff.setNotBusy();
 		if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "performUpdate()  END");
@@ -294,6 +327,10 @@ public class AlertMePeople extends Activity {
                 		presIcon.setImageResource(presR);
                     }
                     if (mesg!=null) mesg.setText(status);
+                }
+                if (rowBg!=null) {
+                	int colorPos = position % rowBg.length;
+                	v.setBackgroundColor(rowBg[colorPos]);
                 }
                 return v;
         }

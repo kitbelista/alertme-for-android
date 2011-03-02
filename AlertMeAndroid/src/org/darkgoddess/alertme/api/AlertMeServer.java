@@ -847,9 +847,6 @@ public class AlertMeServer {
 	 * @param  end        The end date of events to return, in epoch time (seconds). Can be set to string "null" if not used
 	 * @return Raw event data (in CSV format); null if invalid (session key or errors). Rows should at least start with an epoch timestamp and end with a message
 	 */
-	//getDeviceChannelLog( zigbeeId, channel, 4, "null", "null" )
-	// TODO:: CHECK FUNCTION CALL: ordering not verified beyond [attribute]
-	// if raw call 4th input is "null" (or receives 7 arguments), getting "no_data"; however if not it returns ALL
 	public String getDeviceChannelLog(final String sessionKey, final String deviceId, final String attribute, final int limit, final String start, final String end) {
 		String res = null;
 		boolean hasErrors = false;
@@ -859,7 +856,7 @@ public class AlertMeServer {
 			return res;
 		}
 		try {
-			Object rawRes = client.call("getDeviceChannelLog", sessionKey, deviceId, attribute, limit, start, end);
+			Object rawRes = client.call("getDeviceChannelLog", sessionKey, deviceId, attribute, limit, start, end); // these arguments are correct from the documentation
 			String resStr = rawRes.toString();
 			res = resStr;
 			//if (DEBUGOUT) Log.w(TAG, "getEventLog() call returned type: " + rawRes.getClass().getName()+" "+resStr);

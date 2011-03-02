@@ -7,7 +7,7 @@
     android:padding="3dip"
     android:stretchColumns="1"
     android:background="#fff">
-	<TableRow>
+	<TableRow android:gravity="center_vertical">
    		<ImageView
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"

@@ -35,6 +35,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -55,12 +57,16 @@ public class AlertMe extends Activity {
 	
 	//private TextView statusText = null;
 	private Button statusButton = null;
+	private ImageView statusAlarm = null;
 	//private TextView peopleText = null;
 	private Button peopleButton = null;
+	private TextView peopleTextCount = null;
 	//private TextView sensorsText = null;
 	private Button sensorsButton = null;
 	private Button historyButton = null;
 	private Button helpButton = null;
+	private String currentIntruderState = null;
+	private String currentEmergencyState = null;
 
 	private boolean hubChoiceActive = false;
 	private String[] hubNamesChoiceList = null;
@@ -182,9 +188,13 @@ public class AlertMe extends Activity {
     }
 	@Override
 	public Object onRetainNonConfigurationInstance() {
+		AlertMeState saveState = new AlertMeState();
 		if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "onRetainNonConfigurationInstance()  START");
+		saveState.session = alertMe.retrieveCurrentState();
+		saveState.currentIntruderState = currentIntruderState;
+		saveState.currentEmergencyState = currentEmergencyState;
 		if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "onRetainNonConfigurationInstance()  END");
-		return alertMe.retrieveCurrentState();
+		return saveState;
 	}
 	@Override
 	public boolean onKeyDown(final int keyCode, final KeyEvent event) {
@@ -591,8 +601,10 @@ public class AlertMe extends Activity {
 
 		//statusText = (TextView) findViewById(R.id.home_text_status);
 		statusButton = (Button) findViewById(R.id.home_button_status);
+		statusAlarm = (ImageView) findViewById(R.id.home_button_status_warning);
 		//peopleText = (TextView) findViewById(R.id.home_text_people);
 		peopleButton = (Button) findViewById(R.id.home_button_people);
+		peopleTextCount = (TextView) findViewById(R.id.home_button_people_overlay);
 		//sensorsText = (TextView) findViewById(R.id.home_text_sensors);
 		sensorsButton = (Button) findViewById(R.id.home_button_sensors);
 		settingsButton = (Button) findViewById(R.id.home_button_settings);
@@ -797,9 +809,8 @@ public class AlertMe extends Activity {
     private void updatePeople() {
     	// Call the client for the current people cached..
     	ArrayList<Device> keyfobs = alertMe.retrieveDevices(Device.KEYFOB);
-    	String personValue = getString(R.string.people_unavailable);
-		String countTag = getString(R.string.people_count_tag);
     	int personCount = 0;
+    	int total = keyfobs.size();
     	for(Device keyfob: keyfobs) {
     		if (keyfob.attributes.containsKey("presence")) {
     			String pres = (String) keyfob.attributes.get("presence");
@@ -809,19 +820,7 @@ public class AlertMe extends Activity {
     			}
     		}
     	}
-    	if (personCount == 0) {
-    		personValue = getString(R.string.people_none_present);
-    	} else if (personCount == keyfobs.size()) {
-    		personValue = getString(R.string.people_all_present);
-    	} else if (personCount == 1) {
-    		personValue = getString(R.string.people_single_present);
-    	} else if (personCount > 1) {
-    		personValue = getString(R.string.people_multiple_present);
-    	}
-		if (personValue.contains(countTag)) {
-			personValue = personValue.replace(countTag, personCount+"");
-		}
-    	updateScreenPeople(personCount, personValue);
+    	updateScreenPeople(personCount, total);
     }
     private void updateSensors() {
     	ArrayList<Device> devices = alertMe.retrieveDevices();
@@ -843,44 +842,63 @@ public class AlertMe extends Activity {
     }
     
     private void updateScreenBehaviour(String statusIn) {
+    	boolean hasAlarm = false;
 		if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "updateScreenBehaviour('"+statusIn+"')  START");
     	if (statusButton!=null) {
     		String status = (statusIn!=null)? statusIn.trim().toLowerCase(): "";
-    		String statusString = getString(R.string.behaviour_unavailable);
-    		boolean setText = false;
+    		//String statusString = getString(R.string.behaviour_unavailable);
+    		//boolean setText = false;
     		if (status == null) {
     			// Do nothing
     			if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "updateScreenBehaviour()  case NO CHANGE");
     		} else if (status.equalsIgnoreCase("home")) {
-    			statusString = getString(R.string.behaviour_home);
-    			statusButton.setBackgroundResource(R.drawable.ic_home_status_home);
+    			//statusString = getString(R.string.behaviour_home);
+    			statusButton.setBackgroundResource(R.drawable.btn_home_status_home);
     			if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "updateScreenBehaviour()  case HOME");
-    			setText = true;
+    			//setText = true;
     		} else if (status.equalsIgnoreCase("away")) {
-    			statusString = getString(R.string.behaviour_away);
-    			statusButton.setBackgroundResource(R.drawable.ic_home_status_lock);
+    			//statusString = getString(R.string.behaviour_away);
+    			statusButton.setBackgroundResource(R.drawable.btn_home_status_lock);
     			if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "updateScreenBehaviour()  case AWAY");
-    			setText = true;
+    			//setText = true;
     		} else if (status.equalsIgnoreCase("night")) {
-    			statusString = getString(R.string.behaviour_night);
-    			statusButton.setBackgroundResource(R.drawable.ic_home_status_night);
+    			//statusString = getString(R.string.behaviour_night);
+    			statusButton.setBackgroundResource(R.drawable.btn_home_status_night);
     			if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "updateScreenBehaviour()  case NIGHT");
-    			setText = true;
+    			//setText = true;
     		} else {
-    			statusString = getString(R.string.behaviour_unavailable);
-    			statusButton.setBackgroundResource(R.drawable.ic_home_status_offline);
+    			//statusString = getString(R.string.behaviour_unavailable);
+    			statusButton.setBackgroundResource(R.drawable.btn_home_status_offline);
     			if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "updateScreenBehaviour()  case OFFLINE");
-    			setText = true;
+    			//setText = true;
     		}
-    		if (setText) {
-        		statusButton.setText(statusString);
+    		//if (setText) {
+    			// If setting the status button text:
+        		//statusButton.setText(statusString);
+    		//}
+    		if (statusAlarm!=null) {
+    			int visibility = View.GONE;
+        		if (currentIntruderState!=null) {
+        			hasAlarm = (currentEmergencyState.equals("alarmed")||currentEmergencyState.equals("alarmConfirmed"));
+        		}
+        		if (currentEmergencyState!=null) {
+        			hasAlarm = hasAlarm||(currentEmergencyState.equals("alarmed")||currentEmergencyState.equals("alarmConfirmed"));
+        		}
+        		visibility = (hasAlarm)? View.VISIBLE: View.GONE;
+        		statusAlarm.setVisibility(visibility);
     		}
     	}
 		if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "updateScreenBehaviour()  END");
     }
-    private void updateScreenPeople(int totalPresent, String peopleString) {
-    	if (peopleButton!=null) {
-    		peopleButton.setText(peopleString);
+    private void updateScreenPeople(int totalPresent, int total) {
+    	if (peopleTextCount!=null) {
+    		if (totalPresent==total) {
+    			peopleTextCount.setBackgroundResource(R.drawable.indicator_ok);
+        		peopleTextCount.setText("");    			
+    		} else {
+    			peopleTextCount.setBackgroundResource(R.drawable.indicator_count_overlay);
+        		peopleTextCount.setText(totalPresent+"");    			
+    		}
     	}
     }
     private void updateScreenSensors(int totalMissing) {
@@ -895,9 +913,9 @@ public class AlertMe extends Activity {
     		}
         	sensorsButton.setText(sensorString);
     		if (totalMissing>0) {
-    			sensorsButton.setBackgroundResource(R.drawable.ic_home_sensors_notok);
+    			sensorsButton.setBackgroundResource(R.drawable.btn_home_sensors_notok);
     		} else  {
-    			sensorsButton.setBackgroundResource(R.drawable.ic_home_sensors_ok);
+    			sensorsButton.setBackgroundResource(R.drawable.btn_home_sensors_ok);
     		}
     	}
     }
@@ -996,8 +1014,11 @@ public class AlertMe extends Activity {
 	        		updateInstruction = AlertMeConstants.UPDATE_STATUS;
 	        		break;
     			case AlertMeConstants.UPDATE_ALL:
-    	    		if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "ALERTSTARTER::Thread run()  instruction case: UPDATE_ALL");
-	        		alertme.loadAll();
+    				alertme.loadAll();
+	    			if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "ALERTSTARTER::Thread run()  instruction case: UPDATE_ALL");
+	        		if (currentIntruderState==null) currentIntruderState = alertme.getActiveServiceState(AlertMeSession.SERVICE_INTRUDER_ALARM);
+	    			if (currentEmergencyState==null) currentEmergencyState = alertme.getActiveServiceState(AlertMeSession.SERVICE_EMERGENCY_ALARM);
+
     				alertme.getActiveHub();
 	        		resetHubChoice();
 	        		updateInstruction = AlertMeConstants.UPDATE_ALL;
@@ -1141,11 +1162,14 @@ public class AlertMe extends Activity {
 		final Object data = getLastNonConfigurationInstance();
 		if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "loadFromRestoredState()  START");
 		if (data != null) {
-			final AlertMeSession.SessionState oldState = (AlertMeSession.SessionState) data;
+			final AlertMeState saveState = (AlertMeState) data;
+			AlertMeSession.SessionState oldState = saveState.session;
 			boolean reloaded = false;
 			if (alertMe==null) {
 				alertMe = new AlertMeSession(this);
 			}
+			if (saveState.currentIntruderState!=null) currentIntruderState = saveState.currentIntruderState;
+			if (saveState.currentEmergencyState!=null) currentEmergencyState = saveState.currentEmergencyState;
 			reloaded = alertMe.loadFromCachedState(this, oldState);
 			if (reloaded) {
         		alertMe.retrieveAll();
@@ -1165,6 +1189,12 @@ public class AlertMe extends Activity {
 		} catch (Exception e) {}
 		
 		return res;
+	}
+	
+	class AlertMeState {
+		public AlertMeSession.SessionState session = null;
+		public String currentIntruderState = null;
+		public String currentEmergencyState = null;
 	}
 
     interface AlertMeMethodCallback {

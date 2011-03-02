@@ -23,6 +23,7 @@ import org.darkgoddess.alertme.api.utils.Device;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.format.Time;
 
 public class AlertMeConstants {
 	public static final boolean DEBUGOUT = false;
@@ -53,6 +54,10 @@ public class AlertMeConstants {
 	public static final int COMMAND_STATUS_HOME = 21;
 	public static final int COMMAND_STATUS_AWAY = 22;
 	public static final int COMMAND_STATUS_NIGHT = 23;
+	public static final int COMMAND_STATUS_STOPALARM = 24;
+	public static final int COMMAND_STATUS_STOPEMERGENCY = 25;
+	public static final int COMMAND_STATUS_STOPALARM_OK = 26;
+	public static final int COMMAND_STATUS_STOPALARM_FAILED = 27;
 	public static final int COMMAND_STATUS_CANCEL = 29;
 	public static final int INVOKE_STATUS_CONFIRM = 28;
 
@@ -232,6 +237,47 @@ public class AlertMeConstants {
     			res = R.drawable.ic_sensordetail_meter;
     			break;
     	}
+    	return res;
+    }
+    // TODO: Make the format a formula for other languages
+    public static String getDateTitle(Time currentDate, Time titleTime) {
+    	String res = "";
+    	int compareDate = Time.compare(currentDate, titleTime);
+    	// res = titleTime.format("%Y%m%d");
+    	
+    	// CurrentDate is supposed to be the day start (midnight)
+    	// test if the date is the same
+    	if (compareDate<=0) {
+    		res = "Today";
+    	} else {
+    		// currentDate > titleTime
+    		long dayMilli = (1000*60*60*24);
+    		long yesterdayTime = currentDate.toMillis(true) - dayMilli;
+    		long compareYest = titleTime.toMillis(true) - yesterdayTime;
+    		String dayPost = "th";
+    		int cDay = titleTime.monthDay%10;
+    		
+    		switch(cDay) {
+    			case 1:
+    				dayPost = "st";
+    				break;
+    			case 2:
+    				dayPost = "nd";
+    				break;
+    			case 3:
+    				dayPost = "rd";
+    				break;
+    		}
+    		if (compareYest>0) {
+    			res = "Yesterday";
+    		} else {
+    			String formatStr = "%A %d"+dayPost+" %B";
+    			if (currentDate.year!=titleTime.year) {
+    				formatStr += ", %Y";
+    			}
+    			res = titleTime.format(formatStr);
+    		}
+    	}    	
     	return res;
     }
 }

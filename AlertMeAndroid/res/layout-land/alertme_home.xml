@@ -34,36 +34,62 @@
     </LinearLayout>
 
     <TableRow android:padding="3dip">
-    	<LinearLayout android:gravity="center_horizontal">
+    	<FrameLayout android:gravity="center_horizontal"
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+        	android:layout_gravity="center">
 			 <Button
 				 android:id="@+id/home_button_status"        
-			     android:layout_height="75dip"
-			     android:layout_width="75dip"
-			     android:background="@drawable/ic_home_status_offline"
-			     android:layout_marginRight="10dip"
-			     android:text="@string/behaviour_home" /><!-- android:onClick="selfDestruct" -->
-    	</LinearLayout>
-    	<LinearLayout android:gravity="center_horizontal">
+			     android:layout_height="100dip"
+			     android:layout_width="100dip"
+			     android:background="@drawable/btn_home_status_home"
+			     android:layout_marginRight="10dip" /><!-- android:onClick="selfDestruct" -->
+			<ImageView
+				android:id="@+id/home_button_status_warning"  
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginLeft="60dip"
+				android:layout_marginBottom="8dip"
+				android:visibility="gone"
+        		android:layout_gravity="left|bottom"
+				android:src="@drawable/indicator_warning" />
+    	</FrameLayout>
+    	<FrameLayout
+			android:id="@+id/home_people_frame"
+		    android:layout_width="100dip"
+		    android:layout_height="100dip"
+        	android:layout_gravity="center">
 			 <Button
 			 	 android:id="@+id/home_button_people"
-			     android:layout_height="75dip"
-			     android:layout_width="75dip"
-			     android:background="@drawable/ic_home_people"
-			     android:layout_marginRight="10dip"
-			     android:text="@string/people_unavailable" />
-    	</LinearLayout>
+			     android:layout_height="100dip"
+			     android:layout_width="100dip"
+			     android:background="@drawable/btn_home_people"
+			     android:layout_marginRight="10dip" />
+			 <TextView
+				android:id="@+id/home_button_people_overlay"  
+				android:textSize="15dip"
+				android:textColor="#fff"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:layout_marginLeft="60dip"
+				android:layout_marginBottom="8dip"
+        		android:layout_gravity="left|bottom"
+			    android:background="@drawable/indicator_ok"
+				android:text="" />
+    	</FrameLayout>
     	<LinearLayout android:gravity="center_horizontal">
 			 <Button
 			 	 android:id="@+id/home_button_sensors"
-			     android:layout_height="75dip"
-			     android:layout_width="75dip"
-			     android:background="@drawable/ic_home_sensors_ok"
+			     android:layout_height="100dip"
+			     android:layout_width="100dip"
+			     android:background="@drawable/btn_home_sensors_ok"
 			     android:layout_marginRight="10dip"
 			     android:text="@string/sensor_none_missing" />
     	</LinearLayout>
     </TableRow>
     
-    <TableRow android:padding="3dip">
+    <TableRow android:padding="3dip" android:visibility="gone">
 		<TextView
 			android:id="@+id/home_text_status"
 			android:layout_width="wrap_content"
@@ -93,32 +119,32 @@
     	<LinearLayout android:gravity="center_horizontal">
 			 <Button
 			 	 android:id="@+id/home_button_history"
-			     android:layout_height="75dip"
-			     android:layout_width="75dip"
-			     android:background="@drawable/ic_home_history"
+			     android:layout_height="100dip"
+			     android:layout_width="100dip"
+			     android:background="@drawable/btn_home_history"
 			     android:layout_marginRight="10dip"
 			     android:text="" />
     	</LinearLayout>
     	<LinearLayout android:gravity="center_horizontal">
 			 <Button
 			 	 android:id="@+id/home_button_settings"
-			     android:layout_height="75dip"
-			     android:layout_width="75dip"
-			     android:background="@drawable/ic_home_settings"
+			     android:layout_height="100dip"
+			     android:layout_width="100dip"
+			     android:background="@drawable/btn_home_settings"
 			     android:layout_marginRight="10dip"
 			     android:text="" />
     	</LinearLayout>
     	<LinearLayout android:gravity="center_horizontal">
 			 <Button
 			 	 android:id="@+id/home_button_help"
-			     android:layout_height="75dip"
-			     android:layout_width="75dip"
-			     android:background="@drawable/ic_home_help"
+			     android:layout_height="100dip"
+			     android:layout_width="100dip"
+			     android:background="@drawable/btn_home_help"
 			     android:layout_marginRight="10dip"
 			     android:text="" />
     	</LinearLayout>
     </TableRow>
-    <TableRow android:padding="3dip">
+    <TableRow android:padding="3dip" android:visibility="gone">
 		<TextView
 			android:id="@+id/home_text_history"
 			android:layout_width="wrap_content"

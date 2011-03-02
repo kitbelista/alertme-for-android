@@ -28,6 +28,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -198,7 +199,9 @@ public class AMViewItems {
     	if (progressDialog!=null && isBusy) {
     		isBusy = false;
     		unlockFixedScreenRotation();
-    		if (createdDialogs[PROGRESS_DIALOG]) activity.dismissDialog(PROGRESS_DIALOG);
+    		try {
+        		if (createdDialogs[PROGRESS_DIALOG]) activity.dismissDialog(PROGRESS_DIALOG);
+    		} catch (Exception e) {}
     	}
     }
     public void setSystemName(Hub hub) {
@@ -317,6 +320,9 @@ public class AMViewItems {
             TextView temperature = (TextView) deviceDialog.findViewById(R.id.device_data_temperature);
             ImageView tempicon = (ImageView) deviceDialog.findViewById(R.id.device_data_temperature_icon);
             TextView templabel = (TextView) deviceDialog.findViewById(R.id.device_data_temperature_label);
+            TextView powerlevel = (TextView) deviceDialog.findViewById(R.id.device_data_powerlevel);
+            ImageView powicon = (ImageView) deviceDialog.findViewById(R.id.device_data_powerlevel_icon);
+            TextView powlabel = (TextView) deviceDialog.findViewById(R.id.device_data_powerlevel_label);
             
             ImageView presicon = (ImageView) deviceDialog.findViewById(R.id.device_data_presence_icon);
             TextView presence = (TextView) deviceDialog.findViewById(R.id.device_data_presence);
@@ -328,6 +334,7 @@ public class AMViewItems {
 			boolean tempSet = false;
 			boolean presenceSet = false;
 			boolean powerControlSet = false;
+			boolean powerLevelSet = false;
 			
 			String type = device.getStringType();
 			if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "showDeviceInDialog()   Showing device: " +device.name+" [id:"+device.id+"]");
@@ -399,7 +406,16 @@ public class AMViewItems {
 							}
 						}
 						powerControlSet = true;
-					} // end relay state
+						// end relay state
+					} else if (device.type == Device.POWERCLAMP && channel.equals("powerlevel")) {
+						if (powerlevel!=null) powerlevel.setText(val+"W");
+						if (powicon!=null) powicon.setImageResource(R.drawable.ic_sensor_powerlevel);
+						powerLevelSet = true;
+					} else if (device.type == Device.POWER_CONTROLLER && channel.equals("powerlevel")) {
+						if (powerlevel!=null) powerlevel.setText(val+"W");
+						if (powicon!=null) powicon.setImageResource(R.drawable.ic_sensor_power_plug);
+						powerLevelSet = true;
+					}
 				}
 				if (powerControlSet && presenceSet) {
 					presenceSet = false; // don't show presence if state can be controlled
@@ -467,6 +483,16 @@ public class AMViewItems {
 			} else {
 				if (presicon!=null) presicon.setVisibility(View.VISIBLE);
 				if (presence!=null) presence.setVisibility(View.VISIBLE);				
+			}
+			
+			if (!powerLevelSet) {
+				if (powerlevel!=null) powerlevel.setVisibility(View.GONE);
+				if (powicon!=null) powicon.setVisibility(View.GONE);
+				if (powlabel!=null) powlabel.setVisibility(View.GONE);				
+			} else {
+				if (powerlevel!=null) powerlevel.setVisibility(View.VISIBLE);
+				if (powicon!=null) powicon.setVisibility(View.VISIBLE);
+				if (powlabel!=null) powlabel.setVisibility(View.VISIBLE);								
 			}
 			//deviceDialog.setTitle(type+": "+device.name);
 			deviceDialog.setTitle(device.name+" - "+type);
@@ -653,7 +679,12 @@ public class AMViewItems {
 			infoDialog = builder.create();
 		}
 	}
-
+	public static int[] getRowColours(Activity act) {
+		Resources resource = act.getResources();
+		int[] res = new int[] { resource.getColor(R.color.menu_even), resource.getColor(R.color.menu_odd) };
+		return res;
+	}
+	
     private void setBusy(final String title, final String message) {
     	if (progressDialog!=null) {
     		if (title!=null && title.length()!=0) { progressDialog.setMessage(title); }

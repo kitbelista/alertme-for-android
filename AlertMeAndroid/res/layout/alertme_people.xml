@@ -21,6 +21,21 @@
 		    android:layout_marginRight="5dip"
             android:padding="3dip" />
     </LinearLayout>
+		<TableLayout
+			android:background="@drawable/mono_bg"
+	    	android:layout_width="fill_parent"
+	    	android:layout_height="wrap_content">
+				    <TableLayout
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:gravity="center_horizontal"
+	    android:padding="3dip"
+	    	android:layout_marginTop="10dip"
+			android:layout_marginLeft="10dip"
+			android:layout_marginRight="10dip"
+	    	android:layout_marginBottom="10dip"
+		android:background="@drawable/box_background"
+		android:stretchColumns="2">
     <LinearLayout>
 		<TextView
         	android:id="@+id/account_username"        
@@ -74,29 +89,37 @@
             android:padding="3dip" />
             
     </TableRow>
-    <View
-        android:layout_height="2dip"
-	    android:layout_marginTop="10dip"
-	    android:layout_marginBottom="10dip"
-        android:background="#FF909090" />
-    <LinearLayout>
-		<TextView
-        	android:id="@+id/account_hub"        
-            android:text="@string/systemname_default"
-			android:layout_width="wrap_content"
+	    </TableLayout>
+			
+    <LinearLayout
+	    	android:layout_width="fill_parent"
+	    	android:layout_height="fill_parent"
+   		 	android:layout_marginTop="20dip"
+    	android:background="@color/page_background">
+	    <TextView
+        	android:id="@+id/account_hub"  
+			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
-		    android:layout_marginLeft="10dip"
-		    android:layout_marginRight="5dip"
-		    android:textColor="@color/page_text"
-            android:padding="3dip" />    
+			android:paddingTop="2dip"
+			android:paddingBottom="2dip"
+   			android:paddingLeft="5dip"
+            android:text="@string/systemname_default"
+			style="?android:attr/listSeparatorTextViewStyle" />
     </LinearLayout>
     <ListView
 	    android:layout_width="fill_parent"
 	    android:layout_height="fill_parent"
+    	android:minHeight="100dip"
 	    android:id="@+id/keyfob_list"
 	    android:layout_marginTop="4dip"
 	    android:divider="@android:color/transparent"
+    	android:background="@color/page_background"
 	    android:cacheColorHint="@android:color/transparent"
 	/>
+
+	    
+	    </TableLayout>
+
+    
 	
 </TableLayout>

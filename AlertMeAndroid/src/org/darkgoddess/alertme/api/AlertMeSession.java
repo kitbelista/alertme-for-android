@@ -41,6 +41,8 @@ public class AlertMeSession {
 	public static final int MODE_HOME = 0;
 	public static final int MODE_ARM = 1;
 	public static final int MODE_NIGHT = 2;
+	public static final int SERVICE_INTRUDER_ALARM = 0;
+	public static final int SERVICE_EMERGENCY_ALARM = 1;
 	
 	public static final String PREFERENCE_SETTING_ID = "alertMeSessionUserId";
 	public static final String PREFERENCE_SETTING_USERID = "userId";
@@ -450,6 +452,38 @@ public class AlertMeSession {
 		return res;
 	}
 	
+	public String getActiveServiceState(int serviceType) {
+		int serve = SERVICE_INTRUDER_ALARM;
+		String res = null;
+		helperKeepAlive();
+		switch (serviceType) {
+			case SERVICE_INTRUDER_ALARM:
+			case SERVICE_EMERGENCY_ALARM:
+				serve = serviceType;
+				break;
+		}
+		
+		if (session!=null && session.id!=-1) {
+			res = alertMe.getCurrentServiceState(session.sessionKey, getServiceStringFromId(serve));
+			
+		}
+		return res;
+	}
+	
+	public static String getServiceStringFromId(int service) {
+		String res = null;
+
+		switch (service) {
+			case SERVICE_INTRUDER_ALARM:
+				res = "IntruderAlarm";
+				break;
+			case SERVICE_EMERGENCY_ALARM:
+				res = "EmergencyAlarm";
+				break;
+		}
+		return res;
+	}
+	
 	/**
 	 * Attempt to set the relay mode of the given (power controller) device 
 	 * 
@@ -739,6 +773,33 @@ public class AlertMeSession {
 		return res;
 	}
 
+	/**
+	 * Attempt to stop the provided alarm
+	 *
+	 * WARNING:: CANNOT DISABLE FROM THE API AS OF YET
+	 *
+	 * @param  serviceId  One of the services corresponding to IntruderAlarm | EmergencyAlarm
+	 * @returns  True if the system registered the change, False otherwise
+	 */	
+	public boolean stopAlarm(int serviceID) {
+		boolean res = false;
+		boolean doAction = (serviceID == SERVICE_INTRUDER_ALARM) || (serviceID == SERVICE_EMERGENCY_ALARM);
+		
+		// TODO: enable this once the API is able to
+		/*
+		if (doAction) {
+			String deviceCommand = "cancelAlarm"; // THIS IS NOT THE ACTUAL COMMAND
+			String rawRes = "";
+			int isOk = -1;
+			helperKeepAlive();
+			rawRes = alertMe.sendCommand(session.sessionKey, getServiceStringFromId(serviceID), deviceCommand, null);
+			isOk = APIUtilities.getCommandResult(rawRes);
+			res = (isOk == APIUtilities.COMMAND_OK);
+		}*/
+		
+		return res;
+	}
+	
 	/**
 	 * Set the current hub to the given mode
 	 *
@@ -1209,7 +1270,8 @@ public class AlertMeSession {
 		}
 		return res;
 	}
-	public void loadActiveHub() {
+	public boolean loadActiveHub() {
+		boolean loaded = false;
 		if (DEBUGOUT) Log.w(TAG, "loadActiveHub():: START");
 		if (activeHub!=null && session!=null) {
 			String rawRes = alertMe.getHubStatus(session.sessionKey);
@@ -1219,11 +1281,13 @@ public class AlertMeSession {
 				if (hubStatus.containsKey("isavailable")) {					
 					String avail = hubStatus.get("isavailable");
 		    		isHubActive = (avail!=null && avail.trim().toLowerCase().equals("yes"));
+		    		loaded = isHubActive;
 				}
 			}
 			if (DEBUGOUT) Log.w(TAG, "loadActiveHub()::  isHubActive ["+isHubActive+"]");
 		}
 		if (DEBUGOUT) Log.w(TAG, "loadActiveHub():: END");
+		return loaded;
 	}
 	private void helperLoadActiveHub() {
 		boolean didRefresh = false;

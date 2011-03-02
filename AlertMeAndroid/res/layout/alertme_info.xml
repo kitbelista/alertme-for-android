@@ -55,6 +55,24 @@
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
 	            android:padding="3dip" />
+			<TextView        
+	            android:text="- Stabilize all applications when rotating screen: fixed rotation until not busy"
+		  		android:textColor="@color/page_text"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+	            android:padding="3dip" />
+			<TextView        
+	            android:text="- Show hub if state is alarming for both intruder and emergency alarm. API does not support disable alarm function however"
+		  		android:textColor="@color/page_text"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+	            android:padding="3dip" />
+			<TextView        
+	            android:text="- Interface look and feel improvements - IN PROGRESS"
+		  		android:textColor="@color/page_text"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+	            android:padding="3dip" />
 	            
 			<TextView        
 	            android:text="TODO"
@@ -65,26 +83,8 @@
 				android:layout_marginTop="10dip"
 	            android:padding="3dip" />
 	
-			<TextView        
-	            android:text="- Stabilize all applications when rotating screen (people section)"
-		  		android:textColor="@color/page_text"
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-	            android:padding="3dip" />
 	
-			<TextView        
-	            android:text="- Interface look and feel improvements"
-		  		android:textColor="@color/page_text"
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-	            android:padding="3dip" />
 	
-			<TextView        
-	            android:text="- Show hub if state is alarming (and enable disarm)"
-		  		android:textColor="@color/page_text"
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-	            android:padding="3dip" />
 			<TextView        
 	            android:text="- Add refresh to all sub-applications"
 		  		android:textColor="@color/page_text"

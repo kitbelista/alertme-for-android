@@ -33,6 +33,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 
@@ -153,6 +154,45 @@ public class AlertMeBehaviour extends Activity {
 		super.finish();
 		
 	}
+	private void setViewWarnings(TextView emergency, TextView intruder, TextView title, TableRow section) {
+		boolean hasAlarmed = false;
+		if (emergency!=null) {
+			Button emerOff = (Button) findViewById(R.id.behavehome_button_stop_emergency);
+			boolean setVis = false;
+			int visibility = View.GONE;
+			if (currentEmergencyState!=null) {
+				if (currentEmergencyState.equals("alarmed")||currentEmergencyState.equals("alarmConfirmed")) {
+					setVis = true;
+					hasAlarmed = true;
+				}							
+			}
+			visibility = (setVis)? View.VISIBLE: View.GONE;
+			emergency.setVisibility(visibility);
+			if (emerOff!=null) emerOff.setVisibility(View.GONE); // TODO: enable buttons when API is capable
+		}
+		if (intruder!=null) {
+			Button alarmOff = (Button) findViewById(R.id.behavehome_button_stop_alarm);
+			boolean setVis = false;
+			int visibility = View.GONE;
+			if (currentIntruderState!=null) {
+				if (currentIntruderState.equals("alarmed")||currentEmergencyState.equals("alarmConfirmed")) {
+					setVis = true;
+					hasAlarmed = true;
+				}							
+			}
+			visibility = (setVis)? View.VISIBLE: View.GONE;
+			intruder.setVisibility(visibility);
+			if (alarmOff!=null) alarmOff.setVisibility(View.GONE); // TODO: enable buttons when API is capable
+		}
+		if (section!=null) {
+			int visibility = (hasAlarmed)? View.VISIBLE: View.GONE;
+			section.setVisibility(visibility);
+		}
+		if (title!=null) {
+			int visibility = (hasAlarmed)? View.VISIBLE: View.GONE;
+			title.setVisibility(visibility);
+		}
+	}
 	private void setViewOnCurrentView() {
 		if (!hasSetView) {
 			hasSetView = true;
@@ -167,6 +207,11 @@ public class AlertMeBehaviour extends Activity {
 					Button awayButton = (Button) findViewById(R.id.behavehome_button_arm);
 					Button nightButton = (Button) findViewById(R.id.behavehome_button_night);
 					Button cancelHomeButton = (Button) findViewById(R.id.behavehome_cancel);
+					TextView hemergency = (TextView) findViewById(R.id.behavehome_text_hubstate_emergency);
+					TextView hintruder = (TextView) findViewById(R.id.behavehome_text_hubstate_intruder);
+					TextView halarmtitle = (TextView) findViewById(R.id.behavearmed_text_alarmed_title);
+					TableRow halarmsection = (TableRow) findViewById(R.id.behavearmed_text_alarmed_section);					
+					setViewWarnings(hemergency, hintruder, halarmtitle, halarmsection);
 					setAwayAction(awayButton);
 					setNightAction(nightButton);
 					setCancelAction(cancelHomeButton);
@@ -176,6 +221,11 @@ public class AlertMeBehaviour extends Activity {
 					Button homeButton = (Button) findViewById(R.id.behavehome_button_arm);
 					Button cancelArmButton = (Button) findViewById(R.id.behavearmed_cancel);
 					ImageView currentModeImg = (ImageView) findViewById(R.id.behavearmed_currentmode_icon);
+					TextView aemergency = (TextView) findViewById(R.id.behavehome_text_hubstate_emergency);
+					TextView aintruder = (TextView) findViewById(R.id.behavehome_text_hubstate_intruder);
+					TextView alarmtitle = (TextView) findViewById(R.id.behavearmed_text_alarmed_title);
+					TableRow alarmsection = (TableRow) findViewById(R.id.behavearmed_text_alarmed_section);
+					setViewWarnings(aemergency, aintruder, alarmtitle, alarmsection);
 					if (behaviour!=null) {
 						TextView message = (TextView) findViewById(R.id.behavearmed_text_current);
 						if (currentMode.equals(MNIGHT)) {
@@ -495,8 +545,11 @@ public class AlertMeBehaviour extends Activity {
 
         	String data = null;
     		if (hasCurrentSys) {
+    			boolean loaded = false;
     			bCurrentHub = alertme.getActiveHub();
-    			alertme.loadActiveHub();
+    			loaded = alertme.loadActiveHub();
+    			if (currentIntruderState==null && loaded) currentIntruderState = alertme.getActiveServiceState(AlertMeSession.SERVICE_INTRUDER_ALARM);
+    			if (currentEmergencyState==null && loaded) currentEmergencyState = alertme.getActiveServiceState(AlertMeSession.SERVICE_EMERGENCY_ALARM);
     		}
     		
     		if (bCurrentHub==null) {
@@ -521,6 +574,10 @@ public class AlertMeBehaviour extends Activity {
 	    				break;
 	    			case AlertMeConstants.INVOKE_STATUS_CONFIRM:
 	    				messageEnd = AlertMeConstants.INVOKE_STATUS_CONFIRM;
+	    			case AlertMeConstants.COMMAND_STATUS_STOPALARM:
+	    			case AlertMeConstants.COMMAND_STATUS_STOPEMERGENCY:
+	    				// TODO: enable these features when API is updated
+	    				break;
 	    		}
     		}
 

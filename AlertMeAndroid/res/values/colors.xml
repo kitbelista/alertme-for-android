@@ -20,6 +20,7 @@
 <resources>
     <color name="page_background">#ffffffff</color>
     <color name="page_text">#ff333333</color>
+    <color name="page_alert_text">#ff330000</color>
     <color name="page_text_lighter">#ff777777</color>
     <color name="menu_odd">#ffffffff</color>
     <color name="menu_even">#ffdddddd</color>
