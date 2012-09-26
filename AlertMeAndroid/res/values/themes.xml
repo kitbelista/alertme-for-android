@@ -16,12 +16,15 @@
 -->
 
 <resources>
+    <color name="am_theme_color">#ffffff</color>
     <style name="Theme.AlertMe" parent="android:Theme">
-        <item name="android:windowBackground">@drawable/splash</item>
+        <item name="android:windowBackground">@drawable/splash_centered</item>
+    	<item name="android:colorBackground">@color/am_theme_color</item>
         <item name="android:windowNoTitle">true</item>
     </style>
     <style name="Theme.AlertMeDefault" parent="android:Theme">
-        <item name="android:windowBackground">@color/page_background</item>
+        <item name="android:windowBackground">@drawable/icon_top</item>
+    	<item name="android:colorBackground">@color/am_theme_color</item>
         <item name="android:windowNoTitle">true</item>
     </style>
 </resources>

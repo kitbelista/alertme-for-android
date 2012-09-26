@@ -20,7 +20,7 @@ package org.darkgoddess.alertme.api.utils;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import android.util.Log;
+
 
 public class APIUtilities {
 	public static final int COMMAND_INVALID = -1;
@@ -122,18 +122,39 @@ public class APIUtilities {
 		return res;
 	}
 	
+	// the results of performing the command, typically “ok” or “failed”.
 	public static int getCommandResult(final String rawString) {
 		if (!isStringNonEmpty(rawString)) return COMMAND_INVALID;
 		String resStr = rawString.trim().toLowerCase();
 		return (resStr.equals("ok"))? COMMAND_OK: COMMAND_NOTOK;
 	}
 	
-	private static Device getDeviceFromString(final String input) {
+	private static Device getDeviceFromString(final String rawinput) {
 		Device res = null;
+		String attrs = null;
+		String input = rawinput;
+		// 20120206 first see if the string has all the device values already as for getAllDeviceChannels
+		if (input.contains(";")) {
+			String[] alldetails = input.split(";");
+			int asz = alldetails.length;
+			if (asz>=2) {
+				input = alldetails[0];
+				attrs = "";
+				for (int ai=1;ai<asz;ai++) {
+					if (ai!=1) {
+						attrs += ",";
+					}
+					attrs += alldetails[ai];
+				}
+			}
+		} 
 		String[] details = input.split("\\|");
 		if (details.length>=3) {
 			//Log.w(TAG, "DEVICE:: "+ details[0] +"|"+ details[1] +"|"+ details[2]);
 			res = new Device(details[0], details[1], details[2]);
+		}
+		if (res!=null && attrs!=null) {
+			res.setAttributesFromString(attrs);
 		}
 		return res;
 	}
@@ -146,7 +167,7 @@ public class APIUtilities {
 		}
 		return res;
 	}
-	private static Event getEventFromString(final String input) {
+	public static Event getEventFromString(final String input) {
 		Event event = null;
 		//"||" // timestamp and message
 		//"|"  // timestamp, zidlabel, loggedid, typelabel, logged type, message
@@ -180,12 +201,12 @@ public class APIUtilities {
 					if (startPos+3<isz) {
 						String[] dmesgL = {};
 						String fixedInput = input;
-						zid = input.substring(startPos+3, endPos);
-						fixedInput = fixedInput.replace("|[("+zid+")]|", "|<ZID>|");
+						lid = input.substring(startPos+3, endPos);
+						fixedInput = fixedInput.replace("|[("+lid+")]|", "|<ZID>|");
 						dmesgL = fixedInput.split("\\|");
 						if (dmesgL!=null && dmesgL.length>=6) {
 							timestamp = dmesgL[0];
-							lid = dmesgL[2];
+							zid = dmesgL[2];
 							tl = dmesgL[3];
 							tly = dmesgL[4];
 							mesg = dmesgL[5];						
@@ -205,6 +226,17 @@ public class APIUtilities {
 					parsed = true;
 				}
 			}
+			/*
+			 
+	public DeviceEvent(final long timestamp, final String zid, final String lid, final String tl, final String lty, final String mesg) {
+		super(timestamp, mesg);
+		zIdLabel = zid;
+		loggedId = lid;
+		typeLabel = tl;
+		loggedType = lty;
+		Log.w("device", " DEVICE:::: ["+timestamp+"]  mesg::"+zIdLabel+"~"+loggedId+"~"+typeLabel+"~"+loggedType+"~"+message);
+	}
+			 * */
 			
 			if (parsed) {
 				long ts = 0;

@@ -41,12 +41,16 @@ import android.os.Message;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class AlertMeEventHistory extends Activity {
 	private static final String TAG = "ACTIVITY:AlertMeEventHistory";
@@ -57,6 +61,7 @@ public class AlertMeEventHistory extends Activity {
 	private ArrayList<Event> events = null;
 	private boolean isActive = false;
 	private boolean hasCreated = false;
+	private boolean createdList = false;
 	private int[] rowBg = null;
 
     // Handler to update the interface..        
@@ -160,18 +165,44 @@ public class AlertMeEventHistory extends Activity {
 		super.finish();
 		
 	}
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.events, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+        	case R.id.menu_events_refresh:
+    			SharedPreferences sharedPrefs = getSharedPreferences(AlertMeConstants.PREFERENCE_NAME, AlertMeConstants.PREFERENCE_MODE);
+    			invokeEventLoad(null, sharedPrefs);
+        		return true;
+        	case R.id.menu_events_clear:
+        		events = null;
+        		alertMe.flushEventData();
+        		performUpdate(AlertMeConstants.UPDATE_ALL, null);
+        		Toast.makeText(getApplicationContext(), getString(R.string.history_cleared), Toast.LENGTH_SHORT).show();
+        		return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+        }
+    }
+    
 	private void initView() {
 		eventList = (ListView) findViewById(R.id.events_list);
 	}
+	private void invokeEventLoad(Bundle savedInstanceState, SharedPreferences sharedPrefs) {
+		EventListStarter listloader = new EventListStarter(alertMe, handler, getIntent(), savedInstanceState, sharedPrefs);
+		screenStuff.setBusy(AlertMeConstants.INVOKE_HISTORY);
+		listloader.start();
+	}
 	private void loadEventList(Bundle savedInstanceState) {
-		SharedPreferences sharedPrefs = getSharedPreferences(AlertMeConstants.PREFERENCE_NAME, AlertMeConstants.PREFERENCE_MODE);
-		EventListStarter listloader;
-
 		// Create the list with adapters here 
 		if (events==null) {
-			listloader = new EventListStarter(alertMe, handler, getIntent(), savedInstanceState, sharedPrefs);
-			screenStuff.setBusy(AlertMeConstants.INVOKE_HISTORY);
-			listloader.start();
+			SharedPreferences sharedPrefs = getSharedPreferences(AlertMeConstants.PREFERENCE_NAME, AlertMeConstants.PREFERENCE_MODE);
+			invokeEventLoad(savedInstanceState, sharedPrefs);
 		} else {
 			performUpdate(AlertMeConstants.UPDATE_ALL, null);
 		}
@@ -213,7 +244,8 @@ public class AlertMeEventHistory extends Activity {
         		ArrayList<Event> elist = null;
         		Time ts = e.getTime();
         		int mm = ts.month+1;
-        		String dateStamp = ts.year+"|"+mm+"|"+ts.monthDay;
+        		String dd = ts.monthDay+"";
+        		String dateStamp = (dd.length()<2)? ts.year+"|"+mm+"|0"+dd: ts.year+"|"+mm+"|"+dd;
         		if (!dateMap.containsKey(dateStamp)) {
         			elist = new ArrayList<Event>();
         			//dateMap.put(dateStamp, ts);
@@ -227,6 +259,43 @@ public class AlertMeEventHistory extends Activity {
     	
     	return dateMap;
     }
+    private void initNonEmptyEventList() {
+		Time currentTime = new Time();
+		Time currentDate = new Time();
+		SeparatedListAdapter adapter;
+		long currentDateTs = 0;
+		//EventAdapter eventAdapter;
+		//Collections.sort(events, getEventSort(false));
+		HashMap<String, ArrayList<Event>> dateStamps = getDatesFromEventList();
+		ArrayList<String> sortedDates = new ArrayList<String> (dateStamps.keySet());
+		Collections.sort(sortedDates, Event.getComparatorForStringEpoch(true));
+		// more complex plz...
+		//eventAdapter = new EventAdapter(this, R.layout.alertme_events_row, events);
+		//eventList.setAdapter(eventAdapter);
+		currentTime.setToNow();
+    	currentDateTs = currentTime.toMillis(true) - (currentTime.second*1000) - (currentTime.minute*1000*60) - (currentTime.hour*1000*60*60) ;
+    	currentDate.set(currentDateTs);
+		adapter = new SeparatedListAdapter(this, R.layout.list_header);
+		if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "performUpdate()   command: update non-empty event list ("+events.size()+" entries) withint "+sortedDates.size()+" dates");
+		for(String date: sortedDates) {
+			ArrayList<Event> elist = dateStamps.get(date);
+			if (elist!=null && !elist.isEmpty()) {
+				String title = AlertMeConstants.getDateTitle(currentDate, elist.get(0).getTime());
+				EventAdapter eventAdapter;
+				Collections.sort(elist, getEventSort(true));
+				eventAdapter = new EventAdapter(this, R.layout.alertme_events_row, elist);
+    			adapter.addSection(title, eventAdapter);
+			}
+		}
+		eventList.setAdapter(adapter);
+    }
+    private void initEmptyEventList() {
+		// empty
+		ArrayAdapter<String> emptyList;
+		String[] empty = { getString(R.string.event_list_isempty) }; 
+		emptyList = new ArrayAdapter<String>(this, R.layout.alertme_listempty, empty);
+		eventList.setAdapter(emptyList);
+    }
     private void performUpdate(int command, final String mesgData) {
     	if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "performUpdate("+command+", '"+mesgData+"')   START");
     	if (!isActive) {
@@ -238,46 +307,23 @@ public class AlertMeEventHistory extends Activity {
     	// Update list with the events found
     	if (command == AlertMeConstants.UPDATE_ALL) {
     		Hub hub = alertMe.retrieveActiveHub();
-
-    		if (events!=null && !events.isEmpty()) {
-    			Time currentTime = new Time();
-    			Time currentDate = new Time();
-    			SeparatedListAdapter adapter;
-    			long currentDateTs = 0;
-    			//EventAdapter eventAdapter;
-    			//Collections.sort(events, getEventSort(false));
-    			HashMap<String, ArrayList<Event>> dateStamps = getDatesFromEventList();
-    			ArrayList<String> sortedDates = new ArrayList<String> (dateStamps.keySet());
-    			Collections.sort(sortedDates, Event.getComparatorForStringEpoch(true));
-    			// more complex plz...
-    			//eventAdapter = new EventAdapter(this, R.layout.alertme_events_row, events);
-    			//eventList.setAdapter(eventAdapter);
-    			currentTime.setToNow();
-    	    	currentDateTs = currentTime.toMillis(true) - (currentTime.second*1000) - (currentTime.minute*1000*60) - (currentTime.hour*1000*60*60) ;
-    	    	currentDate.set(currentDateTs);
-    			adapter = new SeparatedListAdapter(this, R.layout.list_header);
-    			if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "performUpdate()   command: update non-empty event list ("+events.size()+" entries) withint "+sortedDates.size()+" dates");
-				for(String date: sortedDates) {
-    				ArrayList<Event> elist = dateStamps.get(date);
-    				if (elist!=null && !elist.isEmpty()) {
-    					String title = AlertMeConstants.getDateTitle(currentDate, elist.get(0).getTime());
-    					EventAdapter eventAdapter;
-    					Collections.sort(elist, getEventSort(true));
-    					eventAdapter = new EventAdapter(this, R.layout.alertme_events_row, elist);
-            			adapter.addSection(title, eventAdapter);
-    				}
-    			}
-    			eventList.setAdapter(adapter);
-    			
-    			if (hub!=null) {    				
-            		screenStuff.setSystemName(hub);    			
-    			}
+			if (hub!=null) {    				
+        		screenStuff.setSystemName(hub);    			
+			}
+    		if (!createdList) {
+        		if (events!=null && !events.isEmpty()) {
+        			initNonEmptyEventList();  
+        			createdList = true;      			
+        		} else {
+        			initEmptyEventList();
+        		}
     		} else {
-    			// empty
-        		ArrayAdapter<String> emptyList;
-    			String[] empty = { getString(R.string.event_list_isempty) }; 
-    			emptyList = new ArrayAdapter<String>(this, R.layout.alertme_listempty, empty);
-    			eventList.setAdapter(emptyList);
+				eventList.setAdapter(null);
+    			if (events!=null && !events.isEmpty()) {
+    				initNonEmptyEventList();
+    			} else {
+    				initEmptyEventList();
+    			}
     		}
     	}
     	screenStuff.setNotBusy();
@@ -310,6 +356,50 @@ public class AlertMeEventHistory extends Activity {
         public EventAdapter(Context context, int textViewResourceId, ArrayList<Event> eventList) {
                 super(context, textViewResourceId, eventList);
                 items = eventList;
+        }
+        
+        public void appendEvent(Event newEvent) {
+        	if (items!=null) {
+        		if (!items.isEmpty()) {
+        			// check if the event already exists
+        			boolean insertOk = false;
+        			boolean eventExists = false;
+        			int sz = items.size();
+        			// items are in reverse chrono
+        			for (int i=0; i<sz; i++) {
+        				Event e = items.get(i);
+        				if (newEvent.epochTimestamp==e.epochTimestamp) {
+        					// skip if the event is the same..
+        					String nStr = newEvent.getEventString();
+        					String eStr = e.getEventString();
+        					if (!(nStr!=null && nStr.equals(eStr))) {
+        						// add here if event is different
+        						insertOk = true;
+        					} else {
+        						eventExists = true;
+        					}
+        				} else if (newEvent.epochTimestamp>e.epochTimestamp) {
+    						// add here!    
+    						insertOk = true;    					
+        				}
+        				if (insertOk) {
+    						items.add(i, newEvent);
+        					break;
+        				}
+        				if (eventExists) {
+        					break;
+        				}
+        			}
+        			if (!insertOk && !eventExists) {
+        				items.add(sz, newEvent);
+        			}
+        		} else {
+            		items.add(0, newEvent);
+        		}
+        	} else {
+        		items = new ArrayList<Event>();
+        		items.add(0, newEvent);
+    		}
         }
 
         @Override

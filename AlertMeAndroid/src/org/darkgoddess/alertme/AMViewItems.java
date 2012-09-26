@@ -187,6 +187,12 @@ public class AMViewItems {
     	case AlertMeConstants.INVOKE_SETTINGS_CREATE_FIRSTTIME:
     		setBusy("", activity.getString(R.string.settings_updating_values));
     		break;
+    	case AlertMeConstants.COMMAND_STATUS_STOPALARM:
+    		setBusy("", activity.getString(R.string.alarm_intruder_stopping));
+    		break;
+    	case AlertMeConstants.COMMAND_STATUS_STOPEMERGENCY:
+    		setBusy("", activity.getString(R.string.alarm_emergency_stopping));
+    		break;
     	case AlertMeConstants.INVOKE_TEST:
     		setBusy("", activity.getString(R.string.test_run_wait));
     		break;
@@ -358,8 +364,8 @@ public class AMViewItems {
 					if (channel.equals("batterylevel") && device.isAttributeValid(channel)) {						
 						// format the battery value to 2 decimal places
 						String battLevel = getDecimalFromString(val, 2)+"V";
-                        if (battery!=null) battery.setText(battLevel);
-                        if (batticon!=null) batticon.setImageResource(AlertMeConstants.getBatteryIcon(device));
+						if (battery!=null) battery.setText(battLevel);
+						if (batticon!=null) batticon.setImageResource(AlertMeConstants.getBatteryIcon(device));
 						batterySet = true;
 						
 					} else if (channel.equals("lqi") && device.isAttributeValid(channel)) {
@@ -372,8 +378,8 @@ public class AMViewItems {
 						char degree = '\u00B0';
 						// format the battery value to one decimal place
 						String temp = getDecimalFromString(val, 1)+degree+"C";
-                        if (temperature!=null) temperature.setText(temp);
-                        tempSet = true;
+						if (temperature!=null) temperature.setText(temp);
+						tempSet = true;
 					} else if (channel.equals("presence") && device.isAttributeValid(channel)) {
 						if (val.equals("True")) {
 							if (presicon!=null) presicon.setImageResource(R.drawable.ic_keyfob_present);

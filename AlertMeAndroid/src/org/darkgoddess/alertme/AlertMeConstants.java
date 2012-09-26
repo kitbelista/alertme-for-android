@@ -66,6 +66,7 @@ public class AlertMeConstants {
 	public static final int INVOKE_PEOPLE = 40;
 	
 	public static final int INVOKE_HISTORY = 50;
+	public static final int COMMAND_HISTORY_CLEAR = 52;
 	
 	public static final int INVOKE_HELP = 60;
 
@@ -239,6 +240,15 @@ public class AlertMeConstants {
     	}
     	return res;
     }
+	public static boolean isStateAlarmed(String s) {
+		boolean res = false;
+		if (s!=null) {
+			if (s.equals("alarmed")||s.equals("alarmConfirmed")) {
+				res = true;
+			}							
+		}
+		return res;
+	}
     // TODO: Make the format a formula for other languages
     public static String getDateTitle(Time currentDate, Time titleTime) {
     	String res = "";
@@ -255,23 +265,24 @@ public class AlertMeConstants {
     		long yesterdayTime = currentDate.toMillis(true) - dayMilli;
     		long compareYest = titleTime.toMillis(true) - yesterdayTime;
     		String dayPost = "th";
-    		int cDay = titleTime.monthDay%10;
+    		int dd = titleTime.monthDay;
+    		int cDay = dd%10;
     		
     		switch(cDay) {
     			case 1:
-    				dayPost = "st";
+    				if (dd!=11) dayPost = "st";
     				break;
     			case 2:
-    				dayPost = "nd";
+    				if (dd!=12) dayPost = "nd";
     				break;
     			case 3:
-    				dayPost = "rd";
+    				if (dd!=13) dayPost = "rd";
     				break;
     		}
     		if (compareYest>0) {
     			res = "Yesterday";
     		} else {
-    			String formatStr = "%A %d"+dayPost+" %B";
+    			String formatStr = "%A "+dd+""+dayPost+" %B";
     			if (currentDate.year!=titleTime.year) {
     				formatStr += ", %Y";
     			}

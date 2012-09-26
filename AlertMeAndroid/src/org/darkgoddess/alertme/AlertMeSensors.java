@@ -79,9 +79,9 @@ public class AlertMeSensors extends Activity {
 				listloader.start();					
 			}
 			// now dismiss
-			if (screenStuff!=null) {
-				screenStuff.dismissActiveDialog(AMViewItems.DEVICE_DIALOG);
-			}
+			//if (screenStuff!=null) {
+			//	screenStuff.dismissActiveDialog(AMViewItems.DEVICE_DIALOG);
+			//}
 		}
 	};
 	
@@ -259,9 +259,13 @@ public class AlertMeSensors extends Activity {
     			toastMessage = R.string.powercontroller_change_none;
         		break;
     		case AlertMeConstants.INVOKE_SENSOR_CLAMP_OFF:
+				// update the dialog!
+				if (screenStuff!=null) screenStuff.prepareDeviceInDialog(viewDevice);
     			toastMessage = R.string.powercontroller_change_off;
         		break;
     		case AlertMeConstants.INVOKE_SENSOR_CLAMP_ON:
+				// update the dialog!
+				if (screenStuff!=null) screenStuff.prepareDeviceInDialog(viewDevice);
     			toastMessage = R.string.powercontroller_change_on;
         		break;
     	}
@@ -326,7 +330,7 @@ public class AlertMeSensors extends Activity {
     				boolean wasOk = false;
     				String relay = "";
     				updateInstruction = AlertMeConstants.INVOKE_SENSOR_CLAMP_CHANGE_FAIL;
-    				if (viewDevice!=null) {
+    				if (viewDevice!=null && viewDevice.type == Device.POWER_CONTROLLER) {
     					relay = viewDevice.getAttribute("relaystate");
     					
         				if (instruction==AlertMeConstants.INVOKE_SENSOR_CLAMP_ON) {

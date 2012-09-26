@@ -41,6 +41,7 @@ import android.widget.Toast;
 
 
 import org.darkgoddess.alertme.api.AlertMeSession;
+import org.darkgoddess.alertme.api.AlertMeServer;
 import org.darkgoddess.alertme.api.AlertMeStorage;
 import org.darkgoddess.alertme.api.utils.APIUtilities;
 import org.darkgoddess.alertme.api.utils.Device;
@@ -55,6 +56,7 @@ public class AlertMe extends Activity {
 	private boolean hasCreated = false;
 	private AlertMeSession alertMe = null;
 	
+	private ImageView topIcon = null;
 	//private TextView statusText = null;
 	private Button statusButton = null;
 	private ImageView statusAlarm = null;
@@ -99,7 +101,9 @@ public class AlertMe extends Activity {
 			alertMe = (alertMe==null)? new AlertMeSession(this): alertMe;
 			accounts = alertMe.getUserAccountList();
 			hasNoUsers = (accounts==null || accounts!=null && accounts.isEmpty());
-			if (hasNoUsers) invokeAddNewSettingsFirst();	
+			if (hasNoUsers) {
+				invokeAddNewSettingsFirst();	
+			}
 		}
 		if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "onCreate()  END");
 	}
@@ -444,6 +448,7 @@ public class AlertMe extends Activity {
     	}
     	if (AlertMeConstants.isCommandValid(command)) {
     		// Do a command to update the current page..
+		boolean isOffline = false;
     		ArrayList<AlertUpdateCommand> commandList = new ArrayList<AlertUpdateCommand>();
     		if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "performUpdate()  simple update screen command");
     		if (command == AlertMeConstants.UPDATE_COMMANDLIST) {
@@ -457,17 +462,26 @@ public class AlertMe extends Activity {
     				}
         		}
     		} else if (command == AlertMeConstants.UPDATE_ALL) {
+        		AlertMeStorage.AlertMeUser user = alertMe.getCurrentSession();
         		alertMe.retrieveAll();
         		if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "onActivityResult()  simple update screen: case UPDATE_ALL");
-    			commandList.add(new AlertUpdateCommand(AlertMeConstants.UPDATE_SYSTEMNAME));    			
-    			commandList.add(new AlertUpdateCommand(AlertMeConstants.UPDATE_SYSTEMNAME));	
-        		commandList.add(new AlertUpdateCommand(AlertMeConstants.UPDATE_STATUS));
-            	commandList.add(new AlertUpdateCommand(AlertMeConstants.UPDATE_PEOPLE));
-                commandList.add(new AlertUpdateCommand(AlertMeConstants.UPDATE_SENSORS));    			    			
+			if (user!=null && user.id!=-1) {
+				commandList.add(new AlertUpdateCommand(AlertMeConstants.UPDATE_SYSTEMNAME));    			
+				commandList.add(new AlertUpdateCommand(AlertMeConstants.UPDATE_SYSTEMNAME));	
+				commandList.add(new AlertUpdateCommand(AlertMeConstants.UPDATE_STATUS));
+				commandList.add(new AlertUpdateCommand(AlertMeConstants.UPDATE_PEOPLE));
+				commandList.add(new AlertUpdateCommand(AlertMeConstants.UPDATE_SENSORS));    			    			
+			} else {
+				isOffline = true;
+			}
     		} else {
         		if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "onActivityResult()  simple update screen: case [SINGLE COMMAND]");
     			commandList.add(new AlertUpdateCommand(command));
     		}
+		// TODO: activate the 'splash' page view if not 'online'
+		if (isOffline) {
+		} else {
+		}
     		for(AlertUpdateCommand updateCommand: commandList) {
     	        switch (updateCommand.command) {
 	            	case AlertMeConstants.UPDATE_SYSTEMNAME:	
@@ -599,6 +613,7 @@ public class AlertMe extends Activity {
 		Button refreshButton = null;
 		if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "initView()  START");
 
+		topIcon = (ImageView) findViewById(R.id.home_topico);
 		//statusText = (TextView) findViewById(R.id.home_text_status);
 		statusButton = (Button) findViewById(R.id.home_button_status);
 		statusAlarm = (ImageView) findViewById(R.id.home_button_status_warning);
@@ -664,6 +679,48 @@ public class AlertMe extends Activity {
 			});
 		}
 		if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "initView()  END");
+    }
+    private void initConnectionStatus() {
+		if (topIcon != null) {
+			String rawRes = alertMe.getLastRawAPIResult();
+			int rawInfo = AlertMeServer.Exceptions.getErrorFromRawResult(rawRes);
+			boolean hasConnection = true;
+			switch (rawInfo) {
+				case AlertMeServer.Exceptions.RESULT_NULL:
+				break;
+				case AlertMeServer.Exceptions.ERROR_NO_SESSION:
+					if (AlertMeConstants.DEBUGOUT) Log.w("CONNECTION FAILED" , "ERROR_NO_SESSION");
+					hasConnection = false;
+				break;
+				case AlertMeServer.Exceptions.ERROR_INVALID_USER_DETAILS:
+					if (AlertMeConstants.DEBUGOUT) Log.w("CONNECTION FAILED" , "ERROR_INVALID_USER_DETAILS");
+					hasConnection = false;
+				break;
+				case AlertMeServer.Exceptions.ERROR_NEEDS_HUB_UPGRADE:
+				break;
+				case AlertMeServer.Exceptions.ERROR_LOGIN_FAILED_ACCOUNT_LOCKED:
+					if (AlertMeConstants.DEBUGOUT) Log.w("CONNECTION FAILED" , "ERROR_LOGIN_FAILED_ACCOUNT_LOCKED");
+					hasConnection = false;
+				break;
+				default:
+					if (rawRes==null || rawRes!=null && rawRes.equals("")) {
+						// Check if there is a connection to the internet
+						hasConnection = alertMe.hasInternetConnection();
+						if (!hasConnection) {
+							if (AlertMeConstants.DEBUGOUT) Log.w("CONNECTION FAILED" , "No INTERNET CONNECTION");
+						}	
+					}
+					break;
+			}			
+
+			if (hasConnection) {
+				if (AlertMeConstants.DEBUGOUT) Log.w("CONNECTION OK" , "ICON DRAWABLE");
+				topIcon.setImageResource(R.drawable.icon);
+			} else {
+				if (AlertMeConstants.DEBUGOUT) Log.w("CONNECTION NOT OK" , "ICON OFFLINE");
+				topIcon.setImageResource(R.drawable.icon_offline);
+			}
+		}
     }
     
     private void changeActiveHub(String hubZId) {
@@ -798,6 +855,7 @@ public class AlertMe extends Activity {
     	if (hub!=null) {
     		screenStuff.setSystemName(hub);
     	}
+	initConnectionStatus();
     }
     private void updateBehaviour() {
     	Hub hub = alertMe.retrieveActiveHub();
@@ -824,7 +882,7 @@ public class AlertMe extends Activity {
     }
     private void updateSensors() {
     	ArrayList<Device> devices = alertMe.retrieveDevices();
-    	int totalCount = 0;
+    	//int totalCount = 0;
     	int missingCount = 0;
     	if (devices!=null) {
         	for(Device device: devices) {
@@ -835,7 +893,7 @@ public class AlertMe extends Activity {
         				}
         			}
         		}
-    			totalCount++;
+    			//totalCount++;
         	}
         	updateScreenSensors(missingCount);    		
     	}
@@ -971,7 +1029,7 @@ public class AlertMe extends Activity {
         	// By the time update screen functions are called, the data should
         	// be fresh enough not to delay..
         	int updateInstruction = AlertMeConstants.UPDATE_ALL;
-        	String updateDetails = null;
+        	//String updateDetails = null;
     		boolean hasCurrentSys = false;
     		int modeResult = -1;
     		if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "ALERTSTARTER::Thread run()  START");
@@ -1144,9 +1202,9 @@ public class AlertMe extends Activity {
     			Message msg = handler.obtainMessage();
                 Bundle b = new Bundle();
                 b.putInt("type", updateInstruction);
-                if (updateDetails!=null) {
-                	b.putString("value", updateDetails);
-                }
+                //if (updateDetails!=null) {
+                //	b.putString("value", updateDetails);
+                //}
                 msg.setData(b);
                 
                 alertMe = alertme;

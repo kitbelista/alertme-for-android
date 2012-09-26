@@ -4,7 +4,6 @@
     android:layout_height="fill_parent"
     android:gravity="center_horizontal"
     android:padding="3dip"
-	android:stretchColumns="*"
     android:background="@color/page_background">
     <LinearLayout
 		android:minHeight="45dip">
@@ -21,16 +20,15 @@
 		    android:layout_marginRight="5dip"
             android:padding="3dip" />
     </LinearLayout>
-	<ScrollView
-	    android:layout_width="fill_parent"
-	    android:layout_height="fill_parent">
-	    <TableLayout
-		    android:layout_width="fill_parent"
-		    android:layout_height="fill_parent"
-		    android:gravity="center_horizontal"
-		    android:padding="3dip"
-			android:stretchColumns="*">
-				<TableRow
+    <ScrollView
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    	<TableLayout
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center_horizontal"
+    android:padding="3dip">
+    	<TableRow
 			android:gravity="center"
 			android:layout_width="fill_parent"
 			android:background="@drawable/mono_bg">
@@ -57,7 +55,7 @@
 				android:gravity="center"
 				android:textSize="15sp"
 				android:textColor="@color/page_text"
-            	android:layout_marginLeft="3dip"
+            	android:layout_marginRight="3dip"
 				android:text="@string/behaviour_current_is_away" />
 	    </LinearLayout>
     </TableRow>
@@ -70,9 +68,9 @@
 		android:paddingLeft="5dip"
 		android:text="Alarm activated"
 		style="?android:attr/listSeparatorTextViewStyle" />
-	<TextView
+ 	<TextView
 		android:id="@+id/behavehome_text_hubstate_intruder"
-		android:layout_width="fill_parent"
+		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:gravity="center"
 		android:textAppearance="?android:attr/textAppearanceLarge" 
@@ -81,19 +79,20 @@
 		android:text="@string/settings_hub_is_intruderalarm" />
 	<TextView
 		android:id="@+id/behavehome_text_hubstate_emergency"
-		android:layout_width="fill_parent"
+		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:gravity="center"
 		android:textAppearance="?android:attr/textAppearanceLarge" 
 		android:textColor="@color/page_alert_text"
        	android:layout_marginRight="3dip"
 		android:text="@string/settings_hub_is_emergencyalarm" />
-		
+
     <TableRow android:padding="3dip"
     	android:gravity="center"
 		android:id="@+id/behavearmed_text_alarmed_section">
     	<LinearLayout android:gravity="center_horizontal"
-	    	android:layout_marginTop="10dip">
+	    	android:layout_marginTop="10dip"
+	    	android:layout_marginBottom="20dip">
 			 <Button
 				 android:id="@+id/behavehome_button_stop_alarm"        
 			     android:layout_height="wrap_content"
@@ -109,28 +108,35 @@
     	</LinearLayout>
     </TableRow>
 
-    <TextView
+	<TextView
 		android:id="@+id/behavearmed_text_change_title"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-	    android:layout_marginTop="20dip"
+	    android:layout_marginBottom="20dip"
 		android:paddingTop="2dip"
 		android:paddingBottom="2dip"
 		android:paddingLeft="5dip"
 		android:text="@string/behaviour_dialog_message_change_mode"
 		style="?android:attr/listSeparatorTextViewStyle" />
     
-    <TableRow android:padding="3dip">
-    	<LinearLayout android:gravity="center_horizontal">
+    <LinearLayout
+			android:gravity="center"
+			android:layout_width="fill_parent">
+    	<LinearLayout
+			android:gravity="center"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content">
 			 <Button
 				 android:id="@+id/behavehome_button_arm"        
 			     android:layout_height="80dip"
 			     android:layout_width="80dip"
 			     android:background="@drawable/btn_home_status_home"
-			     android:layout_marginRight="10dip" />
+			     android:layout_marginRight="20dip" />
     	</LinearLayout>
-    </TableRow>
-    <TableRow android:padding="3dip">
+    </LinearLayout> 
+	<LinearLayout
+		android:gravity="center"
+		android:layout_width="fill_parent">
 		<TextView
 			android:id="@+id/behavearmed_text_home"
 			android:layout_width="wrap_content"
@@ -139,7 +145,7 @@
 			android:textSize="16dip"
 			android:textColor="@color/page_text"
 			android:text="Disarm" />
-    </TableRow>
+    </LinearLayout>
     <Button
         android:id="@+id/behavearmed_cancel"
        	android:layout_width="wrap_content"
@@ -149,9 +155,7 @@
         android:padding="5dip"
         android:visibility="gone"
         android:text="Cancel" />
-	    </TableLayout>
+	</TableLayout>
     </ScrollView>
-		
 
-	
 </TableLayout>

@@ -41,8 +41,13 @@
     <string name="behaviour_current_is_away">Currently set to AWAY mode</string>
     <string name="behaviour_current_is_night">Currently set to NIGHT mode</string>
     <string name="behaviour_current_is_offline">Currently cannot reach the hub; try again later</string>
-    <string name="behaviour_update_canceled">Canceled: changes to settings abandoned</string>
+    <string name="behaviour_update_canceled">Cancelled: changes to settings abandoned</string>
     <string name="behaviour_update_ok">Updated mode; loading details</string>
+    
+    <string name="alarm_intruder_stopping">Clearing intruder alarm</string>
+    <string name="alarm_emergency_stopping">Clearing emergency alarm</string>
+    <string name="alarm_stopped_ok">Cleared alarm successful</string>
+    <string name="alarm_stopped_fail">Failed to clear alarm</string>
     
     <string name="systemname_default">AlertMe for Android</string>
     <string name="behaviour_unavailable">Unavailable</string>
@@ -70,7 +75,7 @@
     <string name="settings_update_fail">Failed to update the given account settings</string>
     <string name="settings_update_ok">Saved account setting changes</string>
     <string name="settings_create_ok">Saved account setting changes</string>
-    <string name="settings_update_canceled">Canceled: changes to settings abandoned</string>
+    <string name="settings_update_canceled">Cancelled: changes to settings abandoned</string>
     <string name="settings_updating_values">Saving account details</string>
     <string name="settings_login_username_label">Username</string>
     <string name="settings_login_password_label">Password</string>
@@ -107,13 +112,15 @@
     <string name="test_login_username_label">Username</string>
     <string name="test_login_password_label">Password</string>
     <string name="test_1_label">Test 1</string>
-    <string name="test_1_description">Session key dependant tests. These are simple calls that mostly get values relevant to all AlertMe accounts.</string>
+    <string name="test_1_description">Session key dependent tests. These are simple calls that mostly get values relevant to all AlertMe accounts.</string>
     <string name="test_2_label">Test 2</string>
     <string name="test_2_description">Hub-centric tests. Calls upon the API for hub details - and thus - the services a hub may have available.</string>
     <string name="test_3_label">Test 3</string>
     <string name="test_3_description">Device-centric tests. Stimulates the API for device details (based on existing devices on the first hub found)</string>
     <string name="test_4_label">Test 4</string>
     <string name="test_4_description">Event-centric tests. Stimulates the API for hub events (based on existing devices on the first hub found)</string>
+        
+    <string name="history_cleared">Cleared history cache</string>
     
     <string name="menu_refresh">Refresh</string>
     <string name="menu_add_account">Add account</string>
@@ -121,6 +128,7 @@
     <string name="menu_select_hub">Select hub</string>
     <string name="menu_about">About</string>
     <string name="menu_quit">Quit</string>
+    <string name="menu_history_clear">Clear history</string>
     
     <string name="infomation_dialog_dismiss">Ok</string>
     

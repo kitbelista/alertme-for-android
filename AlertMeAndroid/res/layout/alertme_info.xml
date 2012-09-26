@@ -44,25 +44,7 @@
 				android:layout_marginTop="10dip"
 	            android:padding="3dip" />
 			<TextView        
-	            android:text="- Fix sync with power plug state (on/off)"
-		  		android:textColor="@color/page_text"
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-	            android:padding="3dip" />
-			<TextView        
-	            android:text="- Add option to move to SD card (only for more recent phones, *should* be backwards compatible)"
-		  		android:textColor="@color/page_text"
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-	            android:padding="3dip" />
-			<TextView        
-	            android:text="- Stabilize all applications when rotating screen: fixed rotation until not busy"
-		  		android:textColor="@color/page_text"
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-	            android:padding="3dip" />
-			<TextView        
-	            android:text="- Show hub if state is alarming for both intruder and emergency alarm. API does not support disable alarm function however"
+	            android:text="- Fix event log caching; enable intended auto fetch of new/older events to stored; enable delete log cache"
 		  		android:textColor="@color/page_text"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
@@ -82,9 +64,24 @@
 				android:layout_height="wrap_content"
 				android:layout_marginTop="10dip"
 	            android:padding="3dip" />
-	
-	
-	
+			<TextView        
+	            android:text="- Fix event refresh to append the list"
+		  		android:textColor="@color/page_text"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+	            android:padding="3dip" />
+			<TextView        
+	            android:text="- Event limit store - auto-delete if over 200 entries (setting perhaps)"
+		  		android:textColor="@color/page_text"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+	            android:padding="3dip" />
+			<TextView        
+	            android:text="- Show splash page if no account selected"
+		  		android:textColor="@color/page_text"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+	            android:padding="3dip" />
 			<TextView        
 	            android:text="- Add refresh to all sub-applications"
 		  		android:textColor="@color/page_text"

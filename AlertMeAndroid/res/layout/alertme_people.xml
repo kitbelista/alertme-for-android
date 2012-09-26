@@ -24,12 +24,13 @@
 		<TableLayout
 			android:background="@drawable/mono_bg"
 	    	android:layout_width="fill_parent"
-	    	android:layout_height="wrap_content">
+	    	android:layout_height="wrap_content"
+   		 	android:layout_marginBottom="15dip">
 				    <TableLayout
+			android:id="@+id/account_details_section"
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:gravity="center_horizontal"
-	    android:padding="3dip"
 	    	android:layout_marginTop="10dip"
 			android:layout_marginLeft="10dip"
 			android:layout_marginRight="10dip"
@@ -94,14 +95,12 @@
     <LinearLayout
 	    	android:layout_width="fill_parent"
 	    	android:layout_height="fill_parent"
-   		 	android:layout_marginTop="20dip"
     	android:background="@color/page_background">
 	    <TextView
         	android:id="@+id/account_hub"  
 			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
 			android:paddingTop="2dip"
-			android:paddingBottom="2dip"
    			android:paddingLeft="5dip"
             android:text="@string/systemname_default"
 			style="?android:attr/listSeparatorTextViewStyle" />
@@ -111,11 +110,9 @@
 	    android:layout_height="fill_parent"
     	android:minHeight="100dip"
 	    android:id="@+id/keyfob_list"
-	    android:layout_marginTop="4dip"
 	    android:divider="@android:color/transparent"
     	android:background="@color/page_background"
-	    android:cacheColorHint="@android:color/transparent"
-	/>
+	    android:cacheColorHint="@android:color/transparent" />
 
 	    
 	    </TableLayout>

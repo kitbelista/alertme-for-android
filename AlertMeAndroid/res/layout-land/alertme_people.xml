@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/page_background">
+    <LinearLayout
+    	android:id="@+id/people_header_section"
+    	android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+	    android:gravity="top"
+		android:minHeight="45dip">
+    	<ImageView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:src="@drawable/icon" />
+        <TextView
+        	android:id="@+id/people_housename"        
+            android:text="@string/systemname_default"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+		    android:layout_marginLeft="10dip"
+		    android:layout_marginRight="5dip"
+            android:padding="3dip" />
+    </LinearLayout>
+	<RelativeLayout
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+	    android:gravity="left|bottom"
+	    android:layout_marginTop="45dip"
+		android:background="@drawable/mono_bg">
+		<TableLayout
+			android:id="@+id/account_details_section"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:gravity="center_horizontal"
+		    android:layout_gravity="left"
+		    android:padding="3dip"
+	    	android:layout_marginTop="10dip"
+			android:layout_marginLeft="10dip"
+			android:layout_marginRight="10dip"
+	    	android:layout_marginBottom="10dip"
+        	android:layout_alignParentTop="true"
+        	android:layout_alignParentLeft="true"
+			android:background="@drawable/box_background"
+			android:stretchColumns="2">
+		    <LinearLayout>
+				<TextView
+		        	android:id="@+id/account_username"        
+		            android:text="@string/systemname_default"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+				    android:layout_marginLeft="10dip"
+				    android:layout_marginRight="5dip"
+				    android:textColor="@color/page_text"
+				    android:maxEms="40"
+        			android:ellipsize="marquee"
+		            android:padding="3dip" />    
+		    </LinearLayout>
+		    <TableRow>
+				<TextView
+		        	android:id="@+id/account_firstname_label"        
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+				    android:layout_marginLeft="10dip"
+				    android:layout_marginRight="5dip"
+				    android:text="@string/people_firstname_label"
+				    android:textColor="@color/page_text_lighter"
+		            android:padding="3dip" />
+		    </TableRow>
+		    <TableRow
+				    android:gravity="right">
+				<TextView
+		        	android:id="@+id/account_firstname"        
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+				    android:layout_marginLeft="10dip"
+				    android:layout_marginRight="5dip"
+				    android:text="Firstname"
+				    android:textColor="@color/page_text"
+		            android:padding="3dip" />
+		            
+		    </TableRow>
+		    <TableRow>
+				<TextView
+		        	android:id="@+id/account_lastname_label"        
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+				    android:layout_marginLeft="10dip"
+				    android:layout_marginRight="5dip"
+				    android:text="@string/people_lastname_label"
+				    android:textColor="@color/page_text_lighter"
+		            android:padding="3dip" />
+		    </TableRow>
+		    <TableRow
+				    android:gravity="right">
+				<TextView
+		        	android:id="@+id/account_lastname"        
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+				    android:layout_marginLeft="10dip"
+				    android:layout_marginRight="5dip"
+				    android:text="Lastname"
+				    android:textColor="@color/page_text"
+		            android:padding="3dip" />
+		            
+		    </TableRow>
+	    </TableLayout>
+	    
+	    <TableLayout
+			android:layout_toRightOf="@id/account_details_section"
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+	    	android:background="@color/page_background">
+		    <TextView
+	        	android:id="@+id/account_hub"  
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:paddingTop="2dip"
+				android:paddingBottom="2dip"
+	   			android:paddingLeft="5dip"
+	            android:text="@string/systemname_default"
+				style="?android:attr/listSeparatorTextViewStyle" />
+		    <ListView
+			    android:layout_width="fill_parent"
+			    android:layout_height="fill_parent"
+		    	android:minHeight="100dip"
+			    android:id="@+id/keyfob_list"
+			    android:divider="@android:color/transparent"
+		    	android:background="@color/page_background"
+			    android:cacheColorHint="@android:color/transparent"
+			/>
+	    </TableLayout>
+	    
+	</RelativeLayout>
+</RelativeLayout>

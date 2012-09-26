@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/mono_bg" />
+    <item android:top="28dp" android:left="3dp">
+      <bitmap android:src="@drawable/icon"
+        android:gravity="top|left" />
+    </item>
+</layer-list>

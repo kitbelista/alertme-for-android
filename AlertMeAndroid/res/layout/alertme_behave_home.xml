@@ -86,7 +86,7 @@
 		android:textColor="@color/page_alert_text"
        	android:layout_marginRight="3dip"
 		android:text="@string/settings_hub_is_emergencyalarm" />
-    
+
     <TableRow android:padding="3dip"
     	android:gravity="center"
 		android:id="@+id/behavearmed_text_alarmed_section">
@@ -176,12 +176,7 @@
         android:padding="5dip"
         android:visibility="gone"
         android:text="Cancel" />
-	
-    
-    
-    	</TableLayout>
+	</TableLayout>
     </ScrollView>
-    
-    
 
 </TableLayout>

@@ -17,8 +17,8 @@
 
 package org.darkgoddess.alertme.api;
 
+import org.darkgoddess.alertme.api.utils.APIUtilities;
 import org.darkgoddess.alertme.api.utils.Device;
-import org.darkgoddess.alertme.api.utils.DeviceEvent;
 import org.darkgoddess.alertme.api.utils.Event;
 import org.darkgoddess.alertme.api.utils.Hub;
 
@@ -118,6 +118,28 @@ public class AlertMeStorage {
 		}
 		if (entries!=null) { entries.close(); }
 		return users;
+	}
+	public AlertMeUser getUserByUsername(String username) {
+		AlertMeUser res = null;
+		Cursor entry = null;
+		try {
+			entry = db.query(true, tableUser, userTableColumns, "username = '"+username+"'", null, null, null, null, null);
+			res = new AlertMeUser(
+					getLongFromCursor(KEY_ROWID, entry),
+					getStringFromCursor("username", entry),
+					getStringFromCursor("password", entry),
+					getStringFromCursor("session_id", entry),
+					getLongFromCursor("timestamp", entry),
+					getStringFromCursor("info", entry));
+		} catch (SQLException se) {
+			if (DEBUGOUT) Log.w(TAG, "getUsers() FAILED [SQLException] " + se.getMessage());
+		} catch (Exception e) {
+			if (DEBUGOUT) Log.w(TAG, "getUsers() FAILED [Exception] " + e.getMessage());
+		} finally {
+			if (entry!=null) { entry.close(); }
+		}
+		if (entry!=null) { entry.close(); }
+		return res;
 	}
 	public AlertMeUser getUserByHub(long hubId) {
 		AlertMeUser res = null;
@@ -221,14 +243,16 @@ public class AlertMeStorage {
 		// First remove all the events, devices and then hubs
 		Cursor entry = null;
 		try {
-			int internalCount = 0;
+			//int internalCount = 0;
 			entry = db.query(true, tableHub, hubTableColumns, "user_id" + "=" + userId, null, null, null, null, null);
 			if (entry!=null && entry.getCount()!=0) {
 				entry.moveToFirst();
 				do {
 					long hubId = getLongFromCursor(KEY_ROWID, entry);
-					internalCount += db.delete(tableEvent, "hub_id = " + hubId, null);
-					internalCount += db.delete(tableDevice, "hub_id = " + hubId, null);
+					//internalCount += db.delete(tableEvent, "hub_id = " + hubId, null);
+					//internalCount += db.delete(tableDevice, "hub_id = " + hubId, null);
+					db.delete(tableEvent, "hub_id = " + hubId, null);
+					db.delete(tableDevice, "hub_id = " + hubId, null);
 				} while (entry.moveToNext());
 			}
 		} catch (SQLException se) {
@@ -819,6 +843,10 @@ public class AlertMeStorage {
 		if (DEBUGOUT) Log.w(TAG, "updateEvents()  END result::"+res);
 		return res;
 	}
+	public boolean deleteEvents(long hubId) {
+		int internalCount = db.delete(tableEvent, "hub_id = " + hubId, null);
+		return (internalCount>0);
+	}
 	
 	public static class AlertMeUser {
 		public long id = -1;
@@ -994,12 +1022,11 @@ public class AlertMeStorage {
 			
 			if (epoch>=0 && rawMesg!=null && rawMesg.length()!=0) {
 				if (rawMesg.contains("|")) {
-					String[] eventAttr = rawMesg.split("|");
-					if (eventAttr.length>=5) {					
-						res = new DeviceEvent(epoch, eventAttr[0], eventAttr[1], eventAttr[2], eventAttr[3], eventAttr[4]);
-					}
+					String rawEvent = epoch+"|"+rawMesg;
+					res = APIUtilities.getEventFromString(rawEvent);
 				} else {
 					res = new Event(epoch, rawMesg);
+					if (DEBUGOUT) Log.w(TAG, "getEventFromCursor() returning Event("+epoch+", '"+rawMesg+"')");
 				}
 			}
 		}

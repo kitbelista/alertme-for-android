@@ -172,17 +172,17 @@ public class AlertMeSettings extends Activity {
 			// 
 			switch(intendedMode) {
 				case AlertMeConstants.INVOKE_SETTINGS_CREATE:
-					Log.w(TAG, "onCreate()  -- CREATE MODE");
+					if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "onCreate()  -- CREATE MODE");
 					isNewMode = true;
 					setButtonsForCreate();
 					break;
 				case AlertMeConstants.INVOKE_SETTINGS_EDIT:
-					Log.w(TAG, "onCreate()  -- EDIT MODE");
+					if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "onCreate()  -- EDIT MODE");
 					setButtonsForEdit();
 					isNewMode = false;
 					break;
 				case AlertMeConstants.INVOKE_SETTINGS_CREATE_FIRSTTIME:
-					Log.w(TAG, "onCreate()  -- CREATE FIRST TIME MODE");
+					if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "onCreate()  -- CREATE FIRST TIME MODE");
 					isNewMode = true;
 					setButtonsForCreateFirstTime();
 					break;
@@ -341,7 +341,7 @@ public class AlertMeSettings extends Activity {
     	Intent intent = alertMe.createIntentFromSession();
 		
 		intent.putExtra(AlertMeConstants.INTENT_RETURN_KEY, command);
-		Log.w(TAG, "completeSettingsAction("+command+", "+exitCode+")   -- returning with exit:"+result+"; intent"+intent);
+		if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "completeSettingsAction("+command+", "+exitCode+")   -- returning with exit:"+result+"; intent"+intent);
 		setResult(result, intent);
         finish();
 	}

@@ -39,7 +39,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.darkgoddess.alertme.api.AlertMeServer;
-import org.darkgoddess.alertme.api.AlertMeStorage;
 import org.darkgoddess.alertme.api.utils.APIUtilities;
 import org.darkgoddess.alertme.api.utils.Device;
 import org.darkgoddess.alertme.api.utils.Hub;

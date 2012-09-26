@@ -48,7 +48,7 @@ public class AlertMeSession {
 	public static final String PREFERENCE_SETTING_USERID = "userId";
 	public static final String PREFERENCE_SETTING_HUBID = "hubId";
 	
-	private static final long SESSION_SPAN = 1000*60*10; // 10 minute sessions (session key and event)
+	private static final long SESSION_SPAN = 1000*60*20; // 20 minute sessions (session key and event)
 	private static final long ITEM_SPAN = 1000*60*5;     //  5 minute sessions (for device and hub)
 	private AlertMeStorage db = null;
 	private AlertMeServer alertMe = null;
@@ -68,6 +68,7 @@ public class AlertMeSession {
 	private long hubSettingsLastRefresh = 0;
 	private long lastActionTime = 0; // time of last (public) action that alters state
 	private Context appContext = null;
+	private String lastRawAPIResult = null;
 	
 	/**
 	 * Creates a plain instance of the object, without any state except to initialize DB access
@@ -89,6 +90,10 @@ public class AlertMeSession {
 		outState.putSerializable(PREFERENCE_SETTING_USERID, uid);
 		outState.putSerializable(PREFERENCE_SETTING_HUBID, hid);
 		return outState;
+	}
+
+	public String getLastRawAPIResult() {
+		return lastRawAPIResult;
 	}
 	
 	/**
@@ -191,9 +196,10 @@ public class AlertMeSession {
 	public boolean hasInternetConnection() {
 		ConnectivityManager conMgr = (ConnectivityManager) appContext.getSystemService (Context.CONNECTIVITY_SERVICE);
 		// ARE WE CONNECTED TO THE NET
-		if (conMgr.getActiveNetworkInfo() != null &&
-				conMgr.getActiveNetworkInfo().isAvailable() &&
-				conMgr.getActiveNetworkInfo().isConnected()) {
+		if (conMgr.getActiveNetworkInfo() != null && conMgr.getActiveNetworkInfo().isConnectedOrConnecting()) {
+				//conMgr.getActiveNetworkInfo().isAvailable() &&
+				//conMgr.getActiveNetworkInfo().isConnected()) {
+			if (DEBUGOUT) Log.w(TAG, "hasInternetConnection()  -- Internet Connection Present");
 			return true;
 		} else {
 			if (DEBUGOUT) Log.w(TAG, "hasInternetConnection()  -- Internet Connection Not Present");
@@ -385,7 +391,7 @@ public class AlertMeSession {
 	 */
     public void logout() {
 		if (session!=null && isSessionAlive()) {		
-			alertMe.logout(session.sessionKey);
+			lastRawAPIResult = alertMe.logout(session.sessionKey);
 			session.sessionKey = null;
 		}
     }
@@ -465,7 +471,7 @@ public class AlertMeSession {
 		
 		if (session!=null && session.id!=-1) {
 			res = alertMe.getCurrentServiceState(session.sessionKey, getServiceStringFromId(serve));
-			
+			lastRawAPIResult = res;
 		}
 		return res;
 	}
@@ -500,6 +506,7 @@ public class AlertMeSession {
 				String rawRes = alertMe.setRelayState(session.sessionKey, mode, device.id);
 				int isOk = APIUtilities.getCommandResult(rawRes);
 				res = (isOk == APIUtilities.COMMAND_OK);
+				lastRawAPIResult = rawRes;
 				if (devices!=null && !devices.isEmpty()) {
 					boolean refresh = false;
 					int i = 0;
@@ -669,7 +676,31 @@ public class AlertMeSession {
 
 		return activeHub;
 	}
-	
+
+	/**
+	 * Delete cached event entries and return them
+	 */
+	public ArrayList<Event> flushEventData() {
+		ArrayList<Event> res = events;
+		if (events==null||events!=null&&events.isEmpty()) {
+			if (activeHubId!=-1) {
+				res = db.getEvents(activeHubId);
+			}
+		}
+		// delete cache..
+		if (activeHubId!=-1) {
+			db.deleteEvents(activeHubId);			
+		}
+		
+		if (events!=null&&events.isEmpty()) {
+			events.clear();
+			events = null;
+			eventLastRefresh = 0;
+		}
+		
+		return res;
+	}
+
 	public ArrayList<Event> getEventData() {
 		helperKeepAlive();
 		if (DEBUGOUT) Log.w(TAG, "getEventData()  START");
@@ -776,7 +807,7 @@ public class AlertMeSession {
 	/**
 	 * Attempt to stop the provided alarm
 	 *
-	 * WARNING:: CANNOT DISABLE FROM THE API AS OF YET
+	 * WARNING:: TO TEST
 	 *
 	 * @param  serviceId  One of the services corresponding to IntruderAlarm | EmergencyAlarm
 	 * @returns  True if the system registered the change, False otherwise
@@ -785,17 +816,16 @@ public class AlertMeSession {
 		boolean res = false;
 		boolean doAction = (serviceID == SERVICE_INTRUDER_ALARM) || (serviceID == SERVICE_EMERGENCY_ALARM);
 		
-		// TODO: enable this once the API is able to
-		/*
 		if (doAction) {
-			String deviceCommand = "cancelAlarm"; // THIS IS NOT THE ACTUAL COMMAND
+			String deviceCommand = "serverClear";
 			String rawRes = "";
 			int isOk = -1;
 			helperKeepAlive();
 			rawRes = alertMe.sendCommand(session.sessionKey, getServiceStringFromId(serviceID), deviceCommand, null);
 			isOk = APIUtilities.getCommandResult(rawRes);
 			res = (isOk == APIUtilities.COMMAND_OK);
-		}*/
+			lastRawAPIResult = rawRes;
+		}
 		
 		return res;
 	}
@@ -832,6 +862,7 @@ public class AlertMeSession {
 				String behaveRes = alertMe.setBehaviourMode(session.sessionKey, strMode);
 				int isOk = APIUtilities.getCommandResult(behaveRes);
 				res = (isOk == APIUtilities.COMMAND_OK);
+				lastRawAPIResult = behaveRes;
 				if (activeHub!=null) {
 					activeHub.behaviour = behaviour;
 					db.updateHubData(activeHubId, activeHub);
@@ -865,6 +896,7 @@ public class AlertMeSession {
 				String rawRes = alertMe.setHub(session.sessionKey, hubZId);
 				int isOk = APIUtilities.getCommandResult(rawRes);
 				res = (isOk == APIUtilities.COMMAND_OK);
+				lastRawAPIResult = rawRes;
 				if (DEBUGOUT) Log.w(TAG, "setActiveHub()  called setHub::"+rawRes);
 				if (res) {
 					// reload everything related to the hub and reset the event and device cache
@@ -959,17 +991,32 @@ public class AlertMeSession {
 	 */
 	public AlertMeStorage.AlertMeUser loginFirstTime(String username, String password) {
 		AlertMeStorage.AlertMeUser res = null;
-		String sess = alertMe.login(username, password);
+		String sess = null;
 		
-		if (APIUtilities.isStringNonEmpty(sess)) {
+		if ( APIUtilities.isStringNonEmpty(username) && APIUtilities.isStringNonEmpty(password)) {
+			sess = alertMe.login(username, password);
+			lastRawAPIResult = sess;			
+		}
+		
+		if (APIUtilities.isStringNonEmpty(sess) && AlertMeServer.Exceptions.loginOkFromRawResult(sess)) {
 			// create all the details as possible
 			long timestamp = System.currentTimeMillis();
 			long uid = -1;
 			String userinfo = alertMe.getUserInfo(sess);
-			uid = db.addUser(username, password, sess, timestamp, userinfo);
-			accountSizeCache = db.getUsersSize();
-			if (uid!=-1) {
-				res = new AlertMeStorage.AlertMeUser(uid, username, password, sess, timestamp, userinfo);		
+			lastRawAPIResult = userinfo;
+			// first check if the user details exist in the DB - overwrite otherwise add
+			res = db.getUserByUsername(username);
+			if (res==null) {
+				uid = db.addUser(username, password, sess, timestamp, userinfo);
+				accountSizeCache = db.getUsersSize();
+				if (uid!=-1) {
+					res = new AlertMeStorage.AlertMeUser(uid, username, password, sess, timestamp, userinfo);		
+				}					
+			} else {
+				res.info = userinfo;
+				res.password = password;
+				res.sessionKey = sess;
+				db.updateUserEntryLogin(res.id, username, password, sess, timestamp, userinfo);
 			}
 		}
 		return res;
@@ -979,6 +1026,7 @@ public class AlertMeSession {
 		if (isSessionAlive()) {
 			String userinfo = alertMe.getUserInfo(session.sessionKey);
 			HashMap<String, String> res = APIUtilities.getDeviceChannelValues(userinfo);
+			lastRawAPIResult = userinfo;
 			db.updateUserEntryInfo(session.id, userinfo);
 			return res;
 		}
@@ -1016,6 +1064,7 @@ public class AlertMeSession {
 		res.hubSettingsLastRefresh = hubSettingsLastRefresh;
 		res.cacheAge = lastActionTime;
 		res.isHubActive = isHubActive;
+		res.lastRawAPIResult = lastRawAPIResult;
 		
 		return res;
 	}
@@ -1037,6 +1086,7 @@ public class AlertMeSession {
 			hubSettingsLastRefresh = state.hubSettingsLastRefresh;
 			lastActionTime = state.cacheAge;
 			isHubActive = state.isHubActive;
+			lastRawAPIResult = state.lastRawAPIResult;
 			res = true;
 		}
 		if (res) {
@@ -1081,7 +1131,7 @@ public class AlertMeSession {
 			helperClearCache();
 		}
 		if (requiresOldLogout && session!=null && APIUtilities.isStringNonEmpty(session.sessionKey)) {
-			alertMe.logout(session.sessionKey);
+			lastRawAPIResult = alertMe.logout(session.sessionKey);
 		}
 		session = userDetails;
 		if (session.timestamp!=null && isSessionAlive()) {
@@ -1170,20 +1220,31 @@ public class AlertMeSession {
 			String end = "null";
 			boolean getAllCurrent = false;
 			// TODO: get stuff from DB
+			if (events==null||events!=null&&events.isEmpty()) {
+				if (activeHubId!=-1) events = db.getEvents(activeHubId);
+			}
+			if (events!=null && !events.isEmpty()) {
+				Collections.sort(events, Event.getComparator(true));
+			}
 			if (events==null|| (events!=null && events.isEmpty())) {
 				getAllCurrent = true;
 			}
 			if (getAllCurrent) {
 				if (DEBUGOUT) Log.w(TAG, "helperGetEventLog()  getAllCurrent: retrieving complete list");
-				events = APIUtilities.getEventLog(alertMe.getEventLog(session.sessionKey, service, limit, start, end));
+				String rawRes = alertMe.getEventLog(session.sessionKey, service, limit, start, end);
+				events = APIUtilities.getEventLog(rawRes);
+				lastRawAPIResult = rawRes;
 				if (activeHubId!=-1) db.updateEvents(activeHubId, events);
 				if (!events.isEmpty()) Collections.sort(events, Event.getComparator(true));
 			} else {
-				String currentStart = null;
-				String currentEnd = null;
+				boolean addedToList = false;
+				String currentStart = "null";
+				String currentEnd = "null";
 				int limitDiff = limit;
 				int eventSize = events.size();
+				long futureDiff = 0;
 				if (DEBUGOUT) Log.w(TAG, "helperGetEventLog()  notAllCurrent: ammending list");
+				if (!events.isEmpty()) Collections.sort(events, Event.getComparator(true));
 				
 				if (eventSize>0) {
 					int lastI = (eventSize-1);
@@ -1191,28 +1252,21 @@ public class AlertMeSession {
 					Event last = events.get(lastI);
 					if (last!=null) {
 						currentStart = last.epochTimestamp + "";
+						if (DEBUGOUT) Log.w(TAG, "helperGetEventLog()  start at: "+currentStart);
 					}
 					if (first!=null) {
+						long currEp = System.currentTimeMillis()/1000;
+						futureDiff = currEp - first.epochTimestamp;
 						currentEnd = first.epochTimestamp + "";
+						if (DEBUGOUT) Log.w(TAG, "helperGetEventLog()  end at: "+currentEnd + " where future diff is: ["+currEp+"-"+first.epochTimestamp+"] = "+futureDiff);
 					}
 					
-					// Appending the past
-					if (currentStart!=null) {
-						ArrayList<Event> append = APIUtilities.getEventLog(alertMe.getEventLog(session.sessionKey, service, limit, start, currentStart));
-						if (activeHubId!=-1) db.updateEvents(activeHubId, append);
-
-						if (!append.isEmpty()) {
-							Collections.sort(append, Event.getComparator(true));
-							for (Event e: append) {
-								events.add(e);
-								limitDiff--;
-							}
-							if (DEBUGOUT) Log.w(TAG, "helperGetEventLog()  append past: ammending list size: "+append.size());
-						}
-					}
 					// Appending the future
-					if (currentEnd!=null && limitDiff>0) {
-						ArrayList<Event> append = APIUtilities.getEventLog(alertMe.getEventLog(session.sessionKey, service, limitDiff, currentEnd, null));
+					if (currentEnd!=null && limitDiff>0 && futureDiff>0) {
+						String rawRes = alertMe.getEventLog(session.sessionKey, service, limitDiff, currentEnd, "null");
+						ArrayList<Event> append = APIUtilities.getEventLog(rawRes);
+						lastRawAPIResult = rawRes;
+						if (DEBUGOUT) Log.w(TAG, "helperGetEventLog()  appending future with (limit:"+limitDiff+", start:"+currentEnd+", end:null)");
 						if (activeHubId!=-1) db.updateEvents(activeHubId, append);
 
 						if (!append.isEmpty()) {
@@ -1221,11 +1275,30 @@ public class AlertMeSession {
 								events.add(e);
 								limitDiff--;
 							}
+							addedToList = true;
 							if (DEBUGOUT) Log.w(TAG, "helperGetEventLog()  append current: ammending list size: "+append.size());
 						}
 						
 					}
-					
+					// Appending the past
+					if (currentStart!=null && limitDiff>0) {
+						String rawRes = alertMe.getEventLog(session.sessionKey, service, limitDiff, start, currentStart);
+						ArrayList<Event> append = APIUtilities.getEventLog(rawRes);
+						lastRawAPIResult = rawRes;
+						if (DEBUGOUT) Log.w(TAG, "helperGetEventLog()  appending past with (limit:"+limitDiff+", start:"+start+", end:"+currentStart+")");
+						if (activeHubId!=-1) db.updateEvents(activeHubId, append);
+
+						if (!append.isEmpty()) {
+							Collections.sort(append, Event.getComparator(true));
+							for (Event e: append) {
+								events.add(e);
+								limitDiff--;
+							}
+							addedToList = true;
+							if (DEBUGOUT) Log.w(TAG, "helperGetEventLog()  append past: ammending list size: "+append.size());
+						}
+					}
+					if (addedToList) Collections.sort(events, Event.getComparator(true));
 				}
 			}
 			
@@ -1261,7 +1334,8 @@ public class AlertMeSession {
 		if (session!=null && APIUtilities.isStringNonEmpty(session.username) 
 				&& APIUtilities.isStringNonEmpty(session.password)) {
 			String sess = alertMe.login(session.username, session.password);
-			if (APIUtilities.isStringNonEmpty(sess)) {
+			lastRawAPIResult = sess;
+			if (APIUtilities.isStringNonEmpty(sess) && AlertMeServer.Exceptions.loginOkFromRawResult(sess)) {
 				session.sessionKey = sess;
 				db.updateUserEntrySession(session.id, sess); // Store!
 				res = true;
@@ -1276,6 +1350,7 @@ public class AlertMeSession {
 		if (activeHub!=null && session!=null) {
 			String rawRes = alertMe.getHubStatus(session.sessionKey);
 			HashMap<String, String> hubStatus = APIUtilities.getDeviceChannelValues(rawRes);
+			lastRawAPIResult = rawRes;
 			if (DEBUGOUT) Log.w(TAG, "loadActiveHub()::  hubStatus ["+rawRes+"]");
 			if (hubStatus!=null) {
 				if (hubStatus.containsKey("isavailable")) {					
@@ -1300,6 +1375,7 @@ public class AlertMeSession {
 			activeHub.behaviour = alertMe.getBehaviour(session.sessionKey);
 			activeHub.setServicesFromString(alertMe.getAllServices(session.sessionKey));
 			activeHubId = db.getHubId(session.id, activeHub.id);
+			lastRawAPIResult = activeHub.behaviour;
 			// Save changes to the DB
 			if (activeHubId==-1) {
 				activeHubId = db.addHub(session.id, activeHub);
@@ -1328,7 +1404,9 @@ public class AlertMeSession {
 		if (hubs==null) {
 			if (DEBUGOUT) Log.w(TAG, "helperLoadHubs  -- null hubs: calling getAllHubs");
 			if (hasSessionKey()) {
-				hubs = APIUtilities.getAllHubs(alertMe.getAllHubs(session.sessionKey));
+				String rawRes = alertMe.getAllHubs(session.sessionKey);
+				hubs = APIUtilities.getAllHubs(rawRes);
+				lastRawAPIResult = rawRes;
 				if (DEBUGOUT) Log.w(TAG, "helperLoadHubs  -- null hubs: calling getAllHubs: DONE");
 				if(hubs!=null && !hubs.isEmpty()) {
 					int hSize = hubs.size();
@@ -1370,7 +1448,7 @@ public class AlertMeSession {
 					helperLoadActiveHub();
 
 					if (hSize>1 && activeHub!=null) {
-						alertMe.setHub(session.sessionKey, activeHub.id);
+						lastRawAPIResult = alertMe.setHub(session.sessionKey, activeHub.id);
 					}
 					
 					if (session.id>=0) {
@@ -1408,18 +1486,34 @@ public class AlertMeSession {
 	private void helperLoadDevices() {
 		if (devices==null) {
 			if (hasSessionKey() && activeHub!=null && activeHubId!=-1) {
-				devices = APIUtilities.getAllDevices(alertMe.getAllDevices(session.sessionKey));
+				String rawRes = alertMe.getAllDeviceChannelValues(session.sessionKey);
+				devices = APIUtilities.getAllDevices(rawRes);
+				lastRawAPIResult = rawRes;
+				if(devices!=null && !devices.isEmpty()) {
+					if (session.id!=-1) {
+						db.updateDevices(activeHubId, devices);
+					}
+				}
+				/*
+				// 20120206 stupid getDeviceChannel doesn't do negatives.. FAIL
+				String rawRes = alertMe.getAllDevices(session.sessionKey);
+				devices = APIUtilities.getAllDevices(rawRes);
+				lastRawAPIResult = rawRes;
 				if(devices!=null && !devices.isEmpty()) {
 					// Load all the data for the devices
+					String tmpRes;
 					int count = 0;
 					for (Device device: devices) {
-						device.setAttributesFromString(alertMe.getDeviceChannelValue(session.sessionKey, device.id));
+						tmpRes = alertMe.getDeviceChannelValue(session.sessionKey, device.id);
+						lastRawAPIResult = tmpRes;
+						device.setAttributesFromString(tmpRes);
 						devices.set(count++, device);
 					}
 					if (session.id!=-1) {
 						db.updateDevices(activeHubId, devices);
 					}
 				}
+				*/
 				deviceLastRefresh = System.currentTimeMillis();
 			}
 		}
@@ -1477,7 +1571,7 @@ public class AlertMeSession {
 		public long eventLastRefresh = 0;
 		public long hubSettingsLastRefresh = 0;
 		public long cacheAge = 0; // for comparing cache ages
-		
+		public String lastRawAPIResult = null;
 	}
 	
 }

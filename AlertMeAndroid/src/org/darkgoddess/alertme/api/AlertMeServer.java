@@ -932,6 +932,86 @@ public class AlertMeServer {
 			"An unknown error has occured",
 			"The specified item already exists"
 		};
+
+		public static final int RESULT_NULL = -2;
+		public static final int RESULT_OK = -1;
+		public static final int ERROR_NO_SESSION = 0;
+		public static final int ERROR_INVALID_USER_DETAILS = 1;
+		public static final int ERROR_INTERNAL_ERROR = 2;
+		public static final int ERROR_SERVICE_NOT_AVAILABLE_FOR_LOGIN_STATUS = 3;
+		public static final int ERROR_INVALID_ARGUMENTS = 4;
+		public static final int ERROR_INVALID_METHOD = 5;
+		public static final int ERROR_NO_HUB = 6;
+		public static final int ERROR_HUB_NOT_CONTACTABLE = 7;
+		public static final int ERROR_INVALID_HUB_ID = 8;
+		public static final int ERROR_NEEDS_HUB_UPGRADE = 9;
+		public static final int ERROR_DEVICE_NOT_PRESENT = 10;
+		public static final int ERROR_LOGIN_FAILED_ACCOUNT_LOCKED = 11;
+		public static final int ERROR_PRIVILEGED_SYSTEMS_ONLY = 12;
+
+		public static final String RAW_NO_SESSION = "no_session";
+		public static final String RAW_INVALID_USER_DETAILS = "invalid_user_details";
+		public static final String RAW_INTERNAL_ERROR = "internal_error";
+		public static final String RAW_SERVICE_NOT_AVAILABLE_FOR_LOGIN_STATUS = "service_not_available_for_login_status";
+		public static final String RAW_INVALID_ARGUMENTS = "invalid_arguments";
+		public static final String RAW_INVALID_METHOD = "invalid_method";
+		public static final String RAW_NO_HUB = "no_hub";
+		public static final String RAW_HUB_NOT_CONTACTABLE = "hub_not_contactable";
+		public static final String RAW_INVALID_HUB_ID = "invalid_hub_id";
+		public static final String RAW_NEEDS_HUB_UPGRADE = "needs_hub_upgrade";
+		public static final String RAW_DEVICE_NOT_PRESENT = "device_not_present";
+		public static final String RAW_LOGIN_FAILED_ACCOUNT_LOCKED = "login_failed_account_locked";
+		public static final String RAW_PRIVILEGED_SYSTEMS_ONLY = "priviledged_systems_only";
 		
+		public static boolean loginOkFromRawResult(String rawRes) {
+			boolean res = true;
+			if (rawRes!=null) {
+				if (rawRes.equals(RAW_INVALID_USER_DETAILS)) {
+					res = false;
+				} else if (rawRes.equals(RAW_LOGIN_FAILED_ACCOUNT_LOCKED)) {
+					res = false;
+				} else if (rawRes.equals(RAW_NO_SESSION)) {
+					res = false;
+				} else if (rawRes.equals(RAW_INTERNAL_ERROR)) {
+					res = false;
+				}
+			}
+			return res;
+		}
+		public static int getErrorFromRawResult(String rawRes) {
+			int res = RESULT_NULL;
+			if (rawRes!=null) {
+				if (rawRes.equals(RAW_NO_SESSION)) {
+					res = ERROR_NO_SESSION;
+				} else if (rawRes.equals(RAW_INVALID_USER_DETAILS)) {
+					res = ERROR_INVALID_USER_DETAILS;
+				} else if (rawRes.equals(RAW_INTERNAL_ERROR)) {
+					res = ERROR_INTERNAL_ERROR;
+				} else if (rawRes.equals(RAW_SERVICE_NOT_AVAILABLE_FOR_LOGIN_STATUS)) {
+					res = ERROR_SERVICE_NOT_AVAILABLE_FOR_LOGIN_STATUS;
+				} else if (rawRes.equals(RAW_INVALID_ARGUMENTS)) {
+					res = ERROR_INVALID_ARGUMENTS;
+				} else if (rawRes.equals(RAW_INVALID_METHOD)) {
+					res = ERROR_INVALID_METHOD;
+				} else if (rawRes.equals(RAW_NO_HUB)) {
+					res = ERROR_NO_HUB;
+				} else if (rawRes.equals(RAW_HUB_NOT_CONTACTABLE)) {
+					res = ERROR_HUB_NOT_CONTACTABLE;
+				} else if (rawRes.equals(RAW_INVALID_HUB_ID)) {
+					res = ERROR_INVALID_HUB_ID;
+				} else if (rawRes.equals(RAW_NEEDS_HUB_UPGRADE)) {
+					res = ERROR_NEEDS_HUB_UPGRADE;
+				} else if (rawRes.equals(RAW_DEVICE_NOT_PRESENT)) {
+					res = ERROR_DEVICE_NOT_PRESENT;
+				} else if (rawRes.equals(RAW_LOGIN_FAILED_ACCOUNT_LOCKED)) {
+					res = ERROR_LOGIN_FAILED_ACCOUNT_LOCKED;
+				} else if (rawRes.equals(RAW_PRIVILEGED_SYSTEMS_ONLY)) {
+					res = ERROR_PRIVILEGED_SYSTEMS_ONLY;
+				}
+
+			}
+
+			return res;
+		}
 	}
 }

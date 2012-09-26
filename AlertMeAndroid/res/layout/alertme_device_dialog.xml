@@ -49,7 +49,7 @@
 		
 		</TableLayout>
 		<TableLayout>
-    		<TableRow android:layout_marginTop="20dip">	
+    		<TableRow android:layout_marginTop="20dip" android:gravity="center_vertical">	
 		    	<ImageView
 		    		android:gravity="center_vertical|right"	
 			        android:id="@+id/device_data_signal_icon" 
@@ -74,7 +74,7 @@
 					android:textAppearance="?android:attr/textAppearanceSmall"
 					android:padding="3dip" />    		
     		</TableRow>
-    		<TableRow>	
+    		<TableRow android:gravity="center_vertical">	
 		    	<ImageView
 		    		android:gravity="center_vertical|right"	
 			        android:id="@+id/device_data_battery_icon" 
@@ -99,7 +99,7 @@
 					android:textAppearance="?android:attr/textAppearanceSmall"
 					android:padding="3dip" />    		
     		</TableRow>
-    		<TableRow>	
+    		<TableRow android:gravity="center_vertical">	
 		    	<ImageView
 		    		android:gravity="center_vertical|right"	
 			        android:id="@+id/device_data_temperature_icon" 
@@ -124,7 +124,7 @@
 					android:textAppearance="?android:attr/textAppearanceSmall"
 					android:padding="3dip" />    		
     		</TableRow>
-    		<TableRow>	
+    		<TableRow android:gravity="center_vertical">	
 		    	<ImageView
 		    		android:gravity="center_vertical|right"	
 			        android:id="@+id/device_data_powerlevel_icon" 

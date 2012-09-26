@@ -56,6 +56,16 @@ public class SeparatedListAdapter extends BaseAdapter {
 		}
 		return null;
 	}
+	
+	public Adapter getGroupAtIndex(int position) {
+		Adapter res = null;
+		if (headers!=null && !headers.isEmpty()) {
+			String heading = headers.getItem(position);
+			res = sections.get(heading);
+		}
+			
+		return res;
+	}
 
 	public int getCount() {
 		// total together all sections, plus one for each section header
@@ -124,5 +134,15 @@ public class SeparatedListAdapter extends BaseAdapter {
 		return position;
 	}
 
+	@Override
+	public void notifyDataSetChanged() {
+		for(Object section : this.sections.keySet()) {
+			Adapter adapter = sections.get(section);
+			if (adapter instanceof BaseAdapter) {
+				((BaseAdapter) adapter).notifyDataSetChanged();
+			}
+		}
+		this.headers.notifyDataSetChanged();
+	}
 }
 

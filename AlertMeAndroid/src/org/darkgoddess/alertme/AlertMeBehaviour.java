@@ -35,6 +35,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class AlertMeBehaviour extends Activity {
@@ -160,29 +161,31 @@ public class AlertMeBehaviour extends Activity {
 			Button emerOff = (Button) findViewById(R.id.behavehome_button_stop_emergency);
 			boolean setVis = false;
 			int visibility = View.GONE;
-			if (currentEmergencyState!=null) {
-				if (currentEmergencyState.equals("alarmed")||currentEmergencyState.equals("alarmConfirmed")) {
-					setVis = true;
-					hasAlarmed = true;
-				}							
+			if (AlertMeConstants.isStateAlarmed(currentEmergencyState)) {
+				setVis = true;
+				hasAlarmed = true;
+				if (emerOff!=null) {
+					emerOff.setOnClickListener(emergencyStopListener);
+				}
 			}
 			visibility = (setVis)? View.VISIBLE: View.GONE;
 			emergency.setVisibility(visibility);
-			if (emerOff!=null) emerOff.setVisibility(View.GONE); // TODO: enable buttons when API is capable
+			if (emerOff!=null) emerOff.setVisibility(visibility);
 		}
 		if (intruder!=null) {
 			Button alarmOff = (Button) findViewById(R.id.behavehome_button_stop_alarm);
 			boolean setVis = false;
 			int visibility = View.GONE;
-			if (currentIntruderState!=null) {
-				if (currentIntruderState.equals("alarmed")||currentEmergencyState.equals("alarmConfirmed")) {
-					setVis = true;
-					hasAlarmed = true;
-				}							
+			if (AlertMeConstants.isStateAlarmed(currentIntruderState)) {
+				setVis = true;
+				hasAlarmed = true;
+				if (alarmOff!=null) {
+					alarmOff.setOnClickListener(intruderStopListener);
+				}
 			}
 			visibility = (setVis)? View.VISIBLE: View.GONE;
 			intruder.setVisibility(visibility);
-			if (alarmOff!=null) alarmOff.setVisibility(View.GONE); // TODO: enable buttons when API is capable
+			if (alarmOff!=null) alarmOff.setVisibility(visibility);
 		}
 		if (section!=null) {
 			int visibility = (hasAlarmed)? View.VISIBLE: View.GONE;
@@ -191,6 +194,21 @@ public class AlertMeBehaviour extends Activity {
 		if (title!=null) {
 			int visibility = (hasAlarmed)? View.VISIBLE: View.GONE;
 			title.setVisibility(visibility);
+		}
+	}
+	private void setWarningsOnCurrentView() {
+		if (currentView==R.layout.alertme_behave_home) {
+			TextView hemergency = (TextView) findViewById(R.id.behavehome_text_hubstate_emergency);
+			TextView hintruder = (TextView) findViewById(R.id.behavehome_text_hubstate_intruder);
+			TextView halarmtitle = (TextView) findViewById(R.id.behavearmed_text_alarmed_title);
+			TableRow halarmsection = (TableRow) findViewById(R.id.behavearmed_text_alarmed_section);					
+			setViewWarnings(hemergency, hintruder, halarmtitle, halarmsection);
+		} else if (currentView==R.layout.alertme_behave_armed) {
+			TextView aemergency = (TextView) findViewById(R.id.behavehome_text_hubstate_emergency);
+			TextView aintruder = (TextView) findViewById(R.id.behavehome_text_hubstate_intruder);
+			TextView alarmtitle = (TextView) findViewById(R.id.behavearmed_text_alarmed_title);
+			TableRow alarmsection = (TableRow) findViewById(R.id.behavearmed_text_alarmed_section);
+			setViewWarnings(aemergency, aintruder, alarmtitle, alarmsection);
 		}
 	}
 	private void setViewOnCurrentView() {
@@ -206,12 +224,8 @@ public class AlertMeBehaviour extends Activity {
 				case R.layout.alertme_behave_home:
 					Button awayButton = (Button) findViewById(R.id.behavehome_button_arm);
 					Button nightButton = (Button) findViewById(R.id.behavehome_button_night);
-					Button cancelHomeButton = (Button) findViewById(R.id.behavehome_cancel);
-					TextView hemergency = (TextView) findViewById(R.id.behavehome_text_hubstate_emergency);
-					TextView hintruder = (TextView) findViewById(R.id.behavehome_text_hubstate_intruder);
-					TextView halarmtitle = (TextView) findViewById(R.id.behavearmed_text_alarmed_title);
-					TableRow halarmsection = (TableRow) findViewById(R.id.behavearmed_text_alarmed_section);					
-					setViewWarnings(hemergency, hintruder, halarmtitle, halarmsection);
+					Button cancelHomeButton = (Button) findViewById(R.id.behavehome_cancel);				
+					setWarningsOnCurrentView();
 					setAwayAction(awayButton);
 					setNightAction(nightButton);
 					setCancelAction(cancelHomeButton);
@@ -221,11 +235,7 @@ public class AlertMeBehaviour extends Activity {
 					Button homeButton = (Button) findViewById(R.id.behavehome_button_arm);
 					Button cancelArmButton = (Button) findViewById(R.id.behavearmed_cancel);
 					ImageView currentModeImg = (ImageView) findViewById(R.id.behavearmed_currentmode_icon);
-					TextView aemergency = (TextView) findViewById(R.id.behavehome_text_hubstate_emergency);
-					TextView aintruder = (TextView) findViewById(R.id.behavehome_text_hubstate_intruder);
-					TextView alarmtitle = (TextView) findViewById(R.id.behavearmed_text_alarmed_title);
-					TableRow alarmsection = (TableRow) findViewById(R.id.behavearmed_text_alarmed_section);
-					setViewWarnings(aemergency, aintruder, alarmtitle, alarmsection);
+					setWarningsOnCurrentView();
 					if (behaviour!=null) {
 						TextView message = (TextView) findViewById(R.id.behavearmed_text_current);
 						if (currentMode.equals(MNIGHT)) {
@@ -450,7 +460,16 @@ public class AlertMeBehaviour extends Activity {
     	    	screenStuff.setNotBusy();
     	    	screenStuff.setDismissMessage(getString(mesgResource));
     	    	screenStuff.showDialog(AMViewItems.DISMISS_DIALOG);
-				break;    	
+				break;
+			case AlertMeConstants.COMMAND_STATUS_STOPALARM_OK:
+				setWarningsOnCurrentView(); // should remove the sections affected
+		    	screenStuff.setNotBusy();
+        		Toast.makeText(getApplicationContext(), getString(R.string.alarm_stopped_ok), Toast.LENGTH_SHORT).show();
+				break;
+			case AlertMeConstants.COMMAND_STATUS_STOPALARM_FAILED:
+		    	screenStuff.setNotBusy();
+        		Toast.makeText(getApplicationContext(), getString(R.string.alarm_stopped_fail), Toast.LENGTH_SHORT).show();
+				break;
     	}
     	screenStuff.setNotBusy();
     	if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "performUpdate()  END");
@@ -575,8 +594,21 @@ public class AlertMeBehaviour extends Activity {
 	    			case AlertMeConstants.INVOKE_STATUS_CONFIRM:
 	    				messageEnd = AlertMeConstants.INVOKE_STATUS_CONFIRM;
 	    			case AlertMeConstants.COMMAND_STATUS_STOPALARM:
+	    				boolean intruderStopOk = alertme.stopAlarm(AlertMeSession.SERVICE_INTRUDER_ALARM);
+	    				if (intruderStopOk) {
+	    					currentIntruderState = alertme.getActiveServiceState(AlertMeSession.SERVICE_INTRUDER_ALARM);
+	    					messageEnd = (AlertMeConstants.isStateAlarmed(currentIntruderState))? AlertMeConstants.COMMAND_STATUS_STOPALARM_FAILED: AlertMeConstants.COMMAND_STATUS_STOPALARM_OK;
+	    				} else {
+	    					messageEnd = AlertMeConstants.COMMAND_STATUS_STOPALARM_FAILED;
+	    				}
 	    			case AlertMeConstants.COMMAND_STATUS_STOPEMERGENCY:
-	    				// TODO: enable these features when API is updated
+	    				boolean emergencyStopOk = alertme.stopAlarm(AlertMeSession.SERVICE_EMERGENCY_ALARM);
+	    				if (emergencyStopOk) {
+	    					currentEmergencyState = alertme.getActiveServiceState(AlertMeSession.SERVICE_EMERGENCY_ALARM);
+	    					messageEnd = (AlertMeConstants.isStateAlarmed(currentEmergencyState))? AlertMeConstants.COMMAND_STATUS_STOPALARM_FAILED: AlertMeConstants.COMMAND_STATUS_STOPALARM_OK;
+	    				} else {
+	    					messageEnd = AlertMeConstants.COMMAND_STATUS_STOPALARM_FAILED;
+	    				}	    				
 	    				break;
 	    		}
     		}
@@ -619,4 +651,26 @@ public class AlertMeBehaviour extends Activity {
 		}
 	}
 	
+	private final View.OnClickListener emergencyStopListener = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			if (screenStuff!=null) {
+				BehaviourStarter startThread;
+				startThread = new BehaviourStarter(alertMe, handler, getIntent(), null, null, AlertMeConstants.COMMAND_STATUS_STOPEMERGENCY);
+				screenStuff.setBusy(AlertMeConstants.COMMAND_STATUS_STOPEMERGENCY);
+				startThread.start();
+			}
+		}
+	};
+	private final View.OnClickListener intruderStopListener = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			if (screenStuff!=null) {
+				BehaviourStarter startThread;
+				startThread = new BehaviourStarter(alertMe, handler, getIntent(), null, null, AlertMeConstants.COMMAND_STATUS_STOPALARM);
+				screenStuff.setBusy(AlertMeConstants.COMMAND_STATUS_STOPALARM);
+				startThread.start();
+			}
+		}
+	};
 }
