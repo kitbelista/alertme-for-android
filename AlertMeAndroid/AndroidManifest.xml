@@ -23,9 +23,9 @@
         <activity android:name=".AlertMeSplash" android:label="@string/app_name" android:theme="@style/Theme.AlertMeDefault" />
         <activity android:name=".AlertMeTest" android:label="@string/app_name" android:theme="@style/Theme.AlertMe" android:launchMode="singleTask"/>
 
-		<uses-permission android:name="android.permission.INTERNET"></uses-permission>
     </application>
 
+<uses-permission android:name="android.permission.INTERNET"></uses-permission>
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
 <uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
 </manifest> 
