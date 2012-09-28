@@ -318,15 +318,15 @@ public class Device implements Serializable {
 		return res;
 	}
 	
-	public static String[] alarmDetectorAttributes = {"presence", "tamper", "upgrade", "batterylevel", "lqi", "temperature"}; 	
-	public static String[] buttonAttributes = {"presence", "tamper", "upgrade", "batterylevel", "lqi", "temperature"}; 	
-	public static String[] cameraAttributes = {"presence", "tamper", "upgrade", "batterylevel", "lqi", "temperature"}; // TODO: not sure
-	public static String[] contactSensorAttributes = {"presence", "tamper", "upgrade", "batterylevel", "lqi", "temperature"}; 
-	public static String[] keyfobAttributes = {"presence", "tamper", "upgrade", "batterylevel", "lqi"}; 
-	public static String[] lampAttributes = {"presence", "tamper", "upgrade", "batterylevel", "lqi"}; 
-	public static String[] motionSensorAttributes = {"presence", "tamper", "upgrade", "batterylevel", "lqi", "temperature"}; 
-	public static String[] powerPlugAttributes = {"presence", "tamper", "upgrade", "batterylevel", "lqi", "temperature", "remotecontrol", "relaystate", "mainsstate", "powerlevel"}; 
-	public static String[] meterAttributes = {"presence", "tamper", "upgrade", "batterylevel", "lqi", "temperature", "remotemode", "relaystate", "mainsstate", "powerlevel"}; 
+	public final static String[] alarmDetectorAttributes = {"presence", "tamper", "upgrade", "batterylevel", "lqi", "temperature"}; 	
+	public final static String[] buttonAttributes = {"presence", "tamper", "upgrade", "batterylevel", "lqi", "temperature"}; 	
+	public final static String[] cameraAttributes = {"presence", "tamper", "upgrade", "batterylevel", "lqi", "temperature"}; // TODO: not sure
+	public final static String[] contactSensorAttributes = {"presence", "tamper", "upgrade", "batterylevel", "lqi", "temperature", "closed"}; 
+	public final static String[] keyfobAttributes = {"presence", "tamper", "upgrade", "batterylevel", "lqi"}; 
+	public final static String[] lampAttributes = {"presence", "tamper", "upgrade", "batterylevel", "lqi"}; 
+	public final static String[] motionSensorAttributes = {"presence", "tamper", "upgrade", "batterylevel", "lqi", "temperature"}; 
+	public final static String[] powerPlugAttributes = {"presence", "tamper", "upgrade", "batterylevel", "lqi", "temperature", "remotecontrol", "relaystate", "mainsstate", "powerlevel"}; 
+	public final static String[] meterAttributes = {"presence", "tamper", "upgrade", "batterylevel", "lqi", "temperature", "remotemode", "relaystate", "mainsstate", "powerlevel"}; 
 
 
 	   /**

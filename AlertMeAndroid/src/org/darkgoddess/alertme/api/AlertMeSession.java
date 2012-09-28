@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
+import org.darkgoddess.alertme.AlertMeConstants;
 import org.darkgoddess.alertme.api.utils.APIUtilities;
 import org.darkgoddess.alertme.api.utils.Device;
 import org.darkgoddess.alertme.api.utils.Event;
@@ -1483,6 +1484,58 @@ public class AlertMeSession {
 			}
 		}
 	}
+	// using getAllDeviceChannelValues has it's downsides:
+	private void helperLoadMissingValues(Device device) {
+		String[] checkAttrs = null;
+		switch(device.type) {
+			case Device.ALARM_DETECTOR:
+				checkAttrs = Device.alarmDetectorAttributes;
+				break;
+			case Device.BUTTON:
+				checkAttrs = Device.buttonAttributes;
+				break;
+			case Device.CAMERA:
+				checkAttrs = Device.cameraAttributes;
+				break;
+			case Device.CONTACT_SENSOR:
+				checkAttrs = Device.contactSensorAttributes;
+				break;
+			case Device.KEYFOB:
+				checkAttrs = Device.keyfobAttributes;
+				break;
+			case Device.LAMP:
+				checkAttrs = Device.lampAttributes;
+				break;
+			case Device.MOTION_SENSOR:
+				checkAttrs = Device.motionSensorAttributes;
+				break;
+			case Device.POWER_CONTROLLER:
+				checkAttrs = Device.powerPlugAttributes;
+				break;
+			case Device.POWERCLAMP:
+				checkAttrs = Device.meterAttributes;
+				break;
+		}
+		if (checkAttrs!=null) {
+			String val = null;
+			String tmpRes = null;
+			HashMap<String, String> attrs = null;
+			for (String key: checkAttrs) {
+				val = device.getAttribute(key);
+				if (val==null) {
+					if (tmpRes==null) {
+						tmpRes = alertMe.getDeviceChannelValue(session.sessionKey, device.id);
+						lastRawAPIResult = tmpRes;
+						attrs = Device.getAttributesFromString(tmpRes);					
+					}
+					if (attrs!=null && attrs.containsKey(key)) {
+						val = attrs.get(key);
+						device.attributes.put(key, val);
+					}
+				}
+			}			
+		}
+	}
 	private void helperLoadDevices() {
 		if (devices==null) {
 			if (hasSessionKey() && activeHub!=null && activeHubId!=-1) {
@@ -1490,6 +1543,10 @@ public class AlertMeSession {
 				devices = APIUtilities.getAllDevices(rawRes);
 				lastRawAPIResult = rawRes;
 				if(devices!=null && !devices.isEmpty()) {
+					// 20120928 stupid getAllDeviceChannelValues doesn't get ALL channel values.. FAIL
+					for (Device device: devices) {
+						helperLoadMissingValues(device);
+					}
 					if (session.id!=-1) {
 						db.updateDevices(activeHubId, devices);
 					}
