@@ -4,20 +4,17 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
 	android:orientation="horizontal"
-    android:padding="3dip"
->
+    android:padding="3dip">
 	<TextView
 	    android:layout_width="wrap_content"
 	    android:layout_height="wrap_content"
 	    android:id="@+id/title"
 	    android:textSize="20dip"
-	    android:textColor="#fff"
-	/>
+	    android:textColor="#fff" />
 	<TextView
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:gravity="right"
 	    android:id="@+id/params"
-	    android:textColor="#fff"
-	/>
+	    android:textColor="#fff" />
 </LinearLayout>

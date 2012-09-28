@@ -9,6 +9,7 @@
     android:background="#fff">
 	<TableRow android:gravity="center_vertical">
    		<ImageView
+   		    android:contentDescription="@string/contdesc_people_keyfob"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 		    android:id="@+id/people_icon"
@@ -17,7 +18,7 @@
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:id="@+id/person_name"
-		    android:text="sensor name"
+		    android:text="@string/people_default_fobname"
 		    android:layout_marginLeft="5dip"
 		    android:layout_marginRight="15dip"
 		    android:textColor="#777" />
@@ -28,15 +29,17 @@
 		    android:id="@+id/person_status"
 		    android:layout_marginLeft="5dip"
 		    android:layout_marginRight="15dip"
-		    android:text="status"
+		    android:text="@string/people_default_fobstatus"
 		    android:textColor="#555" />
 		<ImageView
+		    android:contentDescription="@string/contdesc_devicedetail_signal"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 		    android:id="@+id/person_signal_icon"
 		    android:layout_marginRight="10dip"
 			android:src="@drawable/ic_sensor_signal_0" />
 		<ImageView
+		    android:contentDescription="@string/contdesc_devicedetail_presence"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 		    android:id="@+id/person_presence_icon"

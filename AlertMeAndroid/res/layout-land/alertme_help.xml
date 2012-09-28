@@ -1,26 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:gravity="center_horizontal"
-    android:padding="3dip"
-	android:stretchColumns="2"
-    android:background="@color/page_background">
-    <LinearLayout
-		android:minHeight="45dip">
-    	<ImageView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:src="@drawable/icon" />
-        <TextView
-        	android:id="@+id/help_top"        
-            android:text="@string/systemname_default"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-		    android:layout_marginLeft="10dip"
-		    android:layout_marginRight="5dip"
-            android:padding="3dip" />
-    </LinearLayout>
+    android:stretchColumns="2"
+    style="@style/AlertMePage">
+    <TextView
+        android:id="@+id/help_top"        
+        android:text="@string/systemname_default"
+        style="@style/AlertMeTitleConnected" />
     <ScrollView
 		android:layout_width="fill_parent"
 	    android:layout_height="wrap_content">
@@ -33,7 +18,7 @@
 		    <TextView        
 	        	android:id="@+id/help_title"    
 				android:textAppearance="?android:attr/textAppearanceLarge"    
-	            android:text="About the main sections"
+	            android:text="@string/help_title_sections"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 			    android:layout_marginLeft="5dip"
@@ -48,6 +33,7 @@
 						android:layout_height="35dip"
 						android:layout_width="35dip">
 						<ImageView
+						    android:contentDescription="@string/contdesc_behaviour"
 							android:layout_width="wrap_content"
 							android:layout_height="wrap_content"
 						    android:scaleType="fitXY"
@@ -55,7 +41,7 @@
 					</LinearLayout>
 			        <TextView        
 			        	android:id="@+id/help_status"        
-			            android:text="Status"
+			            android:text="@string/help_title_section_status"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:maxEms="4"
@@ -70,7 +56,7 @@
 			        <TextView        
 			        	android:id="@+id/help_status_detail"    
 						android:maxEms="20"    
-			            android:text="Shows the current mode status of the active system; click on this for options to change the system behaviour mode to either HOME, AWAY or NIGHT."
+			            android:text="@string/help_desc_section_status"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 					    android:textColor="@color/page_text"
@@ -85,6 +71,7 @@
 						android:layout_height="35dip"
 						android:layout_width="35dip">
 					<ImageView
+					    android:contentDescription="@string/contdesc_people"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 					    android:scaleType="fitXY"
@@ -93,7 +80,7 @@
 					</LinearLayout>
 			        <TextView        
 			        	android:id="@+id/help_people"        
-			            android:text="People"
+			            android:text="@string/help_title_section_people"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:maxEms="4"
@@ -108,7 +95,7 @@
 			        <TextView        
 			        	android:id="@+id/help_people_detail"    
 						android:maxEms="20"        
-			            android:text="Quickly determine which keyfobs are within the active hub and view the account details"
+			            android:text="@string/help_desc_section_people"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 					    android:layout_marginRight="5dip"
@@ -124,6 +111,7 @@
 						android:layout_width="35dip"
 						android:layout_height="35dip">
 						<ImageView
+						    android:contentDescription="@string/contdesc_sensors"
 							android:layout_width="wrap_content"
 							android:layout_height="wrap_content"
 						    android:scaleType="fitXY"
@@ -132,7 +120,7 @@
 					</LinearLayout>
 			        <TextView        
 			        	android:id="@+id/help_sensors"        
-			            android:text="Sensors"
+			            android:text="@string/help_title_section_sensors"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:maxEms="4"
@@ -147,7 +135,7 @@
 			        <TextView        
 			        	android:id="@+id/help_sensors_detail"        
 						android:maxEms="20"    
-			            android:text="The icon indicates whether all devices are registered with the hub. Clicking on this option will enable you to view the entire list of devices and their details"
+			            android:text="@string/help_desc_section_sensors"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 					    android:layout_marginRight="5dip"
@@ -163,6 +151,7 @@
 						android:layout_width="35dip"
 						android:layout_height="35dip">
 						<ImageView
+						    android:contentDescription="@string/contdesc_settings"
 							android:layout_width="wrap_content"
 							android:layout_height="wrap_content"
 						    android:scaleType="fitXY"
@@ -171,7 +160,7 @@
 					</LinearLayout>
 			        <TextView        
 			        	android:id="@+id/help_settings"        
-			            android:text="Account Settings"
+			            android:text="@string/help_title_section_settings"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:maxEms="4"
@@ -186,7 +175,7 @@
 			        <TextView        
 			        	android:id="@+id/help_settings_detail"       
 						android:maxEms="20"     
-			            android:text="View or modify the current account settings that connect with your AlertMe system"
+			            android:text="@string/help_desc_section_settings"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 					    android:layout_marginRight="5dip"
@@ -202,6 +191,7 @@
 						android:layout_width="35dip"
 						android:layout_height="35dip">
 						<ImageView
+						    android:contentDescription="@string/contdesc_history"
 							android:layout_width="wrap_content"
 							android:layout_height="wrap_content"
 						    android:scaleType="fitXY"
@@ -210,7 +200,7 @@
 					</LinearLayout>
 			        <TextView        
 			        	android:id="@+id/help_history"        
-			            android:text="History"
+			            android:text="@string/help_title_section_events"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:maxEms="4"
@@ -225,7 +215,7 @@
 			        <TextView        
 			        	android:id="@+id/help_history_detail"      
 						android:maxEms="20"      
-			            android:text="View a list of events that have been registered with your AlertMe hub"
+			            android:text="@string/help_desc_section_events"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 					    android:layout_marginRight="5dip"
@@ -241,6 +231,7 @@
 						android:layout_width="35dip"
 						android:layout_height="35dip">
 						<ImageView
+						    android:contentDescription="@string/contdesc_help"
 							android:layout_width="wrap_content"
 							android:layout_height="wrap_content"
 						    android:scaleType="fitXY"
@@ -249,7 +240,7 @@
 					</LinearLayout>
 			        <TextView        
 			        	android:id="@+id/help_help"        
-			            android:text="Help"
+			            android:text="@string/help_title_section_help"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:maxEms="4"
@@ -264,7 +255,7 @@
 					<TextView        
 						android:id="@+id/help_help_detail"   
 						android:maxEms="20"         
-						android:text="This helpme"
+						android:text="@string/help_desc_section_help"
 						android:layout_width="wrap_content"
 						android:layout_height="wrap_content"
 						android:layout_marginRight="5dip"
@@ -276,13 +267,11 @@
 		        android:layout_height="2dip"
 			    android:layout_marginTop="25dip"
 			    android:layout_marginBottom="5dip"
-		        android:background="#FF909090" />			
-			
-			
+		        android:background="#FF909090" />
 		    <!-- FAQ -->    
 		    <TextView        
 	        	android:id="@+id/help_title_faq"        
-	            android:text="Common tasks"
+	            android:text="@string/help_title_tasks"
 				android:textAppearance="?android:attr/textAppearanceLarge"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
@@ -292,7 +281,7 @@
 	            android:padding="3dip" />
 	        <TextView        
 	        	android:id="@+id/help_faq1"        
-	            android:text="I have multiple hubs for my account; how do I view them?"
+	            android:text="@string/help_task1_question"
 				android:textAppearance="?android:attr/textAppearanceMedium"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
@@ -302,7 +291,7 @@
 	            android:padding="3dip" />
 	        <TextView        
 	        	android:id="@+id/help_faq1_aws"        
-	            android:text="Click on the menu button once you have connected with your account details. If AlertMe for Android has detected that you have more than one hub the option Select hub should be available to you. Click on this option to get a prompt of all the hubs in your system"	
+	            android:text="@string/help_task1_answer"	
 				android:textAppearance="?android:attr/textAppearanceSmall"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
@@ -311,7 +300,7 @@
 	            android:padding="3dip" />
 	        <TextView        
 	        	android:id="@+id/help_faq2"        
-	            android:text="I have the status as Unavailable. What does that mean?"
+	            android:text="@string/help_task2_question"
 				android:textAppearance="?android:attr/textAppearanceMedium"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
@@ -321,7 +310,7 @@
 	            android:padding="3dip" />
 	        <TextView        
 	        	android:id="@+id/help_faq2_aws"        
-	            android:text="If for some reason the system did not get a positive response from the AlertMe API then it is possible that either a) the connection is temporarily bad; b) too many requests have been made to the API already; c) the account details are invalid d) too many attempts with the incorrect password have disabled access to the account"
+	            android:text="@string/help_task2_answer"
 				android:textAppearance="?android:attr/textAppearanceSmall"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
@@ -337,7 +326,7 @@
 		    <TextView        
 		        android:id="@+id/help_title_test"    
 				android:textAppearance="?android:attr/textAppearanceLarge"    
-	            android:text="API Testing"
+	            android:text="@string/help_title_apitest"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
 			    android:layout_marginLeft="5dip"
@@ -346,7 +335,7 @@
 	            android:padding="3dip" />
 	        <TextView        
 	        	android:id="@+id/help_test_detail"        
-	            android:text="This should only be of interest for other developers wanting to see the API in action without the interface"
+	            android:text="@string/help_apitest_info"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
 			    android:layout_marginRight="5dip"
@@ -354,13 +343,9 @@
 	            android:padding="3dip" />
 		    <Button
 		        android:id="@+id/help_test_invoke_test"
-		       	android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:background="@drawable/button"
-		        android:layout_marginTop="40dip"
-		        android:padding="5dip"
-		        android:onClick="invokeTest"
-		        android:text="Run test" />
+		       	android:onClick="invokeTest"
+		        android:text="@string/help_apitest_dotesting"
+		        style="@style/AlertMeButton" />
 	   	</TableLayout>
    	</ScrollView>
 </TableLayout>

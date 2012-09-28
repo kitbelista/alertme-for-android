@@ -101,7 +101,48 @@ public class AlertMeConstants {
 	public static final String INTENT_REQUEST_KEY = "alertMeRequest";
 	public static final String INTENT_RETURN_SYSID = "alertMeId";
 	public static final String INTENT_DEVICE_LIST = "alertMeDevices";
+	
+	public static final String HANDLER_DATA_TYPE = "type";
+	public static final String HANDLER_DATA_VALUE = "value";
+	public static final String STR_TRUE = "true";
+	public static final String STR_FALSE = "false";
+	public static final String RELAYMODE_TRUE = "True";
+	public static final String RELAYMODE_FALSE = "False";
+	public static final String STR_COMMA = ",";
+	public static final String STR_STOP = ".";
+	public static final String EMPTY_STR = "";
+	public static final String STR_PRESENCE = "presence";
+	public static final String STR_FIRSTNAME = "firstname";
+	public static final String STR_LASTNAME = "lastname";
+	public static final String STR_RELAYSTATE = "relaystate";
+	public static final String STR_BATTERYLEVEL = "batterylevel";
+	public static final String STR_TEMPERATURE = "temperature";
+	public static final String STR_LQI = "lqi";
+	public static final String STR_CLOSED = "closed";
+	public static final String STR_TAMPER = "tamper";
+	public static final String STR_AM = "AM";
+	public static final String STR_HOME = "home";
+	public static final String STR_AWAY = "away";
+	public static final String STR_NIGHT = "night";
+	public static final String ALARM_STR_ALARMED = "alarmed";
+	public static final String ALARM_STR_CONFIRMED = "alarmConfirmed";
+	public static final String STR_SEP_DASH = " - ";
+	public static final String EVENT_START_ARMEDBY = "The Intruder Alarm was armed by ";
+	public static final String EVENT_START_DISARMEDBY = "The Intruder Alarm was disarmed by ";
+	public static final String EVENT_KEYFOB_OWNED = "'s Keyfob";
+	public static final String EVENT_MODE_CHANGE = "Behaviour changed to";
+	public static final String STR_DEGREE_CELCIUS = "\u00B0C";
+	
+	public static final char STR_V = 'V';
+	public static final char STR_W = 'W';
+	public static final char STR_ZERO = '0';
+	public static final char STR_DEGREE = '\u00B0';
+	public static final char STR_PERCENT = '%';
 
+	public static final String MODE_HOME_OK = "home_ok";
+	public static final String MODE_AWAY_OK = "away_ok";
+	public static final String MODE_NIGHT_OK = "night_ok";
+	
 	public static boolean isCommandValid(int command) {
 		boolean res = false;
         switch (command) {
@@ -251,7 +292,7 @@ public class AlertMeConstants {
 	}
     // TODO: Make the format a formula for other languages
     public static String getDateTitle(Time currentDate, Time titleTime) {
-    	String res = "";
+    	String res = null;
     	int compareDate = Time.compare(currentDate, titleTime);
     	// res = titleTime.format("%Y%m%d");
     	
@@ -264,31 +305,65 @@ public class AlertMeConstants {
     		long dayMilli = (1000*60*60*24);
     		long yesterdayTime = currentDate.toMillis(true) - dayMilli;
     		long compareYest = titleTime.toMillis(true) - yesterdayTime;
-    		String dayPost = "th";
-    		int dd = titleTime.monthDay;
-    		int cDay = dd%10;
     		
-    		switch(cDay) {
-    			case 1:
-    				if (dd!=11) dayPost = "st";
-    				break;
-    			case 2:
-    				if (dd!=12) dayPost = "nd";
-    				break;
-    			case 3:
-    				if (dd!=13) dayPost = "rd";
-    				break;
-    		}
     		if (compareYest>0) {
     			res = "Yesterday";
     		} else {
+    			String dayPost = null;
+        		int dd = titleTime.monthDay;
+        		int cDay = dd%10;
+        		
+        		switch(cDay) {
+        			case 1:
+        				if (dd!=11) dayPost = "st";
+        				break;
+        			case 2:
+        				if (dd!=12) dayPost = "nd";
+        				break;
+        			case 3:
+        				if (dd!=13) dayPost = "rd";
+        				break;
+        			default:
+        				dayPost = "th";
+        				break;
+        		}
     			String formatStr = "%A "+dd+""+dayPost+" %B";
     			if (currentDate.year!=titleTime.year) {
     				formatStr += ", %Y";
     			}
     			res = titleTime.format(formatStr);
     		}
-    	}    	
+    	}
+    	if (res==null) res = ""; // \0_o/
+    	return res;
+    }
+
+    public static final String EVENTLOG_MODE_TO_HOME = "Behaviour changed to At home";
+    public static final String EVENTLOG_MODE_TO_AWAY = "Behaviour changed to Away";
+    public static final String EVENTLOG_MODE_TO_NIGHT = "Behaviour changed to Night";
+    public static final String EVENTLOG_HUB_GONE = "The hub disappeared from network";
+    public static final String EVENTLOG_DISARMED_FROM = "The Intruder Alarm was disarmed from ";
+    public static final String EVENTLOG_ARMED_FROM = "The Intruder Alarm was armed from ";
+
+    public static int getIconFromEventMessage(String appName, String eventMessage) {
+    	int res = 0;
+    	String mesg = eventMessage.trim();
+    	if (mesg.equalsIgnoreCase(EVENTLOG_MODE_TO_HOME)) {
+    		res = R.drawable.ic_sensor_hub;        		
+    	} else if (mesg.equalsIgnoreCase(EVENTLOG_MODE_TO_AWAY)) {
+    		res = R.drawable.ic_sensor_hub;
+    	} else if (mesg.equalsIgnoreCase(EVENTLOG_MODE_TO_NIGHT)) {
+    		res = R.drawable.ic_sensor_hub;
+    	} else if (mesg.equalsIgnoreCase(EVENTLOG_HUB_GONE)) {
+    		res = R.drawable.ic_home_sensors_notok;
+    	} else if (mesg.equalsIgnoreCase(EVENTLOG_DISARMED_FROM+appName)) {
+    		res = R.drawable.icon;
+    	} else if (mesg.equalsIgnoreCase(EVENTLOG_ARMED_FROM+appName)) {
+    		res = R.drawable.icon;
+    	}
+    	//The Intruder Alarm was set off by Front Hall Motion Sensor	22:06
+    	//The Front Door Door/Window Sensor was triggered. The alarm will be raised if further triggers are detected
+    	
     	return res;
     }
 }

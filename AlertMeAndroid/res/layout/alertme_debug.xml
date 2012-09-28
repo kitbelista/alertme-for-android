@@ -5,219 +5,173 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
    	<ImageView
+   	    android:contentDescription="@string/contdesc_splashimg"
         android:layout_gravity="center"
         android:layout_width="fill_parent" 
         android:layout_height="fill_parent" 
         android:scaleType="center"
 		android:src="@drawable/splash" />
-    
-        <TextView        
-        	android:id="@+id/debug_title"        
-            android:text="@string/test_default_title"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-		    android:layout_marginTop="10dip"
-        	android:layout_gravity="top"
-            android:padding="3dip" />
+     <TextView        
+     	android:id="@+id/debug_title"        
+        android:text="@string/test_default_title"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+	   	android:layout_marginTop="10dip"
+     	android:layout_gravity="top"
+        android:padding="3dip" />
 	<ScrollView 
-		    android:textColor="#fff"
-        	android:layout_gravity="bottom"
-        	android:background="#AA000000"
+	    android:textColor="#fff"
+       	android:layout_gravity="bottom"
+       	android:background="#AA000000"
 		android:layout_marginTop="50dip"
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent">
-		<TableLayout
-			android:stretchColumns="*"
+		<LinearLayout
+			android:orientation="vertical"
 			android:id="@+id/debug_main_scroll"
+			android:layout_width="fill_parent"
+			android:layout_height="wrap_content">
+            <TableLayout
+                android:id="@+id/debug_section_setup"
+                android:layout_marginBottom="16sp"
+				android:stretchColumns="2"
+				android:shrinkColumns="0"
+			    android:scrollHorizontally="false"
 				android:layout_width="fill_parent"
-				android:layout_height="fill_parent">
-			<TableRow
-				android:layout_width="fill_parent"
-				android:layout_height="wrap_content"
-				android:id="@+id/debug_section_setup">
-				<TableLayout
-						android:stretchColumns="*"
-					android:id="@+id/debug_main"
+				android:layout_height="wrap_content">
+				<TextView        
+		        	android:id="@+id/debug_setup"        
+		            android:text="@string/settings_title_setup"
+					android:textAppearance="?android:attr/textAppearanceLarge"
+					android:background="#111"
 					android:layout_width="fill_parent"
-					android:layout_height="fill_parent">
-					
-					<TextView        
-			        	android:id="@+id/debug_setup"        
-			            android:text="Setup"
-						android:textAppearance="?android:attr/textAppearanceLarge"
-						android:background="#111"
-						android:layout_width="fill_parent"
-						android:layout_height="wrap_content"
+					android:layout_height="wrap_content"
+		            android:padding="3dip" />
+				<TextView        
+		        	android:id="@+id/debug_setup_login"        
+		            android:text="@string/test_login_label"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:background="#333"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+		            android:padding="3dip" />
+			    <TableRow android:layout_marginBottom="5dip">
+			        <TextView
+			            android:layout_column="1"
+			            android:text="@string/test_login_username_label"
 			            android:padding="3dip" />
-				    
-					<TextView        
-			        	android:id="@+id/debug_setup_login"        
-			            android:text="@string/test_login_label"
-						android:textAppearance="?android:attr/textAppearanceMedium"
-						android:background="#333"
-						android:layout_width="fill_parent"
-						android:layout_height="wrap_content"
+					<EditText
+					    android:hint="@string/settings_login_username_label"
+			        	android:layout_column="2"
+			        	android:id="@+id/debug_username"
+					    android:layout_width="fill_parent"
+			        	android:layout_height="wrap_content"
+			        	style="@style/AlertMeEditText" />
+			    </TableRow>
+			    <TableRow android:layout_marginBottom="5dip">
+			        <TextView
+			            android:layout_column="1"
+			            android:text="@string/test_login_password_label"
 			            android:padding="3dip" />
-		            <TableLayout
-						android:stretchColumns="2"
-						android:shrinkColumns="0"
-					        android:scrollHorizontally="false"
-						android:layout_width="fill_parent"
-						android:layout_height="wrap_content">
-					    <TableRow android:layout_marginBottom="5dip">
-					        <TextView
-					            android:layout_column="1"
-					            android:text="@string/test_login_username_label"
-					            android:padding="3dip" />
-							<EditText
-					        	android:layout_column="2"
-					        	android:id="@+id/debug_username"
-					        	android:background="@drawable/button"
-							    android:padding="5dip"
-							    android:textColor="#fff"
-							    android:layout_width="fill_parent"
-					        	android:layout_height="wrap_content" />
-					    </TableRow>
-					
-					    <TableRow android:layout_marginBottom="5dip">
-					        <TextView
-					            android:layout_column="1"
-					            android:text="@string/test_login_password_label"
-					            android:padding="3dip" />
-							<EditText
-					        	android:layout_column="2"
-					        	android:id="@+id/debug_password"
-					        	android:password="true"
-					        	android:background="@drawable/button"
-							    android:padding="5dip"
-							    android:textColor="#fff"
-							    android:layout_width="fill_parent"
-					        	android:layout_height="wrap_content" />
-					    </TableRow>
-					    <TextView        
-				        	android:id="@+id/debug_setup_tests"        
-				            android:text="@string/test_list_label"
-							android:textAppearance="?android:attr/textAppearanceMedium"
-							android:background="#333"
-							android:layout_width="fill_parent"
-							android:layout_height="wrap_content"
-				            android:padding="3dip" />
-			            <CheckBox android:id="@+id/test1"
-					        android:layout_width="wrap_content"
-					        android:layout_height="wrap_content"
-					        android:text="@string/test_1_label" />
-				        <LinearLayout
-					        android:layout_width="fill_parent"
-					        android:layout_height="wrap_content">
-					        <TextView
-					            android:text="@string/test_1_description"
-					        	android:layout_width="fill_parent"
-						        android:layout_height="wrap_content"
-						        android:maxEms="10"
-						        android:singleLine="false"
-						        android:scrollHorizontally="false"
-						            android:padding="3dip" />
-			           	</LinearLayout>
-			            <CheckBox android:id="@+id/test2"
-					        android:layout_width="wrap_content"
-					        android:layout_height="wrap_content"
-					        android:text="@string/test_2_label" />
-				        <LinearLayout
-					        android:layout_width="fill_parent"
-					        android:layout_height="wrap_content">
-					        <TextView
-					            android:text="@string/test_2_description"
-					        	android:layout_width="fill_parent"
-						        android:layout_height="wrap_content"
-						        android:maxEms="10"
-						        android:singleLine="false"
-						        android:scrollHorizontally="false"
-						            android:padding="3dip" />
-			           	</LinearLayout>
-			            <CheckBox android:id="@+id/test3"
-					        android:layout_width="wrap_content"
-					        android:layout_height="wrap_content"
-					        android:text="@string/test_3_label" />
-				        <LinearLayout
-					        android:layout_width="fill_parent"
-					        android:layout_height="wrap_content">
-					        <TextView
-					            android:text="@string/test_3_description"
-					        	android:layout_width="fill_parent"
-						        android:layout_height="wrap_content"
-						        android:maxEms="10"
-						        android:singleLine="false"
-						        android:scrollHorizontally="false"
-						            android:padding="3dip" />
-			            	
-			           	</LinearLayout>
-			            <CheckBox android:id="@+id/test4"
-					        android:layout_width="wrap_content"
-					        android:layout_height="wrap_content"
-					        android:text="@string/test_4_label" />
-				        <LinearLayout
-					        android:layout_width="fill_parent"
-					        android:layout_height="wrap_content">
-					        <TextView
-					            android:text="@string/test_4_description"
-					        	android:layout_width="fill_parent"
-						        android:layout_height="wrap_content"
-						        android:maxEms="10"
-						        android:singleLine="false"
-						        android:scrollHorizontally="false"
-						            android:padding="3dip" />
-			            	
-			           	</LinearLayout>
-				            
-				            
-						<Button
-				        	android:id="@+id/debug_tests_run"
-				        	android:layout_width="wrap_content"
-					        android:layout_height="wrap_content"
-					        android:background="@drawable/button"
-					        android:padding="5dip"
-					        android:onClick="invokeTests"
-							android:textColor="#fff"
-					        android:text="@string/test_run_label" />
-		            </TableLayout>
-					        
-					
-				</TableLayout>
-			</TableRow>
-			<TableRow
+					<EditText
+					    android:hint="@string/settings_login_password_label"
+			        	android:layout_column="2"
+			        	android:id="@+id/debug_password"
+			        	android:password="true"
+					    android:layout_width="fill_parent"
+			        	android:layout_height="wrap_content"
+			        	style="@style/AlertMeEditText" />
+			    </TableRow>
+			    <TextView        
+		        	android:id="@+id/debug_setup_tests"        
+		            android:text="@string/test_list_label"
+					android:textAppearance="?android:attr/textAppearanceMedium"
+					android:background="#333"
+					android:layout_width="fill_parent"
+					android:layout_height="wrap_content"
+		            android:padding="3dip" />
+	            <CheckBox android:id="@+id/test1"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:text="@string/test_1_label" />
+		        <TextView
+		            android:text="@string/test_1_description"
+		        	android:layout_width="fill_parent"
+			        android:layout_height="wrap_content"
+			        android:maxEms="10"
+			        android:layout_marginBottom="7sp"
+			        android:singleLine="false"
+			        android:scrollHorizontally="false"
+			        android:padding="3dip" />
+	            <CheckBox android:id="@+id/test2"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:text="@string/test_2_label" />
+		        <TextView
+		            android:text="@string/test_2_description"
+		        	android:layout_width="fill_parent"
+			        android:layout_height="wrap_content"
+			        android:maxEms="10"
+			        android:singleLine="false"
+			        android:scrollHorizontally="false"
+			        android:padding="3dip" />
+	            <CheckBox android:id="@+id/test3"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:text="@string/test_3_label" />
+		        <TextView
+		            android:text="@string/test_3_description"
+		        	android:layout_width="fill_parent"
+			        android:layout_height="wrap_content"
+			        android:maxEms="10"
+			        android:layout_marginBottom="7sp"
+			        android:singleLine="false"
+			        android:scrollHorizontally="false"
+			        android:padding="3dip" />
+	            <CheckBox android:id="@+id/test4"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:text="@string/test_4_label" />
+		        
+		        <TextView
+		            android:text="@string/test_4_description"
+		        	android:layout_width="fill_parent"
+			        android:layout_height="wrap_content"
+			        android:maxEms="10"
+			        android:layout_marginBottom="7sp"
+			        android:singleLine="false"
+			        android:scrollHorizontally="false"
+			        android:padding="3dip" />
+		            
+				<Button
+		        	android:id="@+id/debug_tests_run"
+		        	android:onClick="invokeTests"
+					android:text="@string/test_run_label"
+			        style="@style/AlertMeButton"  />
+            </TableLayout>
+			<LinearLayout
+			    android:orientation="vertical"
 				android:id="@+id/debug_section_results"
+				android:layout_marginBottom="16sp"
 				android:layout_width="fill_parent"
-				android:layout_height="fill_parent">
-				<TableLayout
-					android:stretchColumns="*"
+				android:layout_height="wrap_content">
+		        <TextView        
+		        	android:id="@+id/debug_body"        
+		            android:text=""
+		        	android:maxEms="10"
 					android:layout_width="fill_parent"
-					android:layout_height="wrap_content">
-			        <LinearLayout
-				        android:layout_width="fill_parent"
-				        android:layout_height="wrap_content">
-				        <TextView        
-				        	android:id="@+id/debug_body"        
-				            android:text=""
-								        android:maxEms="10"
-							android:layout_width="fill_parent"
-							android:layout_height="fill_parent"
-				            android:padding="3dip" />
-			        </LinearLayout>    
-					<Button
-			        	android:id="@+id/debug_tests_retry"
-			        	android:layout_width="fill_parent"
-				        android:layout_height="wrap_content"
-				        android:layout_marginLeft="10dip"
-				        android:background="@drawable/button"
-				        android:padding="5dip"
-						android:textColor="#fff"
-				        android:onClick="retakeTests"
-				        android:text="@string/test_retry_label" />
+					android:layout_height="fill_parent"
+		            android:padding="3dip" />
+				<Button
+				    android:layout_gravity="center_horizontal"
+				    android:id="@+id/debug_tests_retry"
+		        	android:onClick="retakeTests"
+			        android:text="@string/test_retry_label"
+			        style="@style/AlertMeButton"  />
 
-				</TableLayout>
-			</TableRow>
+			</LinearLayout>
 			
-		</TableLayout>
+		</LinearLayout>
 
 	</ScrollView>
 </FrameLayout>

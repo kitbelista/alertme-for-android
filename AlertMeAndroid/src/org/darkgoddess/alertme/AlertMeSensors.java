@@ -59,6 +59,7 @@ public class AlertMeSensors extends Activity {
 	private boolean hasCreated = false;
 	private Device viewDevice = null;
 	private int[] rowBg = null;
+	private int rowBgLen = 0;
 
 	private final View.OnClickListener deviceControllerClick = new View.OnClickListener() {
 		public void onClick(View view) {
@@ -68,15 +69,16 @@ public class AlertMeSensors extends Activity {
 				// attempt to toggle!
 				SharedPreferences sharedPrefs = getSharedPreferences(AlertMeConstants.PREFERENCE_NAME, AlertMeConstants.PREFERENCE_MODE);
 				SensorListStarter listloader = new SensorListStarter(alertMe, handler, getIntent(), null, sharedPrefs);
-				String relay = viewDevice.getAttribute("relaystate");
-				
-				if (relay.equals("True")) {
-					listloader.instruction = AlertMeConstants.INVOKE_SENSOR_CLAMP_OFF;
-				} else {
-					listloader.instruction = AlertMeConstants.INVOKE_SENSOR_CLAMP_ON;					
+				String relay = viewDevice.getAttribute(AlertMeConstants.STR_RELAYSTATE);
+				if (relay!=null) {
+					if (relay.equalsIgnoreCase(AlertMeConstants.STR_TRUE)) {
+						listloader.instruction = AlertMeConstants.INVOKE_SENSOR_CLAMP_OFF;
+					} else {
+						listloader.instruction = AlertMeConstants.INVOKE_SENSOR_CLAMP_ON;					
+					}
+					screenStuff.setBusy(AlertMeConstants.UPDATE_SENSORS);
+					listloader.start();										
 				}
-				screenStuff.setBusy(AlertMeConstants.UPDATE_SENSORS);
-				listloader.start();					
 			}
 			// now dismiss
 			//if (screenStuff!=null) {
@@ -88,8 +90,8 @@ public class AlertMeSensors extends Activity {
     // Handler to update the interface..        
 	final Handler handler = new Handler() {
         public void handleMessage(Message msg) {
-            int mesgType = msg.getData().getInt("type");
-            String mesgData = msg.getData().getString("value");
+            int mesgType = msg.getData().getInt(AlertMeConstants.HANDLER_DATA_TYPE);
+            String mesgData = msg.getData().getString(AlertMeConstants.HANDLER_DATA_VALUE);
             performUpdate(mesgType, mesgData);
         }
     };
@@ -105,7 +107,8 @@ public class AlertMeSensors extends Activity {
 			hasCreated = true;
 			initView();
 		}
-		rowBg = AMViewItems.getRowColours(this);
+		rowBg = AMViewItems.getRowBackgrounds(this);
+		if (rowBg!=null) rowBgLen = rowBg.length;
 	}
 	@Override
     public void onStart() {
@@ -328,18 +331,19 @@ public class AlertMeSensors extends Activity {
     				boolean doChange = false;
     				boolean newRelayMode = false;
     				boolean wasOk = false;
-    				String relay = "";
+    				String relay = null;
+    				String vrelay = null;
     				updateInstruction = AlertMeConstants.INVOKE_SENSOR_CLAMP_CHANGE_FAIL;
     				if (viewDevice!=null && viewDevice.type == Device.POWER_CONTROLLER) {
-    					relay = viewDevice.getAttribute("relaystate");
-    					
+    					relay = viewDevice.getAttribute(AlertMeConstants.STR_RELAYSTATE);
+    					vrelay = (relay!=null)? relay.toLowerCase(): null;
         				if (instruction==AlertMeConstants.INVOKE_SENSOR_CLAMP_ON) {
         					// Currently off, instruct to go on
-        					doChange = (relay!=null && relay.equals("False"));
+        					doChange = (vrelay!=null && vrelay.equals(AlertMeConstants.STR_FALSE));
         					newRelayMode = true;
         				} else {
         					// Currently on, instruct to go off
-        					doChange = (relay!=null && relay.equals("True"));
+        					doChange = (vrelay!=null && vrelay.equals(AlertMeConstants.STR_TRUE));
         					newRelayMode = false;
         				}
         				if (doChange) {
@@ -349,8 +353,7 @@ public class AlertMeSensors extends Activity {
         					updateInstruction = AlertMeConstants.INVOKE_SENSOR_CLAMP_CHANGE_NONE;
         				}
     					if (wasOk) {
-    						String newVal = (newRelayMode)? "True": "False";
-    						viewDevice.setAttribute("relaystate", newVal);
+    						viewDevice.setAttribute(AlertMeConstants.STR_RELAYSTATE, (newRelayMode)? AlertMeConstants.RELAYMODE_TRUE: AlertMeConstants.RELAYMODE_FALSE);
     						devices = alertme.retrieveDevices(); // refresh
     						alertMe = alertme; // store!
     					}
@@ -363,7 +366,7 @@ public class AlertMeSensors extends Activity {
     		if (handler!=null) {
     			Message msg = handler.obtainMessage();
                 Bundle b = new Bundle();
-                b.putInt("type", updateInstruction);
+                b.putInt(AlertMeConstants.HANDLER_DATA_TYPE, updateInstruction);
                 msg.setData(b);
                 handler.sendMessage(msg);
     		}        		
@@ -407,6 +410,7 @@ public class AlertMeSensors extends Activity {
                         TextView name = (TextView) v.findViewById(R.id.sensorline_name);
                         TextView type = (TextView) v.findViewById(R.id.sensorline_type);
                 		ImageView sigicon = (ImageView) v.findViewById(R.id.sensorline_signal_icon);
+                		
                         if (battery!=null) {
                         	battery.setText(""+d.batteryLevel);
                         }
@@ -428,46 +432,44 @@ public class AlertMeSensors extends Activity {
                         if (sigicon!=null) {
                         	sigicon.setImageResource(AlertMeConstants.getSignalIcon(d));
                         }
-                        //if (position%2==0) { v.setBackgroundColor(R.color.menu_even); }
-                        //else { v.setBackgroundColor(R.color.menu_odd); }
                         v.setOnClickListener(new DeviceClicker(d));
-                }
-                if (rowBg!=null) {
-                	int colorPos = position % rowBg.length;
-                	v.setBackgroundColor(rowBg[colorPos]);
+                        if (rowBg!=null) {
+                        	int colorPos = position % rowBgLen;
+                        	v.setBackgroundResource(rowBg[colorPos]);
+                        }
                 }
                 return v;
         }
         private String getStatusString(Device d) {
-        	String res = "";
+        	String res = null;
         	
         	if (d.type==Device.KEYFOB) {
-        		String pres = d.getAttribute("presence");
+        		String pres = d.getAttribute(AlertMeConstants.STR_PRESENCE);
         		if (pres!=null) {
-        			if (pres.equals("True")) {
-        				res = "Present";
+        			if (pres.equalsIgnoreCase(AlertMeConstants.STR_TRUE)) {
+        				res = getString(R.string.sensor_device_presence_present);
         			} else {
-        				res = "Away";
+        				res = getString(R.string.sensor_device_presence_away);
         			}
         		}
         	} else {
         		if (d.type == Device.CONTACT_SENSOR) {
-        			String closed = d.attributes.get("closed");
-        			if (closed!=null && closed.length()!=0 && closed.equalsIgnoreCase("true")) {
-        				res = "Closed";
+        			String closed = d.attributes.get(AlertMeConstants.STR_CLOSED);
+        			if (closed!=null && closed.length()!=0 && closed.equalsIgnoreCase(AlertMeConstants.STR_TRUE)) {
+        				res = getString(R.string.sensor_device_door_closed);
         			} else {
-        				res = "Open";
+        				res = getString(R.string.sensor_device_door_open);
         			}
         		} else {
-            		String tampered = d.attributes.get("tamper");
+            		String tampered = d.attributes.get(AlertMeConstants.STR_TAMPER);
             		if (tampered!=null) {
-            			if (tampered.equals("True")) {
-            				res = "Not Ok";
+            			if (tampered.equalsIgnoreCase(AlertMeConstants.STR_TRUE)) {
+            				res = getString(R.string.sensor_device_tampered);
             			} else {
-            				res = "All Ok";
+            				res = getString(R.string.sensor_device_nottampered);
             				if (d.type != Device.POWER_CONTROLLER) {
             					if (d.getBatteryLevel()<3) {
-            						res = "Battery low";
+            						res = getString(R.string.sensor_device_batterylow);
             					}
             				}
             			}
@@ -476,6 +478,7 @@ public class AlertMeSensors extends Activity {
         			
         		}
         	}
+        	if (res==null) res = "";
         	
         	return res;
         }

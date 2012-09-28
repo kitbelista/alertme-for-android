@@ -11,7 +11,7 @@
 		android:minHeight="35dip">
         <TextView        
         	android:id="@+id/splash_credits"        
-            android:text="exacat"
+            android:text="@string/splashpage_credits"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 		    android:layout_marginLeft="10dip"
@@ -22,6 +22,7 @@
     <TableRow android:gravity="bottom">
     	<View />
     	<ImageView
+    	    android:contentDescription="@string/contdesc_splashimg"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
     		android:gravity="center"

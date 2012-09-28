@@ -35,6 +35,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,7 +50,7 @@ public class AlertMeTest extends Activity {
 	//private AlertMeStorage db = null;
 	private TextView title = null;
 	private TextView body = null;
-	private LinearLayout setup = null;
+	private TableLayout setup = null;
 	private LinearLayout results = null;
 	private EditText userText = null;
 	private EditText passText = null;
@@ -221,7 +222,7 @@ public class AlertMeTest extends Activity {
 		body = (TextView) findViewById(R.id.debug_body);
 		userText = (EditText) findViewById(R.id.debug_username);
 		passText = (EditText) findViewById(R.id.debug_password);
-		setup = (LinearLayout) findViewById(R.id.debug_section_setup);
+		setup = (TableLayout) findViewById(R.id.debug_section_setup);
 		results = (LinearLayout) findViewById(R.id.debug_section_results);
 	}
 	private void enableSetup() {
@@ -284,6 +285,7 @@ public class AlertMeTest extends Activity {
 	}
 	private void retakeTests() {
 		enableSetup();
+		updateText(title, getString(R.string.test_default_title));
 	}
 	
 	private void invokeTests() {

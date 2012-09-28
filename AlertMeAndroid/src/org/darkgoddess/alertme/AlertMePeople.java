@@ -60,13 +60,14 @@ public class AlertMePeople extends Activity {
 	private TextView accountHub = null;
 	private ArrayList<Device> keyFobs = null;
 	private int[] rowBg = null;
+	private int rowBgLen = 0;
 
 	// Handler to update the interface..        
 	final Handler handler = new Handler() {
 	    public void handleMessage(Message msg) {
-	        int mesgType = msg.getData().getInt("type");
-	        String first = msg.getData().getString("firstname");
-	        String surname = msg.getData().getString("lastname");
+	        int mesgType = msg.getData().getInt(AlertMeConstants.HANDLER_DATA_TYPE);
+	        String first = msg.getData().getString(AlertMeConstants.STR_FIRSTNAME);
+	        String surname = msg.getData().getString(AlertMeConstants.STR_LASTNAME);
 	        performUpdate(mesgType, first, surname);
 	    }
 	};
@@ -82,7 +83,8 @@ public class AlertMePeople extends Activity {
 			savedState = savedInstanceState;
 			initView();
 		}
-		rowBg = AMViewItems.getRowColours(this);
+		rowBg = AMViewItems.getRowBackgrounds(this);
+		if (rowBg!=null) rowBgLen = rowBg.length;
 	}
 	@Override
     public void onStart() {
@@ -202,11 +204,11 @@ public class AlertMePeople extends Activity {
     	int personCount = 0;
     	if (keyFobs!=null) {
         	for(Device keyfob: keyFobs) {
-        		if (keyfob.attributes.containsKey("presence")) {
-        			String pres = (String) keyfob.attributes.get("presence");
+        		if (keyfob.attributes.containsKey(AlertMeConstants.STR_PRESENCE)) {
+        			String pres = (String) keyfob.attributes.get(AlertMeConstants.STR_PRESENCE);
         			if (pres!=null) {
         				pres = pres.trim().toLowerCase();
-            			personCount += (pres.equals("true"))? 1: 0;
+            			personCount += (pres.equals(AlertMeConstants.STR_TRUE))? 1: 0;
         			}
         		}
         	}
@@ -263,7 +265,7 @@ public class AlertMePeople extends Activity {
     	}
     	if (hub!=null && accountHub!=null) {
     		String peopleString = getPeopleString();
-    		accountHub.setText(hub.name+ " - "+peopleString);
+    		accountHub.setText(hub.name+ AlertMeConstants.STR_SEP_DASH +peopleString);
     		screenStuff.setSystemName(hub);
     		if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "performUpdate()  updating hub:"+hub.name);
     	}
@@ -312,13 +314,13 @@ public class AlertMePeople extends Activity {
                 }
                 Device k = items.get(position);
                 if (k != null) {
-                	String pres = k.getAttribute("presence");
-                	boolean isPres = pres.equals("True");
+                	String pres = k.getAttribute(AlertMeConstants.STR_PRESENCE);
+                	boolean isPres = (pres!=null)? pres.trim().toLowerCase().equals(AlertMeConstants.STR_TRUE): false;
                     TextView name = (TextView) v.findViewById(R.id.person_name);
             		ImageView sigIcon = (ImageView) v.findViewById(R.id.person_signal_icon);
             		ImageView presIcon = (ImageView) v.findViewById(R.id.person_presence_icon);
                     TextView mesg = (TextView) v.findViewById(R.id.person_status);
-                	String status = (isPres)? "At home": "Away";
+                	String status = (isPres)? getString(R.string.people_fob_home): getString(R.string.people_fob_away);
                     
                     if (name!=null) name.setText(k.name);
                     if (sigIcon!=null) sigIcon.setImageResource(AlertMeConstants.getSignalIcon(k));
@@ -329,8 +331,9 @@ public class AlertMePeople extends Activity {
                     if (mesg!=null) mesg.setText(status);
                 }
                 if (rowBg!=null) {
-                	int colorPos = position % rowBg.length;
-                	v.setBackgroundColor(rowBg[colorPos]);
+                	int colorPos = position % rowBgLen;
+                	v.setBackgroundResource(rowBg[colorPos]);
+                	//v.setBackgroundColor(rowBg[colorPos]);
                 }
                 return v;
         }
@@ -371,11 +374,11 @@ public class AlertMePeople extends Activity {
         			attributes = alertme.getUserInfo();
         		}
         		if (attributes!=null) {
-        			if (attributes.containsKey("firstname")) {
-        				firstname = attributes.get("firstname");
+        			if (attributes.containsKey(AlertMeConstants.STR_FIRSTNAME)) {
+        				firstname = attributes.get(AlertMeConstants.STR_FIRSTNAME);
         			}
-        			if (attributes.containsKey("lastname")) {
-        				lastname = attributes.get("lastname");
+        			if (attributes.containsKey(AlertMeConstants.STR_LASTNAME)) {
+        				lastname = attributes.get(AlertMeConstants.STR_LASTNAME);
         			}
         		}
     		}
@@ -383,9 +386,9 @@ public class AlertMePeople extends Activity {
     		if (handler!=null) {
     			Message msg = handler.obtainMessage();
                 Bundle b = new Bundle();
-                b.putInt("type", AlertMeConstants.UPDATE_ALL);
-                b.putString("firstname", firstname);
-                b.putString("lastname", lastname);
+                b.putInt(AlertMeConstants.HANDLER_DATA_TYPE, AlertMeConstants.UPDATE_ALL);
+                b.putString(AlertMeConstants.STR_FIRSTNAME, firstname);
+                b.putString(AlertMeConstants.STR_LASTNAME, lastname);
                 msg.setData(b);
                 handler.sendMessage(msg);
     		}        		
@@ -412,11 +415,11 @@ public class AlertMePeople extends Activity {
 				attributes = APIUtilities.getDeviceChannelValues(currentUser.info);
 			}
 			if (attributes!=null) {
-				if (attributes.containsKey("firstname")) {
-					firstname = attributes.get("firstname");
+				if (attributes.containsKey(AlertMeConstants.STR_FIRSTNAME)) {
+					firstname = attributes.get(AlertMeConstants.STR_FIRSTNAME);
 				}
-				if (attributes.containsKey("lastname")) {
-					lastname = attributes.get("lastname");
+				if (attributes.containsKey(AlertMeConstants.STR_LASTNAME)) {
+					lastname = attributes.get(AlertMeConstants.STR_LASTNAME);
 				}
 			}
 			performUpdate(AlertMeConstants.UPDATE_ALL, firstname, lastname);

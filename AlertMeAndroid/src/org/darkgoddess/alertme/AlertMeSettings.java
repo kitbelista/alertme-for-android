@@ -199,7 +199,7 @@ public class AlertMeSettings extends Activity {
 	}
     private void setBusy(final String title, final String message) {
     	if (progressDialog!=null) {
-    		if (title!=null && title.length()!=0) { progressDialog.setMessage(title); }
+    		if (title!=null && title.length()!=0) { progressDialog.setTitle(title); }
     		if (message!=null && message.length()!=0) { progressDialog.setMessage(message); }
     		if (!isBusy) {
         		isBusy = true;
@@ -209,7 +209,7 @@ public class AlertMeSettings extends Activity {
     	}
     }
     private void setBusy() {
-    	setBusy("", getString(R.string.home_command_update_systemname));
+    	setBusy(null, getString(R.string.home_command_update_systemname));
     }
 	private void setNotBusy() {
 		if (progressDialog!=null && isBusy) {

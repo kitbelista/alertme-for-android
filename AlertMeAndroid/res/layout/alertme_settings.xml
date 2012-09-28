@@ -1,61 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:gravity="center_horizontal"
-    android:padding="3dip"
     android:stretchColumns="2"
-    android:background="@color/page_background">
-    <LinearLayout
-		android:minHeight="45dip">
-    	<ImageView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:src="@drawable/icon" />
-        <TextView        
-        	android:id="@+id/settings_housename"        
-            android:text="@string/systemname_default"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-		    android:layout_marginLeft="10dip"
-		    android:layout_marginRight="5dip"
-            android:padding="3dip" />
-    </LinearLayout>
-    
+    style="@style/AlertMePage">
+    <TextView
+		android:id="@+id/settings_housename"        
+		android:text="@string/systemname_default"
+		style="@style/AlertMeTitleConnected" />
 	<TextView
 		android:id="@+id/settings_title"
 	    android:textColor="#333"
-	    android:text="Settings"
+	    android:text="@string/settings_main_title"
 	    android:padding="3dip" />
     <TableRow android:layout_marginBottom="5dip">
         <TextView
             android:layout_column="1"
 			android:textColor="#333"
-            android:text="Login name"
+            android:text="@string/settings_login_username_label"
             android:padding="3dip" />
 		<EditText
+		    android:hint="@string/settings_default_username"
         	android:layout_column="2"
         	android:id="@+id/login_username"
-        	android:background="@drawable/button"
-		    android:padding="5dip"
 		    android:layout_width="fill_parent"
-        	android:layout_height="wrap_content" />
+        	android:layout_height="wrap_content"
+			style="@style/AlertMeEditText" />
     </TableRow>
 
     <TableRow android:layout_marginBottom="5dip">
         <TextView
             android:layout_column="1"
             android:textColor="#333"
-            android:text="Password"
+            android:text="@string/settings_login_password_label"
             android:padding="3dip" />
 		<EditText
+		    android:hint="@string/settings_default_password"
         	android:layout_column="2"
         	android:id="@+id/login_password"
         	android:password="true"
-        	android:background="@drawable/button"
-		    android:padding="5dip"
-		    android:layout_width="fill_parent"
-        	android:layout_height="wrap_content" />
+        	android:layout_width="fill_parent"
+        	android:layout_height="wrap_content"
+			style="@style/AlertMeEditText" />
     </TableRow>
 
     <TableRow android:layout_marginBottom="5dip">
@@ -67,20 +51,12 @@
         	android:gravity="right">
 		    <Button
 		        android:id="@+id/login_cancel"
-	        	android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:background="@drawable/button"
-		        android:padding="5dip"
-		        android:text="Cancel" />
+		        android:text="@string/settings_button_cancel"
+		        style="@style/AlertMeInlineButton" />
 			<Button
 	        	android:id="@+id/login_ok"
-	        	android:layout_width="wrap_content"
-		        android:layout_height="wrap_content"
-		        android:layout_marginLeft="10dip"
-		        android:background="@drawable/button"
-		        android:padding="5dip"
-		        android:text="OK" />
-        </LinearLayout>
-    
+		        android:text="@string/settings_button_ok"
+		        style="@style/AlertMeInlineButton" />
+        </LinearLayout>  
     </TableRow>
 </TableLayout>

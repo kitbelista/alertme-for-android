@@ -63,12 +63,13 @@ public class AlertMeEventHistory extends Activity {
 	private boolean hasCreated = false;
 	private boolean createdList = false;
 	private int[] rowBg = null;
+	private int rowBgLen = 0;
 
     // Handler to update the interface..        
 	final Handler handler = new Handler() {
         public void handleMessage(Message msg) {
-            int mesgType = msg.getData().getInt("type");
-            String mesgData = msg.getData().getString("value");
+            int mesgType = msg.getData().getInt(AlertMeConstants.HANDLER_DATA_TYPE);
+            String mesgData = msg.getData().getString(AlertMeConstants.HANDLER_DATA_VALUE);
             performUpdate(mesgType, mesgData);
         }
     };
@@ -86,7 +87,8 @@ public class AlertMeEventHistory extends Activity {
 			initView();
 			savedState = savedInstanceState;
 		}
-		rowBg = AMViewItems.getRowColours(this);
+		rowBg = AMViewItems.getRowBackgrounds(this);
+		if (rowBg!=null) rowBgLen = rowBg.length;
 		if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "onCreate()   END");
 	}
 	@Override
@@ -456,59 +458,41 @@ public class AlertMeEventHistory extends Activity {
                     }
                 }
                 if (rowBg!=null) {
-                	int colorPos = position % rowBg.length;
-                	v.setBackgroundColor(rowBg[colorPos]);
+                	int colorPos = position % rowBgLen;
+                	v.setBackgroundResource(rowBg[colorPos]);
+                	//v.setBackgroundColor(rowBg[colorPos]);
                 }
                 return v;
         }
         private String getTidiedMessage(String eventMessage) {
         	String res = eventMessage.trim();
         	String appName = AlertMeServer.LOGIN_TAG;
-        	if (res.startsWith("The Intruder Alarm was disarmed by ")) {
-        		res = res.replace("The Intruder Alarm was disarmed by ", "");
-        		res = res.concat(" disarmed the alarm");
-        	} else if (res.startsWith("The Intruder Alarm was armed by ")) {
-        		res = res.replace("The Intruder Alarm was armed by ", "");
-        		res = res.concat(" armed the alarm");
-        	} else if (res.equals("The Intruder Alarm was disarmed from "+appName)) {
-        		res = appName + " disarmed the alarm";
-        	} else if (res.equals("The Intruder Alarm was armed from "+appName)) {
-        		res = appName + " armed the alarm";
+        	if (res.startsWith(AlertMeConstants.EVENT_START_DISARMEDBY)) {
+        		res = res.replace(AlertMeConstants.EVENT_START_DISARMEDBY, AlertMeConstants.EMPTY_STR);
+        		res = res.concat(getString(R.string.eventlist_end_disarmedby));
+        	} else if (res.startsWith(AlertMeConstants.EVENT_START_ARMEDBY)) {
+        		res = res.replace(AlertMeConstants.EVENT_START_ARMEDBY, AlertMeConstants.EMPTY_STR);
+        		res = res.concat(getString(R.string.eventlist_end_armedby));
+        	} else if (res.equals(AlertMeConstants.EVENT_START_DISARMEDBY+appName)) {
+        		res = appName + getString(R.string.eventlist_end_disarmedby);
+        	} else if (res.equals(AlertMeConstants.EVENT_START_DISARMEDBY+appName)) {
+        		res = appName + getString(R.string.eventlist_end_armedby);
         	}
-        	if (res.contains("'s Keyfob")) {
-        		res = res.replace("'s Keyfob", "");
+        	if (res.contains(AlertMeConstants.EVENT_KEYFOB_OWNED)) {
+        		res = res.replace(AlertMeConstants.EVENT_KEYFOB_OWNED, AlertMeConstants.EMPTY_STR);
         	}
-        	if (res.contains("Behaviour changed to ")) {
-        		res = res.replace("Behaviour changed to ", "Mode changed to ");
+        	if (res.contains(AlertMeConstants.EVENT_MODE_CHANGE)) {
+        		res = res.replace(AlertMeConstants.EVENT_MODE_CHANGE, getString(R.string.eventlist_mode_change));
         	}
         	
         	return res;
         }
         private int getIconFromEventMessage(String eventMessage) {
-        	int res = 0;
-        	String appName = AlertMeServer.LOGIN_TAG;
-        	String mesg = eventMessage.trim();
-        	if (mesg.equals("Behaviour changed to At home")) {
-        		res = R.drawable.ic_sensor_hub;        		
-        	} else if (mesg.equals("Behaviour changed to Away")) {
-        		res = R.drawable.ic_sensor_hub;
-        	} else if (mesg.equals("Behaviour changed to Night")) {
-        		res = R.drawable.ic_sensor_hub;
-        	} else if (mesg.equals("The hub disappeared from network")) {
-        		res = R.drawable.ic_home_sensors_notok;
-        	} else if (mesg.equals("The Intruder Alarm was disarmed from "+appName)) {
-        		res = R.drawable.icon;
-        	} else if (mesg.equals("The Intruder Alarm was armed from "+appName)) {
-        		res = R.drawable.icon;
-        	}
-        	//The Intruder Alarm was set off by Front Hall Motion Sensor	22:06
-        	//The Front Door Door/Window Sensor was triggered. The alarm will be raised if further triggers are detected
-        	
-        	return res;
+        	return AlertMeConstants.getIconFromEventMessage(AlertMeServer.LOGIN_TAG, eventMessage);
         }
         private String getRawTypeFormated(String input) {
         	String res = (input!=null)? input.trim(): null;
-        	if (res!=null && res.startsWith("AM")) {
+        	if (res!=null && res.startsWith(AlertMeConstants.STR_AM)) {
         		res = res.substring(2);
         	}
         	return res;
@@ -546,7 +530,7 @@ public class AlertMeEventHistory extends Activity {
     		if (handler!=null) {
     			Message msg = handler.obtainMessage();
                 Bundle b = new Bundle();
-                b.putInt("type", AlertMeConstants.UPDATE_ALL);
+                b.putInt(AlertMeConstants.HANDLER_DATA_TYPE, AlertMeConstants.UPDATE_ALL);
                 msg.setData(b);
                 handler.sendMessage(msg);
     		}        		

@@ -18,6 +18,7 @@
 		android:id="@+id/eventline_type_icon_frame"
         android:layout_alignParentLeft="true">
 		<ImageView
+		    android:contentDescription="@string/contdesc_eventlist_device"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 		    android:id="@+id/eventline_type_icon"
@@ -31,7 +32,7 @@
 	    android:id="@+id/eventline_time"
 	    android:layout_marginLeft="50dip"
 	    android:layout_marginRight="5dip"
-	    android:text="HH:MM:SS"
+	    android:text="@string/event_list_default_time"
 	    android:maxEms="10"
         android:layout_alignParentRight="true"
 	    android:textColor="@color/page_text_lighter" />
@@ -39,7 +40,7 @@
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
 	    android:id="@+id/eventline_message"
-	    android:text="Event message"
+	    android:text="@string/event_list_default_mesg"
 	    android:layout_marginLeft="5dip"
 	    android:layout_marginRight="5dip"
 	    android:scrollHorizontally="false" 
@@ -49,7 +50,5 @@
         android:layout_toLeftOf="@id/eventline_time"
         android:layout_alignParentTop="true"
         android:layout_centerVertical="true"
-	    android:textColor="@color/page_text_lighter" />
-    
-    
+	    android:textColor="@color/page_text_lighter" />   
 </RelativeLayout>

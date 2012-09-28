@@ -17,6 +17,14 @@
 
 <resources>
     <color name="am_theme_color">#ffffff</color>
+    <color name="am_bg_color">#ffffff</color>
+    <color name="am_font_color">#000000</color>
+    <dimen name="am_padding_wider">15dip</dimen>
+    <dimen name="am_padding_wide">10dip</dimen>
+    <dimen name="am_padding">5dip</dimen>
+    <dimen name="am_padding_small">5dip</dimen>
+    <dimen name="am_padding_med">7dip</dimen>
+    <dimen name="am_line_minhigh">45dip</dimen>
     <style name="Theme.AlertMe" parent="android:Theme">
         <item name="android:windowBackground">@drawable/splash_centered</item>
     	<item name="android:colorBackground">@color/am_theme_color</item>
@@ -27,4 +35,112 @@
     	<item name="android:colorBackground">@color/am_theme_color</item>
         <item name="android:windowNoTitle">true</item>
     </style>
+    <style name="AlertMePageSplash">
+        <item name="android:layout_width">fill_parent</item>
+    	<item name="android:layout_height">fill_parent</item>
+    	<item name="android:gravity">center_horizontal</item>
+    	<item name="android:background">@drawable/splash_centered</item>
+    </style>
+    <style name="AlertMePage">
+        <item name="android:layout_width">fill_parent</item>
+    	<item name="android:layout_height">fill_parent</item>
+    	<item name="android:gravity">center_horizontal</item>
+    	<item name="android:background">@color/page_background</item>
+    </style>
+    <style name="AlertMeTitle">
+        <item name="android:layout_width">fill_parent</item>
+    	<item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:minHeight">45dip</item>
+        <item name="android:padding">3dip</item>
+    </style>
+    <style name="AlertMeTitleConnected">
+        <item name="android:layout_width">fill_parent</item>
+    	<item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:minHeight">45dip</item>
+        <item name="android:paddingTop">3dip</item>
+        <item name="android:paddingRight">3dip</item>
+        <item name="android:paddingBottom">3dip</item>
+        <item name="android:paddingLeft">50dip</item>
+        <item name="android:background">@drawable/titlebar_connected</item>
+    </style>
+    <style name="AlertMeTitleDisconnected">
+        <item name="android:layout_width">fill_parent</item>
+    	<item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:minHeight">45dip</item>
+        <item name="android:padding">3dip</item>
+        <item name="android:background">@drawable/titlebar_disconnected</item>
+    </style>
+    <style name="AlertMeTitleText">
+        <item name="android:layout_width">fill_parent</item>
+    	<item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">10dip</item>
+        <item name="android:layout_marginRight">5dip</item>
+        <item name="android:padding">3dip</item>
+    </style>
+    <style name="AlertMeTitleConnectIco">
+        <item name="android:layout_width">wrap_content</item>
+    	<item name="android:layout_height">wrap_content</item>
+        <item name="android:src">@drawable/icon</item>
+    </style>
+    <style name="AlertMeHelpTitle">
+        <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
+        <item name="android:textColor">@color/page_text</item>
+		<item name="android:layout_width">fill_parent</item>
+		<item name="android:layout_height">wrap_content</item>
+	    <item name="android:padding">3dip</item>
+    </style>
+    <style name="AlertMeSubTitle">
+        <item name="android:layout_width">fill_parent</item>
+    	<item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">10sp</item>
+        <item name="android:paddingBottom">10sp</item>
+        <item name="android:paddingLeft">7sp</item>
+        <item name="android:paddingRight">7sp</item>
+        <item name="android:textColor">#cccccc</item>
+    	<item name="android:textStyle">bold</item>
+    	<item name="android:textSize">14sp</item>
+    	<item name="android:background">#222222</item>
+    </style>
+    <style name="AlertMePlainButton">
+        <item name="android:layout_width">wrap_content</item>
+    	<item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">40dip</item>
+        <item name="android:layout_marginLeft">16sp</item>
+        <item name="android:layout_marginRight">16sp</item>
+        <item name="android:padding">7sp</item>
+        <item name="android:background">@drawable/button_bg</item>
+        <item name="android:visibility">gone</item>
+    </style>
+    <style name="AlertMeButton">
+        <item name="android:layout_width">wrap_content</item>
+    	<item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">40dip</item>
+        <item name="android:layout_marginLeft">16sp</item>
+        <item name="android:layout_marginRight">16sp</item>
+        <item name="android:padding">7sp</item>
+        <item name="android:background">@drawable/button_bg</item>
+    </style>
+    <style name="AlertMeInlineButton">
+        <item name="android:layout_width">wrap_content</item>
+    	<item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">16sp</item>
+        <item name="android:layout_marginRight">16sp</item>
+        <item name="android:padding">7sp</item>
+        <item name="android:background">@drawable/button_bg</item>
+    </style>
+    <style name="AlertMeEditText">
+        <item name="android:paddingTop">7sp</item>
+        <item name="android:paddingBottom">7sp</item>
+        <item name="android:paddingLeft">10sp</item>
+        <item name="android:paddingRight">10sp</item>
+        <item name="android:layout_marginLeft">8sp</item>
+        <item name="android:layout_marginRight">8sp</item>
+        <item name="android:textColor">#333333</item>
+    	<item name="android:textStyle">bold</item>
+    	<item name="android:textSize">14sp</item>
+    	<item name="android:background">@drawable/edittext_bg</item>
+	</style>
 </resources>

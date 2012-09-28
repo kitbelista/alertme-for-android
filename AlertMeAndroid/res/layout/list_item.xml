@@ -8,5 +8,4 @@
 	android:paddingBottom="10dip"
 	android:paddingLeft="15dip"
 	android:textAppearance="?android:attr/textAppearanceLarge"
-	android:textColor="#555"
-	/>
+	android:textColor="#555" />

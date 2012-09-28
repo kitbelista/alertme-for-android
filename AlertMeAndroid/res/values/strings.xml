@@ -25,6 +25,9 @@
     <string name="home_icontitle_history">History</string>
     <string name="home_icontitle_help">Help</string>
     
+    <string name="event_list_default_time">HH:MM:SSy</string>
+    <string name="event_list_default_mesg">Event message</string>
+    
     <string name="behaviour_dialog_dismiss">Ok</string>
     <string name="behaviour_dialog_message_offline">Sorry, I cannot connect to the hub at the moment. Please try again later.</string>
     <string name="behaviour_dialog_message_home_ok">Current mode is At Home</string>
@@ -43,6 +46,17 @@
     <string name="behaviour_current_is_offline">Currently cannot reach the hub; try again later</string>
     <string name="behaviour_update_canceled">Cancelled: changes to settings abandoned</string>
     <string name="behaviour_update_ok">Updated mode; loading details</string>
+    <string name="behaviour_alarm_cancel_emergency">Cancel Emergency</string>
+    <string name="behaviour_alarm_cancel_intruder">Cancel Alarm</string>
+    <string name="behaviour_alarm_active">Alarm activated</string>
+    <string name="behaviour_mode_cancel">Cancel</string>
+    <string name="behaviour_mode_disarm">Disarm</string>
+    <string name="behaviour_mode_setaway">Set as away</string>
+    <string name="behaviour_mode_setnight">Set night mode</string>
+    
+    <string name="eventlist_end_armedby"> armed the alarm</string>
+    <string name="eventlist_end_disarmedby"> disarmed the alarm</string>
+    <string name="eventlist_mode_change">Mode changed to</string>
     
     <string name="alarm_intruder_stopping">Clearing intruder alarm</string>
     <string name="alarm_emergency_stopping">Clearing emergency alarm</string>
@@ -54,12 +68,27 @@
     <string name="behaviour_home">Home</string>
     <string name="behaviour_away">Armed</string>
     <string name="behaviour_night">Night</string>
+    
+    <string name="people_default_fobname">keyfob name</string>
+    <string name="people_default_fobstatus">status</string>
+    
+    <string name="people_fob_away">Away</string>
+    <string name="people_fob_home">At home</string>
+    <string name="sensor_device_presence_away">Away</string>
+    <string name="sensor_device_presence_present">Present</string>
+    <string name="sensor_device_door_open">Open</string>
+    <string name="sensor_device_door_closed">Closed</string>
+    <string name="sensor_device_tampered">Not Ok</string>
+    <string name="sensor_device_nottampered">All Ok</string>
+    <string name="sensor_device_batterylow">Battery low</string>
+    
     <string name="people_unavailable">No one home</string>
     <string name="people_none_present">No one home</string>
     <string name="people_all_present">All home</string>
     <string name="people_count_tag">COUNT</string>
     <string name="people_single_present">1 person home</string>
     <string name="people_multiple_present">COUNT people home</string>
+    
     <string name="sensor_count_tag">COUNT</string>
     <string name="sensor_single_missing">Not ok</string>
     <string name="sensor_multiple_missing">Not ok</string>
@@ -79,6 +108,12 @@
     <string name="settings_updating_values">Saving account details</string>
     <string name="settings_login_username_label">Username</string>
     <string name="settings_login_password_label">Password</string>
+    <string name="settings_main_title">Settings</string>
+    <string name="settings_default_username">Login name</string>
+    <string name="settings_default_password">Password</string>
+    <string name="settings_button_ok">Ok</string>
+    <string name="settings_button_cancel">Cancel</string>
+    <string name="settings_title_setup">Setup</string>
     
     <string name="hubchoice_invoke_change">Changing active hub</string>
     <string name="hubchoice_select_wait">Loading hub data</string>
@@ -130,13 +165,31 @@
     <string name="menu_quit">Quit</string>
     <string name="menu_history_clear">Clear history</string>
     
+    <string name="splashpage_credits">exacat</string>
     <string name="infomation_dialog_dismiss">Ok</string>
+    
+    <string name="devicedetail_dialog_default_attr">Attribute</string>
+    <string name="devicedetail_dialog_default_val">Value</string>
+    
+    <string name="deviceitem_default_battery">battery</string>
+    <string name="deviceitem_default_status">status</string>
+    <string name="deviceitem_default_name">sensor name</string>
     
     <string name="devicedetail_present">Currently present</string>
     <string name="devicedetail_notpresent">Unavailable</string>
     <string name="devicedetail_control_isoff">Press button to power on</string>
     <string name="devicedetail_control_ison">Press button to power off</string>
     <string name="devicedetail_dialog_dismiss">Ok</string>
+    <string name="devicedetail_label_signal">Signal Strength</string>
+    <string name="devicedetail_label_battery">Battery</string>
+    <string name="devicedetail_label_temp">Temperature</string>
+    <string name="devicedetail_label_power">Power</string>
+    <string name="devicedetail_default_name">Device Name</string>
+    <string name="devicedetail_default_type">Device Type</string>
+    <string name="devicedetail_default_signal">0%</string>
+    <string name="devicedetail_default_battery">0.0V</string>
+    <string name="devicedetail_default_temp">0\u00B0C</string>
+    <string name="devicedetail_default_power">0W</string>
     
     <string name="powercontroller_change_fail">Could not change the device state</string>
     <string name="powercontroller_change_none">No action taken as that change was not necessary</string>
@@ -145,4 +198,62 @@
     
     <string name="people_firstname_label">First name</string>
     <string name="people_lastname_label">Surname</string>
+    
+    <string name="help_title_sections">About the main sections</string>
+    <string name="help_title_section_status">Status</string>
+    <string name="help_desc_section_status">Shows the current mode status of the active system; click on this for options to change the system behaviour mode to either HOME, AWAY or NIGHT.</string>
+    <string name="help_title_section_people">People</string>
+    <string name="help_desc_section_people">Quickly determine which keyfobs are within the active hub and view the account details</string>
+    <string name="help_title_section_sensors">Sensors</string>
+    <string name="help_desc_section_sensors">The icon indicates whether all devices are registered with the hub. Clicking on this option will enable you to view the entire list of devices and their details</string>
+    <string name="help_title_section_settings">Account Settings</string>
+    <string name="help_desc_section_settings">View or modify the current account settings that connect with your AlertMe system</string>
+    <string name="help_title_section_events">History</string>
+    <string name="help_desc_section_events">View a list of events that have been registered with your AlertMe hub</string>
+    <string name="help_title_section_help">Help</string>
+    <string name="help_desc_section_help">This help page</string>
+    <string name="help_title_tasks">Common tasks</string>
+    <string name="help_task1_question">I have multiple hubs for my account; how do I view them?</string>
+    <string name="help_task1_answer">Click on the menu button once you have connected with your account details. If AlertMe for Android has detected that you have more than one hub the option Select hub should be available to you. Click on this option to get a prompt of all the hubs in your system</string>
+    <string name="help_task2_question">I have the status as Unavailable. What does that mean?</string>
+    <string name="help_task2_answer">If for some reason the system did not get a positive response from the AlertMe API then it is possible that either a) the connection is temporarily bad; b) too many requests have been made to the API already; c) the account details are invalid d) too many attempts with the incorrect password have disabled access to the account</string>
+    <string name="help_title_apitest">API Testing</string>
+    <string name="help_apitest_info">This should only be of interest for other developers wanting to see the API in action without the interface</string>
+    <string name="help_apitest_dotesting">Run a test</string>
+    
+    <string name="info_main_title">AlertMe for Android ALPHA</string>
+    <string name="info_main_blurb">A simple tool to interact with AlertMe accounts</string>
+    <string name="info_fixes_title">Fixes</string>
+    <string name="info_fixes_list">
+- Fix event log caching; enable intended auto fetch of new/older events to stored; enable delete log cache\n\n
+- Interface look and feel improvements - IN PROGRESS\n\n
+    </string>
+    <string name="info_todo_title">TODO</string>
+    <string name="info_todo_list">
+- Fix event refresh to append the list\n\n
+- Event limit store - auto-delete if over 200 entries (setting perhaps)\n\n
+- Show splash page if no account selected\n\n
+- Add refresh to all sub-applications\n\n
+- Enable special behaviour if not connected (internet access)\n
+	</string>
+    
+    <string name="contdesc_behaviour">[Alarm Mode icon]</string>
+    <string name="contdesc_people">[People icon]</string>
+    <string name="contdesc_sensors">[Sensors icon]</string>
+    <string name="contdesc_settings">[Settings icon]</string>
+    <string name="contdesc_history">[History icon]</string>
+    <string name="contdesc_help">[Help icon]</string>
+    <string name="contdesc_internet_stat">[Current internet status]</string>
+    <string name="contdesc_behaviour_stat">[Current hub status]</string>
+    <string name="contdesc_devicedetail_ico">[Device type]</string>
+    <string name="contdesc_devicedetail_signal">[Signal strength]</string>
+    <string name="contdesc_devicedetail_battery">[Battery remaining]</string>
+    <string name="contdesc_devicedetail_temp">[Temperature]</string>
+    <string name="contdesc_devicedetail_power">[Power]</string>
+    <string name="contdesc_devicedetail_presence">[Presence]</string>
+    <string name="contdesc_eventlist_device">[Device]</string>
+    <string name="contdesc_people_keyfob">[Keyfob icon]</string>
+    <string name="contdesc_alarm_warning">[Alarm activated: intruder/emergency detected]</string>
+    <string name="contdesc_splashimg">[AlertMe for Android]</string>
+    <string name="contdesc_device_setting">[Device attribute setting]</string>
 </resources>

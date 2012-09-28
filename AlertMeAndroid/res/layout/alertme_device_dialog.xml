@@ -1,209 +1,210 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView  xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-	android:id="@+id/layout_device_root">
-<TableLayout
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:gravity="center_horizontal"
-    android:padding="3dip"
-	android:stretchColumns="*"
-    android:background="@color/page_background">
-    <TableRow android:gravity="center">
-		<TableLayout android:gravity="right"
-				android:layout_width="50dip"
-			    android:layout_marginRight="10dip">
-	       	<TextView        
-	        	android:id="@+id/device_label"        
-	            android:text="Device Name"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-			    android:layout_marginLeft="10dip"
-			    android:layout_marginRight="5dip"
-				android:gravity="right"
-				android:textAppearance="?android:attr/textAppearanceLarge"
-				android:textColor="@color/page_text"
-				android:visibility="gone"
-	            android:padding="3dip" />
-			<TextView        
-		     	android:id="@+id/device_type"        
-				android:text="Device type"
-				android:layout_width="wrap_content"
-				android:layout_height="wrap_content"
-				android:layout_marginRight="5dip"
-				android:gravity="right"
-				android:textColor="@color/page_text"
-				android:visibility="gone"
-				android:textAppearance="?android:attr/textAppearanceSmall"
-				android:padding="3dip" />
-	    	<LinearLayout android:gravity="center">
-		    	<ImageView
-			        android:id="@+id/device_image" 
+    android:id="@+id/layout_device_root"
+    style="@style/AlertMePage">
+	<TableLayout
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"
+	    android:gravity="center_horizontal"
+	    android:padding="3dip"
+		android:stretchColumns="*"
+	    android:background="@color/page_background">
+	    <TableRow android:gravity="center">
+			<TableLayout android:gravity="right"
+					android:layout_width="50dip"
+				    android:layout_marginRight="10dip">
+		       	<TextView        
+		        	android:id="@+id/device_label"        
+		            android:text="@string/devicedetail_default_name"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:scaleType="center"
+				    android:layout_marginLeft="10dip"
+				    android:layout_marginRight="5dip"
 					android:gravity="right"
-					android:src="@drawable/ic_sensordetail_hub" />
-	    		</LinearLayout>
-		
-		</TableLayout>
-		<TableLayout>
-    		<TableRow android:layout_marginTop="20dip" android:gravity="center_vertical">	
-		    	<ImageView
-		    		android:gravity="center_vertical|right"	
-			        android:id="@+id/device_data_signal_icon" 
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:src="@drawable/ic_sensor_signal_0" />		
-    			<TextView        
-			     	android:id="@+id/device_data_signal_label"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:gravity="left"
-					android:layout_marginLeft="7dip"     
-					android:text="Signal Strength" />        	
-    			<TextView        
-			     	android:id="@+id/device_data_signal"        
-					android:text="0%"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_marginLeft="7dip"
-					android:gravity="left"
+					android:textAppearance="?android:attr/textAppearanceLarge"
 					android:textColor="@color/page_text"
-					android:textAppearance="?android:attr/textAppearanceSmall"
-					android:padding="3dip" />    		
-    		</TableRow>
-    		<TableRow android:gravity="center_vertical">	
-		    	<ImageView
-		    		android:gravity="center_vertical|right"	
-			        android:id="@+id/device_data_battery_icon" 
+					android:visibility="gone"
+		            android:padding="3dip" />
+				<TextView        
+			     	android:id="@+id/device_type"        
+					android:text="@string/devicedetail_default_type"
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
-					android:src="@drawable/ic_sensor_battery_0" />			
-    			<TextView        
-			     	android:id="@+id/device_data_battery_label"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:gravity="left"
-					android:layout_marginLeft="7dip"     
-					android:text="Battery" />        	
-    			<TextView        
-			     	android:id="@+id/device_data_battery"        
-					android:text="0.0V"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_marginLeft="7dip"
-					android:gravity="left"
+					android:layout_marginRight="5dip"
+					android:gravity="right"
 					android:textColor="@color/page_text"
+					android:visibility="gone"
 					android:textAppearance="?android:attr/textAppearanceSmall"
-					android:padding="3dip" />    		
-    		</TableRow>
-    		<TableRow android:gravity="center_vertical">	
-		    	<ImageView
-		    		android:gravity="center_vertical|right"	
-			        android:id="@+id/device_data_temperature_icon" 
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:src="@drawable/ic_sensor_temperature" />			
-    			<TextView        
-			     	android:id="@+id/device_data_temperature_label"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:gravity="left"
-					android:layout_marginLeft="7dip"     
-					android:text="Temperature" />        		
-    			<TextView        
-			     	android:id="@+id/device_data_temperature"        
-					android:text="0C"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_marginLeft="7dip"
-					android:gravity="left"
-					android:textColor="@color/page_text"
-					android:textAppearance="?android:attr/textAppearanceSmall"
-					android:padding="3dip" />    		
-    		</TableRow>
-    		<TableRow android:gravity="center_vertical">	
-		    	<ImageView
-		    		android:gravity="center_vertical|right"	
-			        android:id="@+id/device_data_powerlevel_icon" 
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:src="@drawable/ic_sensor_powerlevel" />			
-    			<TextView        
-			     	android:id="@+id/device_data_powerlevel_label"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:gravity="left"
-					android:layout_marginLeft="7dip"     
-					android:text="Power" />        		
-    			<TextView        
-			     	android:id="@+id/device_data_powerlevel"        
-					android:text="0W"
-					android:layout_width="wrap_content"
-					android:layout_height="wrap_content"
-					android:layout_marginLeft="7dip"
-					android:gravity="left"
-					android:textColor="@color/page_text"
-					android:textAppearance="?android:attr/textAppearanceSmall"
-					android:padding="3dip" />    		
-    		</TableRow>
-		</TableLayout>
-   	</TableRow>
+					android:padding="3dip" />
+		    	<LinearLayout android:gravity="center">
+			    	<ImageView
+			    	    android:contentDescription="@string/contdesc_devicedetail_ico"
+				        android:id="@+id/device_image" 
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:scaleType="center"
+						android:gravity="right"
+						android:src="@drawable/ic_sensordetail_hub" />
+		    		</LinearLayout>
+			
+			</TableLayout>
+			<TableLayout>
+	    		<TableRow android:layout_marginTop="20dip" android:gravity="center_vertical">	
+			    	<ImageView
+			    	    android:contentDescription="@string/contdesc_devicedetail_signal"
+			    		android:gravity="center_vertical|right"	
+				        android:id="@+id/device_data_signal_icon" 
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:src="@drawable/ic_sensor_signal_0" />		
+	    			<TextView        
+				     	android:id="@+id/device_data_signal_label"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:gravity="left"
+						android:layout_marginLeft="7dip"     
+						android:text="@string/devicedetail_label_signal" />        	
+	    			<TextView        
+				     	android:id="@+id/device_data_signal"        
+						android:text="@string/devicedetail_default_signal"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_marginLeft="7dip"
+						android:gravity="left"
+						android:textColor="@color/page_text"
+						android:textAppearance="?android:attr/textAppearanceSmall"
+						android:padding="3dip" />    		
+	    		</TableRow>
+	    		<TableRow android:gravity="center_vertical">	
+			    	<ImageView
+			    	    android:contentDescription="@string/contdesc_devicedetail_battery"
+			    		android:gravity="center_vertical|right"	
+				        android:id="@+id/device_data_battery_icon" 
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:src="@drawable/ic_sensor_battery_0" />			
+	    			<TextView        
+				     	android:id="@+id/device_data_battery_label"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:gravity="left"
+						android:layout_marginLeft="7dip"     
+						android:text="@string/devicedetail_label_battery" />        	
+	    			<TextView        
+				     	android:id="@+id/device_data_battery"        
+						android:text="@string/devicedetail_default_battery"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_marginLeft="7dip"
+						android:gravity="left"
+						android:textColor="@color/page_text"
+						android:textAppearance="?android:attr/textAppearanceSmall"
+						android:padding="3dip" />    		
+	    		</TableRow>
+	    		<TableRow android:gravity="center_vertical">	
+			    	<ImageView
+			    	    android:contentDescription="@string/contdesc_devicedetail_temp"
+			    		android:gravity="center_vertical|right"	
+				        android:id="@+id/device_data_temperature_icon" 
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:src="@drawable/ic_sensor_temperature" />			
+	    			<TextView        
+				     	android:id="@+id/device_data_temperature_label"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:gravity="left"
+						android:layout_marginLeft="7dip"     
+						android:text="@string/devicedetail_label_temp" />        		
+	    			<TextView        
+				     	android:id="@+id/device_data_temperature"        
+						android:text="@string/devicedetail_default_temp"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_marginLeft="7dip"
+						android:gravity="left"
+						android:textColor="@color/page_text"
+						android:textAppearance="?android:attr/textAppearanceSmall"
+						android:padding="3dip" />    		
+	    		</TableRow>
+	    		<TableRow android:gravity="center_vertical">	
+			    	<ImageView
+			    	    android:contentDescription="@string/contdesc_devicedetail_power"
+			    		android:gravity="center_vertical|right"	
+				        android:id="@+id/device_data_powerlevel_icon" 
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:src="@drawable/ic_sensor_powerlevel" />			
+	    			<TextView        
+				     	android:id="@+id/device_data_powerlevel_label"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:gravity="left"
+						android:layout_marginLeft="7dip"     
+						android:text="@string/devicedetail_label_power" />        		
+	    			<TextView        
+				     	android:id="@+id/device_data_powerlevel"        
+						android:text="@string/devicedetail_default_power"
+						android:layout_width="wrap_content"
+						android:layout_height="wrap_content"
+						android:layout_marginLeft="7dip"
+						android:gravity="left"
+						android:textColor="@color/page_text"
+						android:textAppearance="?android:attr/textAppearanceSmall"
+						android:padding="3dip" />    		
+	    		</TableRow>
+			</TableLayout>
+	   	</TableRow>
    	
-   	<LinearLayout
-   		android:id="@+id/device_data_presence_section"
-   		android:gravity="center"
-        android:layout_marginTop="30dip">
+	   	<LinearLayout
+	   		android:id="@+id/device_data_presence_section"
+	   		android:gravity="center"
+	        android:layout_marginTop="30dip">
  			<TextView        
-     	android:id="@+id/device_data_presence"        
-		android:text="@string/devicedetail_present"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginLeft="7dip"
-		android:textColor="@color/page_text"
-		android:gravity="left"
-		android:textAppearance="?android:attr/textAppearanceSmall"
-		android:padding="3dip" />    	
-   	<ImageView
-   		android:gravity="center_vertical|right"	
-        android:id="@+id/device_data_presence_icon" 
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:src="@drawable/ic_keyfob_present" />			
-   	</LinearLayout>
+		     	android:id="@+id/device_data_presence"        
+				android:text="@string/devicedetail_present"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginLeft="7dip"
+				android:textColor="@color/page_text"
+				android:gravity="left"
+				android:textAppearance="?android:attr/textAppearanceSmall"
+				android:padding="3dip" />    	
+		   	<ImageView
+		   	    android:contentDescription="@string/contdesc_devicedetail_presence"
+		   		android:gravity="center_vertical|right"	
+		        android:id="@+id/device_data_presence_icon" 
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:src="@drawable/ic_keyfob_present" />			
+	   	</LinearLayout>
    	
-   	<LinearLayout
-   		android:id="@+id/device_data_control_section"
-   		android:gravity="center"
-   		android:visibility="gone"
-        android:layout_marginTop="30dip">
+	   	<LinearLayout
+	   		android:id="@+id/device_data_control_section"
+	   		android:gravity="center"
+	   		android:visibility="gone"
+	        android:layout_marginTop="30dip">
  			<TextView        
-     	android:id="@+id/device_data_control"        
-		android:text="@string/devicedetail_control_isoff"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_marginLeft="7dip"
-		android:textColor="@color/page_text"
-		android:gravity="left"
-		android:textAppearance="?android:attr/textAppearanceSmall"
-		android:padding="3dip" />    	
-   	<Button
-   		android:gravity="center_vertical|right"	
-        android:id="@+id/device_data_control_icon" 
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:background="@drawable/ic_device_power_off" />			
-   	</LinearLayout>
+		     	android:id="@+id/device_data_control"        
+				android:text="@string/devicedetail_control_isoff"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginLeft="7dip"
+				android:textColor="@color/page_text"
+				android:gravity="left"
+				android:textAppearance="?android:attr/textAppearanceSmall"
+				android:padding="3dip" />    	
+		   	<Button
+		   		android:gravity="center_vertical|right"	
+		        android:id="@+id/device_data_control_icon" 
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:background="@drawable/ic_device_power_off" />			
+	   	</LinearLayout>
    	
-    <Button
-        android:id="@+id/device_cancel"
-       	android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/button"
-        android:layout_marginTop="30dip"
-        android:padding="5dip"
-        android:text="Ok" />
-</TableLayout>
+	    <Button
+	        android:id="@+id/device_cancel"
+	       	android:text="@string/devicedetail_dialog_dismiss"
+	       	style="@style/AlertMeButton" />
+	</TableLayout>
 </ScrollView>

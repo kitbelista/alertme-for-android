@@ -1,122 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:gravity="center_horizontal"
-    android:padding="3dip"
-	android:stretchColumns="2"
-    android:background="@color/page_background">
-    <LinearLayout
-		android:minHeight="45dip">
-    	<ImageView
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:src="@drawable/icon" />
-        <TextView
-        	android:id="@+id/people_housename"        
-            android:text="@string/systemname_default"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-		    android:layout_marginLeft="10dip"
-		    android:layout_marginRight="5dip"
-            android:padding="3dip" />
-    </LinearLayout>
-		<TableLayout
-			android:background="@drawable/mono_bg"
-	    	android:layout_width="fill_parent"
-	    	android:layout_height="wrap_content"
-   		 	android:layout_marginBottom="15dip">
-				    <TableLayout
+    android:stretchColumns="2"
+    style="@style/AlertMePage">
+    <TextView
+		android:id="@+id/people_housename"        
+		android:text="@string/systemname_default"
+		style="@style/AlertMeTitleConnected" />
+	<TableLayout
+		android:background="@drawable/mono_bg"
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+  		 	android:layout_marginBottom="15dip">
+	    <TableLayout
 			android:id="@+id/account_details_section"
-	    android:layout_width="fill_parent"
-	    android:layout_height="wrap_content"
-	    android:gravity="center_horizontal"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:gravity="center_horizontal"
 	    	android:layout_marginTop="10dip"
 			android:layout_marginLeft="10dip"
 			android:layout_marginRight="10dip"
 	    	android:layout_marginBottom="10dip"
-		android:background="@drawable/box_background"
-		android:stretchColumns="2">
-    <LinearLayout>
-		<TextView
-        	android:id="@+id/account_username"        
-            android:text="@string/systemname_default"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-		    android:layout_marginLeft="10dip"
-		    android:layout_marginRight="5dip"
-		    android:textColor="@color/page_text"
-            android:padding="3dip" />    
-    </LinearLayout>
-    <TableRow>
-		<TextView
-        	android:id="@+id/account_firstname_label"        
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-		    android:layout_marginLeft="10dip"
-		    android:layout_marginRight="5dip"
-		    android:text="@string/people_firstname_label"
-		    android:textColor="@color/page_text_lighter"
-            android:padding="3dip" />
-		<TextView
-        	android:id="@+id/account_firstname"        
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-		    android:layout_marginLeft="10dip"
-		    android:layout_marginRight="5dip"
-		    android:text="Firstname"
-		    android:textColor="@color/page_text"
-            android:padding="3dip" />
-            
-    </TableRow>
-    <TableRow>
-		<TextView
-        	android:id="@+id/account_lastname_label"        
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-		    android:layout_marginLeft="10dip"
-		    android:layout_marginRight="5dip"
-		    android:text="@string/people_lastname_label"
-		    android:textColor="@color/page_text_lighter"
-            android:padding="3dip" />
-		<TextView
-        	android:id="@+id/account_lastname"        
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-		    android:layout_marginLeft="10dip"
-		    android:layout_marginRight="5dip"
-		    android:text="Lastname"
-		    android:textColor="@color/page_text"
-            android:padding="3dip" />
-            
-    </TableRow>
-	    </TableLayout>
+			android:background="@drawable/box_background"
+			android:stretchColumns="2">
+		    <LinearLayout>
+				<TextView
+		        	android:id="@+id/account_username"        
+		            android:text="@string/systemname_default"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+				    android:layout_marginLeft="10dip"
+				    android:layout_marginRight="5dip"
+				    android:textColor="@color/page_text"
+		            android:padding="3dip" />    
+		    </LinearLayout>
+   			<TableRow>
+				<TextView
+		        	android:id="@+id/account_firstname_label"        
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+				    android:layout_marginLeft="10dip"
+				    android:layout_marginRight="5dip"
+				    android:text="@string/people_firstname_label"
+				    android:textColor="@color/page_text_lighter"
+		            android:padding="3dip" />
+				<TextView
+		        	android:id="@+id/account_firstname"        
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+				    android:layout_marginLeft="10dip"
+				    android:layout_marginRight="5dip"
+				    android:text="@string/people_firstname_label"
+				    android:textColor="@color/page_text"
+		            android:padding="3dip" />
+	            
+		    </TableRow>
+		    <TableRow>
+				<TextView
+		        	android:id="@+id/account_lastname_label"        
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+				    android:layout_marginLeft="10dip"
+				    android:layout_marginRight="5dip"
+				    android:text="@string/people_lastname_label"
+				    android:textColor="@color/page_text_lighter"
+		            android:padding="3dip" />
+				<TextView
+		        	android:id="@+id/account_lastname"        
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+				    android:layout_marginLeft="10dip"
+				    android:layout_marginRight="5dip"
+				    android:text="@string/people_lastname_label"
+				    android:textColor="@color/page_text"
+		            android:padding="3dip" />
+		            
+		    </TableRow>
+  		</TableLayout>
 			
-    <LinearLayout
-	    	android:layout_width="fill_parent"
-	    	android:layout_height="fill_parent"
-    	android:background="@color/page_background">
-	    <TextView
-        	android:id="@+id/account_hub"  
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:paddingTop="2dip"
-   			android:paddingLeft="5dip"
-            android:text="@string/systemname_default"
-			style="?android:attr/listSeparatorTextViewStyle" />
-    </LinearLayout>
-    <ListView
-	    android:layout_width="fill_parent"
-	    android:layout_height="fill_parent"
-    	android:minHeight="100dip"
-	    android:id="@+id/keyfob_list"
-	    android:divider="@android:color/transparent"
-    	android:background="@color/page_background"
-	    android:cacheColorHint="@android:color/transparent" />
-
-	    
-	    </TableLayout>
-
-    
-	
+		<LinearLayout
+		  	android:layout_width="fill_parent"
+		  	android:layout_height="fill_parent"
+		 	android:background="@color/page_background">
+			<TextView
+				android:id="@+id/account_hub"
+				android:text="@string/systemname_default"
+				style="@style/AlertMeSubTitle" />
+		</LinearLayout>
+	    <ListView
+		    android:layout_width="fill_parent"
+		    android:layout_height="fill_parent"
+	    	android:minHeight="100dip"
+		    android:id="@+id/keyfob_list"
+		    android:divider="@android:color/transparent"
+	    	android:background="@color/page_background"
+		    android:cacheColorHint="@android:color/transparent" />
+    </TableLayout>
 </TableLayout>

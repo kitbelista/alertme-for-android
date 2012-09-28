@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-	android:orientation="horizontal"
     android:padding="3dip"
-    android:stretchColumns="2"
-    android:background="#fff">
-	<TableRow android:gravity="center_vertical">
-    
+    android:id="@+id/sensorline_row"
+    android:stretchColumns="2">
+	<TableRow
+	    android:gravity="center_vertical">
 		<TextView
 		    android:layout_width="fill_parent"
 		    android:layout_height="wrap_content"
@@ -16,15 +14,17 @@
 		    android:visibility="gone"
 		    android:textColor="#555" />
 		<ImageView
+		    android:contentDescription="@string/contdesc_devicedetail_ico"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			android:gravity="left"
 		    android:id="@+id/sensorline_type_icon"
 			android:src="@drawable/icon" />
 		<TextView
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:id="@+id/sensorline_name"
-		    android:text="sensor name"
+		    android:text="@string/deviceitem_default_name"
 		    android:layout_marginLeft="5dip"
 		    android:layout_marginRight="15dip"
 		    android:textColor="#777" />
@@ -32,7 +32,7 @@
 		    android:layout_width="wrap_content"
 		    android:layout_height="wrap_content"
 		    android:id="@+id/sensorline_battery"
-		    android:text="battery"
+		    android:text="@string/deviceitem_default_battery"
 		    android:gravity="right"
 		    android:visibility="gone"
 		    android:textColor="#555" />
@@ -43,17 +43,20 @@
 		    android:id="@+id/sensorline_status"
 		    android:layout_marginLeft="5dip"
 		    android:layout_marginRight="15dip"
-		    android:text="status"
+		    android:text="@string/deviceitem_default_status"
 		    android:textColor="#555" />
 		<ImageView
+		    android:contentDescription="@string/contdesc_devicedetail_signal"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
 		    android:id="@+id/sensorline_signal_icon"
 		    android:layout_marginRight="10dip"
 			android:src="@drawable/ic_sensor_signal_0" />
 		<ImageView
+		    android:contentDescription="@string/contdesc_devicedetail_battery"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			android:gravity="right"
 		    android:id="@+id/sensorline_battery_icon"
 			android:src="@drawable/ic_sensor_battery_0" />
 	</TableRow>

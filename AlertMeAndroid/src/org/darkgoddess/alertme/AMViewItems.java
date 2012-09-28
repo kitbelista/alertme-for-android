@@ -149,55 +149,55 @@ public class AMViewItems {
     public void setBusy(int command) {
 	    switch (command) {
     	case AlertMeConstants.UPDATE_SYSTEMNAME:	
-    		setBusy("", activity.getString(R.string.home_command_update_systemname));
+    		setBusy(null, activity.getString(R.string.home_command_update_systemname));
     		break;
     	case AlertMeConstants.UPDATE_STATUS:
-    		setBusy("", activity.getString(R.string.home_command_update_behaviour));
+    		setBusy(null, activity.getString(R.string.home_command_update_behaviour));
     		break;
     	case AlertMeConstants.UPDATE_PEOPLE:
-    		setBusy("", activity.getString(R.string.home_command_update_people));
+    		setBusy(null, activity.getString(R.string.home_command_update_people));
         	break;
     	case AlertMeConstants.UPDATE_SENSORS:
-    		setBusy("", activity.getString(R.string.home_command_update_sensors));
+    		setBusy(null, activity.getString(R.string.home_command_update_sensors));
         	break;
     	case AlertMeConstants.INVOKE_HUB_CHOICE:
-    		setBusy("", activity.getString(R.string.hubchoice_select_wait));
+    		setBusy(null, activity.getString(R.string.hubchoice_select_wait));
         	break;
     	case AlertMeConstants.INVOKE_HUB_SELECT:
-    		setBusy("", activity.getString(R.string.hubchoice_invoke_change));
+    		setBusy(null, activity.getString(R.string.hubchoice_invoke_change));
         	break;
     	case AlertMeConstants.COMMAND_QUIT:
-    		setBusy("", activity.getString(R.string.quit_dialog_wait));
+    		setBusy(null, activity.getString(R.string.quit_dialog_wait));
     		break;
     	case AlertMeConstants.INVOKE_HISTORY:
-    		setBusy("", activity.getString(R.string.home_command_update_history));
+    		setBusy(null, activity.getString(R.string.home_command_update_history));
     		break;
     	case AlertMeConstants.COMMAND_STATUS_AWAY:
-    		setBusy("", activity.getString(R.string.behaviour_busy_message_away));
+    		setBusy(null, activity.getString(R.string.behaviour_busy_message_away));
     		break;
     	case AlertMeConstants.COMMAND_STATUS_NIGHT:
-    		setBusy("", activity.getString(R.string.behaviour_busy_message_night));
+    		setBusy(null, activity.getString(R.string.behaviour_busy_message_night));
     		break;
     	case AlertMeConstants.COMMAND_STATUS_HOME:
-    		setBusy("", activity.getString(R.string.behaviour_busy_message_home));
+    		setBusy(null, activity.getString(R.string.behaviour_busy_message_home));
     		break;
     	case AlertMeConstants.INVOKE_ACCOUNT_SELECT:
-    		setBusy("", activity.getString(R.string.accountchoice_invoke_change));
+    		setBusy(null, activity.getString(R.string.accountchoice_invoke_change));
     		break;
     	case AlertMeConstants.INVOKE_SETTINGS_CREATE_FIRSTTIME:
-    		setBusy("", activity.getString(R.string.settings_updating_values));
+    		setBusy(null, activity.getString(R.string.settings_updating_values));
     		break;
     	case AlertMeConstants.COMMAND_STATUS_STOPALARM:
-    		setBusy("", activity.getString(R.string.alarm_intruder_stopping));
+    		setBusy(null, activity.getString(R.string.alarm_intruder_stopping));
     		break;
     	case AlertMeConstants.COMMAND_STATUS_STOPEMERGENCY:
-    		setBusy("", activity.getString(R.string.alarm_emergency_stopping));
+    		setBusy(null, activity.getString(R.string.alarm_emergency_stopping));
     		break;
     	case AlertMeConstants.INVOKE_TEST:
-    		setBusy("", activity.getString(R.string.test_run_wait));
+    		setBusy(null, activity.getString(R.string.test_run_wait));
     		break;
     	default:
-    		setBusy("", activity.getString(R.string.home_command_update_systemname));
+    		setBusy(null, activity.getString(R.string.home_command_update_systemname));
     		break;
 	    }
 	}
@@ -248,6 +248,15 @@ public class AMViewItems {
     public void registerSystemName(int resourceId) {
     	systemNameResourceId = resourceId;
     	initSystemName();
+    }
+    public void setIsConnected(boolean hasConnection) {
+    	if (systemName!=null) {
+    		if (hasConnection) {
+    			systemName.setBackgroundResource(R.drawable.titlebar_connected);
+    		} else {
+    			systemName.setBackgroundResource(R.drawable.titlebar_disconnected);    			
+    		}
+    	}
     }
     public void registerDeviceDialog() {
     	deviceDialogRegistered = true;
@@ -361,27 +370,32 @@ public class AMViewItems {
 			if (device.attributes!=null && !device.attributes.isEmpty()) {
 				for (String channel: device.attributes.keySet()) {
 					String val = device.attributes.get(channel);
-					if (channel.equals("batterylevel") && device.isAttributeValid(channel)) {						
+					if (channel.equals(AlertMeConstants.STR_BATTERYLEVEL) && device.isAttributeValid(channel)) {						
 						// format the battery value to 2 decimal places
-						String battLevel = getDecimalFromString(val, 2)+"V";
-						if (battery!=null) battery.setText(battLevel);
+						if (battery!=null) {
+							String battLevel = getDecimalFromString(val, 2)+AlertMeConstants.STR_V;
+							battery.setText(battLevel);
+						}
 						if (batticon!=null) batticon.setImageResource(AlertMeConstants.getBatteryIcon(device));
 						batterySet = true;
 						
-					} else if (channel.equals("lqi") && device.isAttributeValid(channel)) {
-						String LQILevel = getDecimalFromString(val, 0);
-						val = LQILevel+"%";
-						if (signal!=null) signal.setText(val);
+					} else if (channel.equals(AlertMeConstants.STR_LQI) && device.isAttributeValid(channel)) {
+						if (signal!=null) {
+							String LQILevel = getDecimalFromString(val, 0);
+							val = LQILevel+AlertMeConstants.STR_PERCENT;
+							signal.setText(val);
+						}
 						if (sigicon!=null) sigicon.setImageResource(AlertMeConstants.getSignalIcon(device));
 						signalSet = true;
-					} else if (channel.equals("temperature") && device.isAttributeValid(channel)) {
-						char degree = '\u00B0';
+					} else if (channel.equals(AlertMeConstants.STR_TEMPERATURE) && device.isAttributeValid(channel)) {
 						// format the battery value to one decimal place
-						String temp = getDecimalFromString(val, 1)+degree+"C";
-						if (temperature!=null) temperature.setText(temp);
+						if (temperature!=null) {
+							String temp = getDecimalFromString(val, 1)+AlertMeConstants.STR_DEGREE_CELCIUS;
+							temperature.setText(temp);
+						}
 						tempSet = true;
-					} else if (channel.equals("presence") && device.isAttributeValid(channel)) {
-						if (val.equals("True")) {
+					} else if (channel.equals(AlertMeConstants.STR_PRESENCE) && device.isAttributeValid(channel)) {
+						if (val.equalsIgnoreCase(AlertMeConstants.STR_TRUE)) {
 							if (presicon!=null) presicon.setImageResource(R.drawable.ic_keyfob_present);
 							if (presence!=null) presence.setText(activity.getString(R.string.devicedetail_present));	
 							
@@ -390,10 +404,10 @@ public class AMViewItems {
 							if (presence!=null) presence.setText(activity.getString(R.string.devicedetail_notpresent));	
 						}
 						presenceSet = true;
-					} else if (device.type == Device.POWER_CONTROLLER && channel.equals("relaystate")) {
+					} else if (device.type == Device.POWER_CONTROLLER && channel.equals(AlertMeConstants.STR_RELAYSTATE)) {
 						TextView controlText = (TextView) deviceDialog.findViewById(R.id.device_data_control);
 						Button powerButton = (Button) deviceDialog.findViewById(R.id.device_data_control_icon);
-						if (val.equals("True")) {
+						if (val.equalsIgnoreCase(AlertMeConstants.STR_TRUE)) {
 							if (controlText!=null) controlText.setText(activity.getString(R.string.devicedetail_control_ison));
 							if (powerButton!=null) powerButton.setBackgroundResource(R.drawable.ic_device_power_on);
 						} else {
@@ -414,11 +428,11 @@ public class AMViewItems {
 						powerControlSet = true;
 						// end relay state
 					} else if (device.type == Device.POWERCLAMP && channel.equals("powerlevel")) {
-						if (powerlevel!=null) powerlevel.setText(val+"W");
+						if (powerlevel!=null) powerlevel.setText(val+AlertMeConstants.STR_W);
 						if (powicon!=null) powicon.setImageResource(R.drawable.ic_sensor_powerlevel);
 						powerLevelSet = true;
 					} else if (device.type == Device.POWER_CONTROLLER && channel.equals("powerlevel")) {
-						if (powerlevel!=null) powerlevel.setText(val+"W");
+						if (powerlevel!=null) powerlevel.setText(val+AlertMeConstants.STR_W);
 						if (powicon!=null) powicon.setImageResource(R.drawable.ic_sensor_power_plug);
 						powerLevelSet = true;
 					}
@@ -501,7 +515,7 @@ public class AMViewItems {
 				if (powlabel!=null) powlabel.setVisibility(View.VISIBLE);								
 			}
 			//deviceDialog.setTitle(type+": "+device.name);
-			deviceDialog.setTitle(device.name+" - "+type);
+			deviceDialog.setTitle(device.name+AlertMeConstants.STR_SEP_DASH+type);
 		}
     } 
 	public void showDeviceInDialog(Device device) {
@@ -525,10 +539,10 @@ public class AMViewItems {
 		String res = "";
 		if (input!=null) {
 			res = input;
-			if (input.contains(".")) {
+			if (input.contains(AlertMeConstants.STR_STOP)) {
 				String endStr = "";
 				int sz = input.length();
-				int dec = input.indexOf(".");
+				int dec = input.indexOf(AlertMeConstants.STR_STOP);
 				int lim = dec+places+1;
 				if (places>0) {
 					if (lim>dec) {
@@ -540,7 +554,7 @@ public class AMViewItems {
 									res = input.substring(0, lim)+endStr;
 									break;
 								}
-								endStr += "0";
+								endStr += AlertMeConstants.STR_ZERO;
 								lim--;
 							}
 						}
@@ -690,10 +704,14 @@ public class AMViewItems {
 		int[] res = new int[] { resource.getColor(R.color.menu_even), resource.getColor(R.color.menu_odd) };
 		return res;
 	}
+	public static int[] getRowBackgrounds(Activity act) {
+		int[] res = new int[] { R.drawable.listitem_even_bg, R.drawable.listitem_odd_bg };
+		return res;
+	}
 	
     private void setBusy(final String title, final String message) {
     	if (progressDialog!=null) {
-    		if (title!=null && title.length()!=0) { progressDialog.setMessage(title); }
+    		if (title!=null && title.length()!=0) { progressDialog.setTitle(title); }
     		if (message!=null && message.length()!=0) { progressDialog.setMessage(message); }
     		if (!isBusy) {
         		isBusy = true;

@@ -1,31 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:gravity="center_horizontal"
-    android:padding="3dip"
-	android:stretchColumns="*"
-    android:background="@color/page_background">
-    <LinearLayout
-		android:id="@+id/home_topline"
-		android:minHeight="45dip">
-    	<ImageView
-        		android:id="@+id/home_topico"        
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:src="@drawable/icon" />
-        <TextView
-        	android:id="@+id/home_housename"        
-            android:text="@string/systemname_default"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-		    android:layout_marginLeft="10dip"
-		    android:layout_marginRight="5dip"
-            android:padding="3dip" />
-    </LinearLayout>
+    android:stretchColumns="*"
+    style="@style/AlertMePage">
+    <TextView
+		android:id="@+id/home_housename"        
+		android:text="@string/systemname_default"
+		style="@style/AlertMeTitleConnected" />
     <TableRow
-	android:id="@+id/home_firstrow"
-	android:padding="3dip" android:gravity="center_horizontal">
+		android:id="@+id/home_firstrow"
+		android:padding="3dip" android:gravity="center_horizontal">
     	<FrameLayout android:gravity="center_horizontal"
 		    android:layout_width="fill_parent"
 		    android:layout_height="fill_parent"
@@ -37,6 +20,7 @@
 			     android:background="@drawable/btn_home_status_home"
 			     android:layout_marginRight="10dip" /><!-- android:onClick="selfDestruct" -->
 			<ImageView
+			    android:contentDescription="@string/contdesc_alarm_warning"
 				android:id="@+id/home_button_status_warning"  
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
@@ -72,8 +56,8 @@
     	</FrameLayout>
     </TableRow>
     <TableRow
-	android:id="@+id/home_secondrow"
-	android:padding="3dip" android:visibility="gone">
+		android:id="@+id/home_secondrow"
+		android:padding="3dip" android:visibility="gone">
 		<TextView
 			android:id="@+id/home_text_status"
 			android:layout_width="wrap_content"
@@ -92,8 +76,8 @@
 			android:text="@string/home_icontitle_people" />    
     </TableRow>
     <TableRow
-	android:id="@+id/home_thirdrow"
-	android:padding="3dip">
+		android:id="@+id/home_thirdrow"
+		android:padding="3dip">
     	<LinearLayout android:gravity="center_horizontal">
 			 <Button
 			 	 android:id="@+id/home_button_sensors"
@@ -114,8 +98,8 @@
     	</LinearLayout>
     </TableRow>
     <TableRow
-	android:id="@+id/home_fourthrow"
-	android:padding="3dip" android:visibility="gone">
+		android:id="@+id/home_fourthrow"
+		android:padding="3dip" android:visibility="gone">
 		<TextView
 			android:id="@+id/home_text_sensors"
 			android:layout_width="wrap_content"
@@ -134,8 +118,8 @@
 			android:text="@string/home_icontitle_settings" />    
     </TableRow>
     <TableRow
-	android:id="@+id/home_fifthrow"
-	android:padding="3dip">
+		android:id="@+id/home_fifthrow"
+		android:padding="3dip">
     	<LinearLayout android:gravity="center_horizontal">
 			 <Button
 			 	 android:id="@+id/home_button_history"
@@ -156,8 +140,8 @@
     	</LinearLayout>
     </TableRow>
     <TableRow
-	android:id="@+id/home_sixthrow"
-	android:padding="3dip" android:visibility="gone">
+		android:id="@+id/home_sixthrow"
+		android:padding="3dip" android:visibility="gone">
 		<TextView
 			android:id="@+id/home_text_history"
 			android:layout_width="wrap_content"
@@ -176,21 +160,19 @@
 			android:text="@string/home_icontitle_help" />    
     </TableRow>
     <LinearLayout
-	android:id="@+id/home_refreshrow"
+		android:id="@+id/home_refreshrow"
     	android:gravity="center_horizontal">
 	    <Button
 	        android:id="@+id/home_refresh"
-        	android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:background="@drawable/button"
-	        android:padding="5dip"
 	        android:visibility="gone"
-	        android:text="Refresh" />
+	        android:text="@string/menu_refresh"
+	        style="@style/AlertMeInlineButton" />
     </LinearLayout>
     <LinearLayout
-	android:id="@+id/home_splashrow"
+		android:id="@+id/home_splashrow"
     	android:gravity="center_horizontal">
     	<ImageView
+    	    android:contentDescription="@string/contdesc_splashimg"
     		android:id="@+id/home_splash"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"

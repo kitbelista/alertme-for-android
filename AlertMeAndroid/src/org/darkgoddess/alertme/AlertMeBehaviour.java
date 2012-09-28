@@ -33,7 +33,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TableRow;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,9 +41,11 @@ import android.widget.Toast;
 public class AlertMeBehaviour extends Activity {
 	private static final String TAG = "ACTIVITY:AlertMeBehaviour";
 	private final String OFFLINE = "unavailable";
-	private final String MHOME = "home";
-	private final String MAWAY = "away";
-	private final String MNIGHT = "night";
+	private final String COMMAND_APPEND_OK = "_OK";
+	private final String COMMAND_APPEND_FAIL = "_COMMAND_FAILED";
+	private final String MHOME = AlertMeConstants.STR_HOME;
+	private final String MAWAY = AlertMeConstants.STR_AWAY;
+	private final String MNIGHT = AlertMeConstants.STR_NIGHT;
 	private String currentIntruderState = null;
 	private String currentEmergencyState = null;
 	private Bundle savedState = null;
@@ -59,8 +61,8 @@ public class AlertMeBehaviour extends Activity {
     // Handler to update the interface..        
 	final Handler handler = new Handler() {
         public void handleMessage(Message msg) {
-            int mesgType = msg.getData().getInt("type");
-            String mesgData = msg.getData().getString("value");
+            int mesgType = msg.getData().getInt(AlertMeConstants.HANDLER_DATA_TYPE);
+            String mesgData = msg.getData().getString(AlertMeConstants.HANDLER_DATA_VALUE);
             performUpdate(mesgType, mesgData);
         }
     };
@@ -155,7 +157,7 @@ public class AlertMeBehaviour extends Activity {
 		super.finish();
 		
 	}
-	private void setViewWarnings(TextView emergency, TextView intruder, TextView title, TableRow section) {
+	private void setViewWarnings(TextView emergency, TextView intruder, TextView title, LinearLayout section) {
 		boolean hasAlarmed = false;
 		if (emergency!=null) {
 			Button emerOff = (Button) findViewById(R.id.behavehome_button_stop_emergency);
@@ -201,13 +203,13 @@ public class AlertMeBehaviour extends Activity {
 			TextView hemergency = (TextView) findViewById(R.id.behavehome_text_hubstate_emergency);
 			TextView hintruder = (TextView) findViewById(R.id.behavehome_text_hubstate_intruder);
 			TextView halarmtitle = (TextView) findViewById(R.id.behavearmed_text_alarmed_title);
-			TableRow halarmsection = (TableRow) findViewById(R.id.behavearmed_text_alarmed_section);					
+			LinearLayout halarmsection = (LinearLayout) findViewById(R.id.behavearmed_text_alarmed_section);					
 			setViewWarnings(hemergency, hintruder, halarmtitle, halarmsection);
 		} else if (currentView==R.layout.alertme_behave_armed) {
 			TextView aemergency = (TextView) findViewById(R.id.behavehome_text_hubstate_emergency);
 			TextView aintruder = (TextView) findViewById(R.id.behavehome_text_hubstate_intruder);
 			TextView alarmtitle = (TextView) findViewById(R.id.behavearmed_text_alarmed_title);
-			TableRow alarmsection = (TableRow) findViewById(R.id.behavearmed_text_alarmed_section);
+			LinearLayout alarmsection = (LinearLayout) findViewById(R.id.behavearmed_text_alarmed_section);
 			setViewWarnings(aemergency, aintruder, alarmtitle, alarmsection);
 		}
 	}
@@ -395,8 +397,8 @@ public class AlertMeBehaviour extends Activity {
 			case AlertMeConstants.UPDATE_ON_START:
 				if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "performUpdate()  case UPDATE_ON_START");
 				//String hubID = null;
-    	    	if (mesgData.contains(",")) {
-    	    		String[] spl = mesgData.split(",");
+    	    	if (mesgData.contains(AlertMeConstants.STR_COMMA)) {
+    	    		String[] spl = mesgData.split(AlertMeConstants.STR_COMMA);
     	    		if (spl.length>=2) {
         	    		ret = spl[0];
         	    		//hubID = spl[1];
@@ -405,18 +407,17 @@ public class AlertMeBehaviour extends Activity {
     	    	loadCurrentHub(alertMe);
     			screenStuff.reloadSystemName();
     			screenStuff.setSystemName(currentHub);
-    	    	ret = ret.toLowerCase();
-				// do nothing, expect the handler action to invoke set view
+    	    	// do nothing, expect the handler action to invoke set view
 				if (ret.equals(OFFLINE)) {
 					if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "performUpdate()  case UPDATE_ON_START  -- view is alertme_behave_offline");
 					currentView = R.layout.alertme_behave_offline;
-				} else if (ret.equals(MHOME)) {
+				} else if (ret.equalsIgnoreCase(MHOME)) {
 					if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "performUpdate()  case UPDATE_ON_START  -- view is alertme_behave_home");
 					currentView = R.layout.alertme_behave_home;					
-				} else if (ret.equals(MAWAY)) {
+				} else if (ret.equalsIgnoreCase(MAWAY)) {
 					if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "performUpdate()  case UPDATE_ON_START  -- view is alertme_behave_armed (away)");
 					currentView = R.layout.alertme_behave_armed;					
-				} else if (ret.equals(MNIGHT)) {
+				} else if (ret.equalsIgnoreCase(MNIGHT)) {
 					if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "performUpdate()  case UPDATE_ON_START  -- view is alertme_behave_armed (night)");
 					currentView = R.layout.alertme_behave_armed;		
 				} else {
@@ -430,11 +431,10 @@ public class AlertMeBehaviour extends Activity {
 			case AlertMeConstants.COMMAND_STATUS_HOME:
 			case AlertMeConstants.COMMAND_STATUS_NIGHT:
 				// if mesgData indicates OK, then show dialog 
-				ret = ret.toUpperCase();
 				int mesgResource = R.string.behaviour_dialog_message_offline;
 				if (command == AlertMeConstants.COMMAND_STATUS_AWAY) {
 					if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "performUpdate()  case COMMAND_STATUS_AWAY  returning: "+ret+" with command "+command);
-					if (ret.equals("AWAY_OK")) {
+					if (ret.equalsIgnoreCase(AlertMeConstants.MODE_AWAY_OK)) {
 						returnCode = AlertMeConstants.COMMAND_STATUS_AWAY;
 						mesgResource = R.string.behaviour_dialog_message_away_ok;
 					} else {
@@ -442,7 +442,7 @@ public class AlertMeBehaviour extends Activity {
 					}
 				} else if (command == AlertMeConstants.COMMAND_STATUS_NIGHT) {
 					if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "performUpdate()  case COMMAND_STATUS_NIGHT  returning: "+ret+" with command "+command);
-					if (ret.equals("NIGHT_OK")) {
+					if (ret.equalsIgnoreCase(AlertMeConstants.MODE_NIGHT_OK)) {
 						returnCode = AlertMeConstants.COMMAND_STATUS_NIGHT;
 						mesgResource = R.string.behaviour_dialog_message_night_ok;
 					} else {
@@ -450,7 +450,7 @@ public class AlertMeBehaviour extends Activity {
 					}
 				} else {
 					if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "performUpdate()  case COMMAND_STATUS_HOME  returning: "+ret+" with command "+command);
-					if (ret.equals("HOME_OK")) {
+					if (ret.equalsIgnoreCase(AlertMeConstants.MODE_HOME_OK)) {
 						returnCode = AlertMeConstants.COMMAND_STATUS_HOME;
 						mesgResource = R.string.behaviour_dialog_message_home_ok;
 					} else {
@@ -507,11 +507,11 @@ public class AlertMeBehaviour extends Activity {
 		if (behaviour!=null) {
 			behaviour = behaviour.trim().toLowerCase();
 			if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "restoreDetailsFromCache()  behaviour ["+behaviour+"]");
-			if (behaviour.equals(MHOME)) {
+			if (behaviour.equalsIgnoreCase(MHOME)) {
 				currentView = R.layout.alertme_behave_home;					
-			} else if (behaviour.equals(MAWAY)) {
+			} else if (behaviour.equalsIgnoreCase(MAWAY)) {
 				currentView = R.layout.alertme_behave_armed;					
-			} else if (behaviour.equals(MNIGHT)) {
+			} else if (behaviour.equalsIgnoreCase(MNIGHT)) {
 				currentView = R.layout.alertme_behave_armed;					
 			} else {
 				currentView = R.layout.alertme_behave_offline;
@@ -583,7 +583,7 @@ public class AlertMeBehaviour extends Activity {
 	    				behaviour = (currentHub!=null)? currentHub.behaviour: OFFLINE;
 	    				hubID = (currentHub!=null)? currentHub.id: null;
 	    				messageEnd = instruction;
-	    				data = behaviour+","+hubID;
+	    				data = behaviour+AlertMeConstants.STR_COMMA+hubID;
 	    				break;
 	    			case AlertMeConstants.COMMAND_STATUS_AWAY:
 	    			case AlertMeConstants.COMMAND_STATUS_HOME:
@@ -616,8 +616,8 @@ public class AlertMeBehaviour extends Activity {
     		if (handler!=null) {
     			Message msg = handler.obtainMessage();
                 Bundle b = new Bundle();
-                b.putInt("type", messageEnd);
-                if (data!=null) { b.putString("value", data); }
+                b.putInt(AlertMeConstants.HANDLER_DATA_TYPE, messageEnd);
+                if (data!=null) { b.putString(AlertMeConstants.HANDLER_DATA_VALUE, data); }
                 msg.setData(b);
                 handler.sendMessage(msg);
     		}        		
@@ -644,7 +644,7 @@ public class AlertMeBehaviour extends Activity {
 				// need to invoke the action
 				boolean ok = alertme.setHubMode(mode);
 				// if ok, append _OK else _FAIL
-				res += (ok)? "_OK" : "_COMMAND_FAILED";
+				res += (ok)? COMMAND_APPEND_OK : COMMAND_APPEND_FAIL;
 			}
 			
 			return res;

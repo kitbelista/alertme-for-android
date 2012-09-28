@@ -18,6 +18,24 @@
 */
 -->
 <resources>
+    <color name="button_pressed_dark">#f8a300</color>
+    <color name="button_pressed_light">#ffd445</color>
+    <color name="button_selected_dark">#f37100</color>
+    <color name="button_selected_light">#fb9a24</color>
+    <color name="button_default_dark">#00000000</color>
+    <color name="button_default_light">#00000000</color>
+    
+    <color name="plainbutton_pressed_dark">#f8a300</color>
+    <color name="plainbutton_pressed_light">#ffd445</color>
+    <color name="plainbutton_pressed_stroke">#f8a300</color>
+    <color name="plainbutton_selected_dark">#f37100</color>
+    <color name="plainbutton_selected_light">#fb9a24</color>
+    <color name="plainbutton_selected_stroke">#f37100</color>
+    <color name="plainbutton_default_dark">#d1d1cf</color>
+    <color name="plainbutton_default_light">#ffffff</color>
+    <color name="plainbutton_default_stroke">#999999</color>
+    
+    
     <color name="page_background">#ffffffff</color>
     <color name="page_text">#ff333333</color>
     <color name="page_alert_text">#ff330000</color>

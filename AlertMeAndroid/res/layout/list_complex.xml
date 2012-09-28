@@ -7,8 +7,7 @@
 	android:orientation="vertical"
 	android:paddingTop="10dip"
 	android:paddingBottom="10dip"
-	android:paddingLeft="15dip"
-	>
+	android:paddingLeft="15dip">
 	<TextView
 		android:id="@+id/list_complex_title"
 		android:layout_width="fill_parent"

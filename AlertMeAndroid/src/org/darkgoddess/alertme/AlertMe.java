@@ -56,7 +56,6 @@ public class AlertMe extends Activity {
 	private boolean hasCreated = false;
 	private AlertMeSession alertMe = null;
 	
-	private ImageView topIcon = null;
 	//private TextView statusText = null;
 	private Button statusButton = null;
 	private ImageView statusAlarm = null;
@@ -79,8 +78,8 @@ public class AlertMe extends Activity {
     // Handler to update the interface..        
 	final Handler handler = new Handler() {
         public void handleMessage(Message msg) {
-            int mesgType = msg.getData().getInt("type");
-            String mesgData = msg.getData().getString("value");
+            int mesgType = msg.getData().getInt(AlertMeConstants.HANDLER_DATA_TYPE);
+            String mesgData = msg.getData().getString(AlertMeConstants.HANDLER_DATA_VALUE);
             performUpdate(mesgType, mesgData);
         }
     };
@@ -452,7 +451,7 @@ public class AlertMe extends Activity {
     		ArrayList<AlertUpdateCommand> commandList = new ArrayList<AlertUpdateCommand>();
     		if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "performUpdate()  simple update screen command");
     		if (command == AlertMeConstants.UPDATE_COMMANDLIST) {
-        		String[] commList = mesgData.split(",");
+        		String[] commList = mesgData.split(AlertMeConstants.STR_COMMA);
     			int i;
         		if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "onActivityResult()  simple update screen: case UPDATE_COMMANDLIST");
         		for(String tmp: commList) {
@@ -610,10 +609,9 @@ public class AlertMe extends Activity {
     
     private void initView() {
 		Button settingsButton = null;
-		Button refreshButton = null;
+		//Button refreshButton = null;
 		if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "initView()  START");
 
-		topIcon = (ImageView) findViewById(R.id.home_topico);
 		//statusText = (TextView) findViewById(R.id.home_text_status);
 		statusButton = (Button) findViewById(R.id.home_button_status);
 		statusAlarm = (ImageView) findViewById(R.id.home_button_status_warning);
@@ -625,7 +623,7 @@ public class AlertMe extends Activity {
 		settingsButton = (Button) findViewById(R.id.home_button_settings);
 		historyButton = (Button) findViewById(R.id.home_button_history);
 		helpButton = (Button) findViewById(R.id.home_button_help);
-		refreshButton = (Button) findViewById(R.id.home_refresh);
+		//refreshButton = (Button) findViewById(R.id.home_refresh);
 		
 		
 		sensorsButton = (Button) findViewById(R.id.home_button_sensors);
@@ -671,54 +669,53 @@ public class AlertMe extends Activity {
 				}
 			});
 		}
-		if (refreshButton!=null) {
-			refreshButton.setOnClickListener(new View.OnClickListener() {
-				public void onClick(View view) {
-					refreshAlertMe();
-				}
-			});
-		}
+		//if (refreshButton!=null) {
+		//	refreshButton.setOnClickListener(new View.OnClickListener() {
+		//		public void onClick(View view) {
+		//			refreshAlertMe();
+		//		}
+		//	});
+		//}
 		if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "initView()  END");
     }
     private void initConnectionStatus() {
-		if (topIcon != null) {
-			String rawRes = alertMe.getLastRawAPIResult();
-			int rawInfo = AlertMeServer.Exceptions.getErrorFromRawResult(rawRes);
-			boolean hasConnection = true;
-			switch (rawInfo) {
-				case AlertMeServer.Exceptions.RESULT_NULL:
+		String rawRes = alertMe.getLastRawAPIResult();
+		int rawInfo = AlertMeServer.Exceptions.getErrorFromRawResult(rawRes);
+		boolean hasConnection = true;
+		switch (rawInfo) {
+			case AlertMeServer.Exceptions.RESULT_NULL:
+			break;
+			case AlertMeServer.Exceptions.ERROR_NO_SESSION:
+				if (AlertMeConstants.DEBUGOUT) Log.w("CONNECTION FAILED" , "ERROR_NO_SESSION");
+				hasConnection = false;
+			break;
+			case AlertMeServer.Exceptions.ERROR_INVALID_USER_DETAILS:
+				if (AlertMeConstants.DEBUGOUT) Log.w("CONNECTION FAILED" , "ERROR_INVALID_USER_DETAILS");
+				hasConnection = false;
+			break;
+			case AlertMeServer.Exceptions.ERROR_NEEDS_HUB_UPGRADE:
+			break;
+			case AlertMeServer.Exceptions.ERROR_LOGIN_FAILED_ACCOUNT_LOCKED:
+				if (AlertMeConstants.DEBUGOUT) Log.w("CONNECTION FAILED" , "ERROR_LOGIN_FAILED_ACCOUNT_LOCKED");
+				hasConnection = false;
+			break;
+			default:
+				if (rawRes==null || rawRes!=null && rawRes.equals(AlertMeConstants.EMPTY_STR)) {
+					// Check if there is a connection to the internet
+					hasConnection = alertMe.hasInternetConnection();
+					if (!hasConnection) {
+						if (AlertMeConstants.DEBUGOUT) Log.w("CONNECTION FAILED" , "No INTERNET CONNECTION");
+					}	
+				}
 				break;
-				case AlertMeServer.Exceptions.ERROR_NO_SESSION:
-					if (AlertMeConstants.DEBUGOUT) Log.w("CONNECTION FAILED" , "ERROR_NO_SESSION");
-					hasConnection = false;
-				break;
-				case AlertMeServer.Exceptions.ERROR_INVALID_USER_DETAILS:
-					if (AlertMeConstants.DEBUGOUT) Log.w("CONNECTION FAILED" , "ERROR_INVALID_USER_DETAILS");
-					hasConnection = false;
-				break;
-				case AlertMeServer.Exceptions.ERROR_NEEDS_HUB_UPGRADE:
-				break;
-				case AlertMeServer.Exceptions.ERROR_LOGIN_FAILED_ACCOUNT_LOCKED:
-					if (AlertMeConstants.DEBUGOUT) Log.w("CONNECTION FAILED" , "ERROR_LOGIN_FAILED_ACCOUNT_LOCKED");
-					hasConnection = false;
-				break;
-				default:
-					if (rawRes==null || rawRes!=null && rawRes.equals("")) {
-						// Check if there is a connection to the internet
-						hasConnection = alertMe.hasInternetConnection();
-						if (!hasConnection) {
-							if (AlertMeConstants.DEBUGOUT) Log.w("CONNECTION FAILED" , "No INTERNET CONNECTION");
-						}	
-					}
-					break;
-			}			
+		}			
 
+		screenStuff.setIsConnected(hasConnection);
+		if (AlertMeConstants.DEBUGOUT) {
 			if (hasConnection) {
 				if (AlertMeConstants.DEBUGOUT) Log.w("CONNECTION OK" , "ICON DRAWABLE");
-				topIcon.setImageResource(R.drawable.icon);
 			} else {
 				if (AlertMeConstants.DEBUGOUT) Log.w("CONNECTION NOT OK" , "ICON OFFLINE");
-				topIcon.setImageResource(R.drawable.icon_offline);
 			}
 		}
     }
@@ -855,7 +852,7 @@ public class AlertMe extends Activity {
     	if (hub!=null) {
     		screenStuff.setSystemName(hub);
     	}
-	initConnectionStatus();
+    	initConnectionStatus();
     }
     private void updateBehaviour() {
     	Hub hub = alertMe.retrieveActiveHub();
@@ -870,11 +867,11 @@ public class AlertMe extends Activity {
     	int personCount = 0;
     	int total = keyfobs.size();
     	for(Device keyfob: keyfobs) {
-    		if (keyfob.attributes.containsKey("presence")) {
-    			String pres = (String) keyfob.attributes.get("presence");
+    		if (keyfob.attributes.containsKey(AlertMeConstants.STR_PRESENCE)) {
+    			String pres = (String) keyfob.attributes.get(AlertMeConstants.STR_PRESENCE);
     			if (pres!=null) {
     				pres = pres.trim().toLowerCase();
-        			personCount += (pres.equals("true"))? 1: 0;
+        			personCount += (pres.equals(AlertMeConstants.STR_TRUE))? 1: 0;
     			}
     		}
     	}
@@ -909,17 +906,17 @@ public class AlertMe extends Activity {
     		if (status == null) {
     			// Do nothing
     			if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "updateScreenBehaviour()  case NO CHANGE");
-    		} else if (status.equalsIgnoreCase("home")) {
+    		} else if (status.equalsIgnoreCase(AlertMeConstants.STR_HOME)) {
     			//statusString = getString(R.string.behaviour_home);
     			statusButton.setBackgroundResource(R.drawable.btn_home_status_home);
     			if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "updateScreenBehaviour()  case HOME");
     			//setText = true;
-    		} else if (status.equalsIgnoreCase("away")) {
+    		} else if (status.equalsIgnoreCase(AlertMeConstants.STR_AWAY)) {
     			//statusString = getString(R.string.behaviour_away);
     			statusButton.setBackgroundResource(R.drawable.btn_home_status_lock);
     			if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "updateScreenBehaviour()  case AWAY");
     			//setText = true;
-    		} else if (status.equalsIgnoreCase("night")) {
+    		} else if (status.equalsIgnoreCase(AlertMeConstants.STR_NIGHT)) {
     			//statusString = getString(R.string.behaviour_night);
     			statusButton.setBackgroundResource(R.drawable.btn_home_status_night);
     			if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "updateScreenBehaviour()  case NIGHT");
@@ -937,10 +934,10 @@ public class AlertMe extends Activity {
     		if (statusAlarm!=null) {
     			int visibility = View.GONE;
         		if (currentIntruderState!=null) {
-        			hasAlarm = (currentEmergencyState.equals("alarmed")||currentEmergencyState.equals("alarmConfirmed"));
+        			hasAlarm = (currentIntruderState.equals(AlertMeConstants.ALARM_STR_ALARMED)||currentIntruderState.equals(AlertMeConstants.ALARM_STR_CONFIRMED));
         		}
         		if (currentEmergencyState!=null) {
-        			hasAlarm = hasAlarm||(currentEmergencyState.equals("alarmed")||currentEmergencyState.equals("alarmConfirmed"));
+        			hasAlarm = hasAlarm||(currentEmergencyState.equals(AlertMeConstants.ALARM_STR_ALARMED)||currentEmergencyState.equals(AlertMeConstants.ALARM_STR_CONFIRMED));
         		}
         		visibility = (hasAlarm)? View.VISIBLE: View.GONE;
         		statusAlarm.setVisibility(visibility);
@@ -952,7 +949,7 @@ public class AlertMe extends Activity {
     	if (peopleTextCount!=null) {
     		if (totalPresent==total) {
     			peopleTextCount.setBackgroundResource(R.drawable.indicator_ok);
-        		peopleTextCount.setText("");    			
+        		peopleTextCount.setText(AlertMeConstants.EMPTY_STR);    			
     		} else {
     			peopleTextCount.setBackgroundResource(R.drawable.indicator_count_overlay);
         		peopleTextCount.setText(totalPresent+"");    			
@@ -1201,7 +1198,7 @@ public class AlertMe extends Activity {
     		if (handler!=null) {
     			Message msg = handler.obtainMessage();
                 Bundle b = new Bundle();
-                b.putInt("type", updateInstruction);
+                b.putInt(AlertMeConstants.HANDLER_DATA_TYPE, updateInstruction);
                 //if (updateDetails!=null) {
                 //	b.putString("value", updateDetails);
                 //}
