@@ -5,7 +5,7 @@
  * should not be modified by hand.
  */
 
-package org.darkgoddess.alertme;
+package org.darkgoddess.alertdroid;
 
 public final class R {
     public static final class anim {
@@ -484,6 +484,8 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int info_todo_title=0x7f0600c4;
         public static final int infomation_dialog_dismiss=0x7f060090;
         public static final int keyfob_list_isempty=0x7f06000e;
+        /**  All ok 
+         */
         public static final int login_title_add=0x7f060051;
         public static final int login_title_add_firsttime=0x7f060053;
         public static final int login_title_edit=0x7f060052;
@@ -523,7 +525,11 @@ or to a theme attribute in the form "<code>?[<i>package</i>:][<i>type</i>:]<i>na
         public static final int sensor_device_presence_present=0x7f060041;
         public static final int sensor_device_tampered=0x7f060044;
         public static final int sensor_list_isempty=0x7f06000c;
+        /**  Not ok 
+         */
         public static final int sensor_multiple_missing=0x7f06004f;
+        /**  Not ok 
+         */
         public static final int sensor_none_missing=0x7f060050;
         public static final int sensor_single_missing=0x7f06004e;
         public static final int settings_button_cancel=0x7f060061;
