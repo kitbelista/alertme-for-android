@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.darkgoddess.alertme.api.utils;
+package org.darkgoddess.alertdroid.api.utils;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

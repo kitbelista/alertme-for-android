@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.darkgoddess.alertme;
+package org.darkgoddess.alertdroid;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,12 +40,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import org.darkgoddess.alertme.api.AlertMeSession;
-import org.darkgoddess.alertme.api.AlertMeServer;
-import org.darkgoddess.alertme.api.AlertMeStorage;
-import org.darkgoddess.alertme.api.utils.APIUtilities;
-import org.darkgoddess.alertme.api.utils.Device;
-import org.darkgoddess.alertme.api.utils.Hub;
+import org.darkgoddess.alertdroid.api.AlertMeServer;
+import org.darkgoddess.alertdroid.api.AlertMeSession;
+import org.darkgoddess.alertdroid.api.AlertMeStorage;
+import org.darkgoddess.alertdroid.api.utils.APIUtilities;
+import org.darkgoddess.alertdroid.api.utils.Device;
+import org.darkgoddess.alertdroid.api.utils.Hub;
+import org.darkgoddess.alertdroid.R;
 
 public class AlertMe extends Activity {
 	private static final String TAG = "ACTIVITY:AlertMe";
@@ -369,6 +370,10 @@ public class AlertMe extends Activity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.home, menu);
         return true;
+    }
+    @Override
+	protected void onPrepareDialog(int i, Dialog d) {
+    	screenStuff.onPrepareDialog(i, d);
     }
     @Override
     public boolean onPrepareOptionsMenu (Menu menu) {

@@ -1,6 +1,6 @@
 /**
  * 
- * Copyright 2011 Kathlene Belista
+ * Copyright 2012 Kathlene Belista
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,10 +15,11 @@
  * limitations under the License.
  */
 
-package org.darkgoddess.alertme;
+package org.darkgoddess.alertdroid;
 
 
-import org.darkgoddess.alertme.api.utils.Device;
+import org.darkgoddess.alertdroid.api.utils.Device;
+import org.darkgoddess.alertdroid.R;
 
 import android.content.Context;
 import android.content.Intent;
@@ -338,12 +339,17 @@ public class AlertMeConstants {
     	return res;
     }
 
+    public static final String ALARM_INTRUDER = "IntruderAlarm";
+    public static final String ALARM_EMERGENCY = "EmergencyAlarm";
+    public static final String RELAYSTATE_ON = "on";
+    public static final String RELAYSTATE_OFF = "off";
     public static final String EVENTLOG_MODE_TO_HOME = "Behaviour changed to At home";
     public static final String EVENTLOG_MODE_TO_AWAY = "Behaviour changed to Away";
     public static final String EVENTLOG_MODE_TO_NIGHT = "Behaviour changed to Night";
     public static final String EVENTLOG_HUB_GONE = "The hub disappeared from network";
     public static final String EVENTLOG_DISARMED_FROM = "The Intruder Alarm was disarmed from ";
     public static final String EVENTLOG_ARMED_FROM = "The Intruder Alarm was armed from ";
+	public static final String LEGACY_APPNAME = "AlertMe for Android";
 
     public static int getIconFromEventMessage(String appName, String eventMessage) {
     	int res = 0;
@@ -357,9 +363,13 @@ public class AlertMeConstants {
     	} else if (mesg.equalsIgnoreCase(EVENTLOG_HUB_GONE)) {
     		res = R.drawable.ic_home_sensors_notok;
     	} else if (mesg.equalsIgnoreCase(EVENTLOG_DISARMED_FROM+appName)) {
-    		res = R.drawable.icon;
+    		res = R.drawable.icon_online;
     	} else if (mesg.equalsIgnoreCase(EVENTLOG_ARMED_FROM+appName)) {
-    		res = R.drawable.icon;
+    		res = R.drawable.icon_online;
+    	} else if (mesg.equalsIgnoreCase(EVENTLOG_DISARMED_FROM+LEGACY_APPNAME)) {
+    		res = R.drawable.icon_online;
+    	} else if (mesg.equalsIgnoreCase(EVENTLOG_ARMED_FROM+LEGACY_APPNAME)) {
+    		res = R.drawable.icon_online;
     	}
     	//The Intruder Alarm was set off by Front Hall Motion Sensor	22:06
     	//The Front Door Door/Window Sensor was triggered. The alarm will be raised if further triggers are detected

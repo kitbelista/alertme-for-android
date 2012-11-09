@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.darkgoddess.alertme.api;
+package org.darkgoddess.alertdroid.api;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -53,7 +53,7 @@ import android.util.Log;
  */
 public class AlertMeServer {
 	private static final String TAG = "AlertMeServer";
-	public static final String LOGIN_TAG = "AlertMe for Android";
+	public static final String LOGIN_TAG = "Alert Droid";
 	private static final boolean DEBUGOUT = false;
 	public static final long SESSION_SPAN = 1000*60*10; // 10 minute sessions
 	//public static final String APIURL = "http://10.0.2.2:8888"; // TESTING SERVER

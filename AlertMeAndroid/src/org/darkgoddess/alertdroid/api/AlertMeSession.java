@@ -15,17 +15,17 @@
  * limitations under the License.
  */
 
-package org.darkgoddess.alertme.api;
+package org.darkgoddess.alertdroid.api;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
-import org.darkgoddess.alertme.AlertMeConstants;
-import org.darkgoddess.alertme.api.utils.APIUtilities;
-import org.darkgoddess.alertme.api.utils.Device;
-import org.darkgoddess.alertme.api.utils.Event;
-import org.darkgoddess.alertme.api.utils.Hub;
+import org.darkgoddess.alertdroid.AlertMeConstants;
+import org.darkgoddess.alertdroid.api.utils.APIUtilities;
+import org.darkgoddess.alertdroid.api.utils.Device;
+import org.darkgoddess.alertdroid.api.utils.Event;
+import org.darkgoddess.alertdroid.api.utils.Hub;
 
 import android.content.Context;
 import android.content.Intent;
@@ -482,10 +482,10 @@ public class AlertMeSession {
 
 		switch (service) {
 			case SERVICE_INTRUDER_ALARM:
-				res = "IntruderAlarm";
+				res = AlertMeConstants.ALARM_INTRUDER;
 				break;
 			case SERVICE_EMERGENCY_ALARM:
-				res = "EmergencyAlarm";
+				res = AlertMeConstants.ALARM_EMERGENCY;
 				break;
 		}
 		return res;
@@ -503,7 +503,7 @@ public class AlertMeSession {
 		if (device!=null && hasSessionValues()) {
 			helperKeepAlive();
 			if (hasSessionKey()) {
-				String mode = (isRelayState)? "on": "off";
+				String mode = (isRelayState)? AlertMeConstants.RELAYSTATE_ON: AlertMeConstants.RELAYSTATE_OFF;
 				String rawRes = alertMe.setRelayState(session.sessionKey, mode, device.id);
 				int isOk = APIUtilities.getCommandResult(rawRes);
 				res = (isOk == APIUtilities.COMMAND_OK);
@@ -523,7 +523,7 @@ public class AlertMeSession {
 						long deviceId = db.getDeviceId(activeHubId, device.id);
 						// if ok, save to database
 						if (deviceId!=-1) {
-							String newMode = (isRelayState)? "True": "False";
+							String newMode = (isRelayState)? AlertMeConstants.RELAYMODE_TRUE: AlertMeConstants.RELAYMODE_FALSE;
 							device.setAttribute("relaystate", newMode);
 							db.updateDevice(deviceId, device);
 						}

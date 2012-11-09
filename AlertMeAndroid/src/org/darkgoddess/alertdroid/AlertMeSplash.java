@@ -15,7 +15,9 @@
  * limitations under the License.
  */
 
-package org.darkgoddess.alertme;
+package org.darkgoddess.alertdroid;
+
+import org.darkgoddess.alertdroid.R;
 
 import android.app.Activity;
 import android.os.Bundle;

@@ -2,7 +2,7 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@drawable/mono_bg" />
     <item android:top="28dp" android:left="3dp">
-      <bitmap android:src="@drawable/icon"
+      <bitmap android:src="@drawable/icon_online"
         android:gravity="top|left" />
     </item>
 </layer-list>

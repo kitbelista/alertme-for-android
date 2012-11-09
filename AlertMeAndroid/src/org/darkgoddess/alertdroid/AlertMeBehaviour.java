@@ -15,11 +15,12 @@
  * limitations under the License.
  */
 
-package org.darkgoddess.alertme;
+package org.darkgoddess.alertdroid;
 
 
-import org.darkgoddess.alertme.api.AlertMeSession;
-import org.darkgoddess.alertme.api.utils.Hub;
+import org.darkgoddess.alertdroid.api.AlertMeSession;
+import org.darkgoddess.alertdroid.api.utils.Hub;
+import org.darkgoddess.alertdroid.R;
 
 import android.app.Activity;
 import android.app.Dialog;

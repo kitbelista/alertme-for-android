@@ -15,10 +15,11 @@
  * limitations under the License.
  */
 
-package org.darkgoddess.alertme;
+package org.darkgoddess.alertdroid;
 
-import org.darkgoddess.alertme.api.utils.Device;
-import org.darkgoddess.alertme.api.utils.Hub;
+import org.darkgoddess.alertdroid.api.utils.Device;
+import org.darkgoddess.alertdroid.api.utils.Hub;
+import org.darkgoddess.alertdroid.R;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -145,7 +146,18 @@ public class AMViewItems {
 		activity.showDialog(id);
 		if (AlertMeConstants.DEBUGOUT) Log.w(TAG, "showDialog()    END");
 	}
-	
+	public void onPrepareDialog(int i, Dialog d) {
+		switch (i) {
+			case INFO_DIALOG:
+				Button posB = null;
+				posB = infoDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+				if (posB!=null) {
+					posB.setBackgroundResource(R.drawable.button_bg);
+				}
+				break;
+		
+		}
+	}
     public void setBusy(int command) {
 	    switch (command) {
     	case AlertMeConstants.UPDATE_SYSTEMNAME:	
@@ -691,7 +703,6 @@ public class AMViewItems {
 			//Context context = activity.getApplicationContext();
 			LayoutInflater inflater = (LayoutInflater) activity.getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 			View layout = inflater.inflate(R.layout.alertme_info, (ViewGroup) activity.findViewById(R.id.layout_info_root));
-
 			AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 			builder.setView(layout)
 				.setCancelable(false)

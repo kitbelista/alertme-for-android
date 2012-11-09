@@ -15,19 +15,20 @@
  * limitations under the License.
  */
 
-package org.darkgoddess.alertme;
+package org.darkgoddess.alertdroid;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 
-import org.darkgoddess.alertme.api.AlertMeServer;
-import org.darkgoddess.alertme.api.AlertMeSession;
-import org.darkgoddess.alertme.api.utils.Device;
-import org.darkgoddess.alertme.api.utils.DeviceEvent;
-import org.darkgoddess.alertme.api.utils.Event;
-import org.darkgoddess.alertme.api.utils.Hub;
+import org.darkgoddess.alertdroid.api.AlertMeServer;
+import org.darkgoddess.alertdroid.api.AlertMeSession;
+import org.darkgoddess.alertdroid.api.utils.Device;
+import org.darkgoddess.alertdroid.api.utils.DeviceEvent;
+import org.darkgoddess.alertdroid.api.utils.Event;
+import org.darkgoddess.alertdroid.api.utils.Hub;
+import org.darkgoddess.alertdroid.R;
 import org.darkgoddess.android.utils.SeparatedListAdapter;
 
 import android.app.Activity;

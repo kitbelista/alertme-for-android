@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.darkgoddess.alertme.api.utils;
+package org.darkgoddess.alertdroid.api.utils;
 
 
 public class DeviceEvent extends Event {

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">AlertMe Android</string>
-    <string name="app_name_behaviour">AlertMe Android - Alarm Mode</string>
-    <string name="app_name_people">AlertMe Android - People</string>
-    <string name="app_name_sensors">AlertMe Android - Sensors</string>
-    <string name="app_name_settings">AlertMe Android - Settings</string>
-    <string name="app_name_history">AlertMe Android - History</string>
-    <string name="app_name_help">AlertMe Android - Help</string>
+    <string name="app_name">Alert Droid</string>
+    <string name="app_name_behaviour">Alert Droid - Alarm Mode</string>
+    <string name="app_name_people">Alert Droid - People</string>
+    <string name="app_name_sensors">Alert Droid - Sensors</string>
+    <string name="app_name_settings">Alert Droid - Settings</string>
+    <string name="app_name_history">Alert Droid - History</string>
+    <string name="app_name_help">Alert Droid - Help</string>
 
     <string name="home_command_update_systemname">Updating details</string>
     <string name="home_command_update_behaviour">Updating behaviour</string>
@@ -63,7 +63,7 @@
     <string name="alarm_stopped_ok">Cleared alarm successful</string>
     <string name="alarm_stopped_fail">Failed to clear alarm</string>
     
-    <string name="systemname_default">AlertMe for Android</string>
+    <string name="systemname_default">Alert Droid</string>
     <string name="behaviour_unavailable">Unavailable</string>
     <string name="behaviour_home">Home</string>
     <string name="behaviour_away">Armed</string>
@@ -90,9 +90,9 @@
     <string name="people_multiple_present">COUNT people home</string>
     
     <string name="sensor_count_tag">COUNT</string>
-    <string name="sensor_single_missing">Not ok</string>
-    <string name="sensor_multiple_missing">Not ok</string>
-    <string name="sensor_none_missing">All ok</string>
+    <string name="sensor_single_missing"></string><!-- Not ok -->
+    <string name="sensor_multiple_missing"></string><!-- Not ok -->
+    <string name="sensor_none_missing"></string><!-- All ok -->
 
     <string name="login_title_add">Add new account details</string>
     <string name="login_title_edit">Edit the current account details</string>
@@ -214,27 +214,25 @@
     <string name="help_desc_section_help">This help page</string>
     <string name="help_title_tasks">Common tasks</string>
     <string name="help_task1_question">I have multiple hubs for my account; how do I view them?</string>
-    <string name="help_task1_answer">Click on the menu button once you have connected with your account details. If AlertMe for Android has detected that you have more than one hub the option Select hub should be available to you. Click on this option to get a prompt of all the hubs in your system</string>
+    <string name="help_task1_answer">Click on the menu button once you have connected with your account details. If Alert Droid has detected that you have more than one hub the option Select hub should be available to you. Click on this option to get a prompt of all the hubs in your system</string>
     <string name="help_task2_question">I have the status as Unavailable. What does that mean?</string>
     <string name="help_task2_answer">If for some reason the system did not get a positive response from the AlertMe API then it is possible that either a) the connection is temporarily bad; b) too many requests have been made to the API already; c) the account details are invalid d) too many attempts with the incorrect password have disabled access to the account</string>
     <string name="help_title_apitest">API Testing</string>
     <string name="help_apitest_info">This should only be of interest for other developers wanting to see the API in action without the interface</string>
     <string name="help_apitest_dotesting">Run a test</string>
     
-    <string name="info_main_title">AlertMe for Android ALPHA</string>
+    <string name="info_main_title">Alert Droid BETA</string>
     <string name="info_main_blurb">A simple tool to interact with AlertMe accounts</string>
     <string name="info_fixes_title">Fixes</string>
     <string name="info_fixes_list">
-- Fix event log caching; enable intended auto fetch of new/older events to stored; enable delete log cache\n\n
-- Interface look and feel improvements - IN PROGRESS\n\n
+- Simplification of layouts (mainly under the hood)\n\n
+- Re \'branding\' preparation for Google Play\n\n
     </string>
     <string name="info_todo_title">TODO</string>
     <string name="info_todo_list">
-- Fix event refresh to append the list\n\n
 - Event limit store - auto-delete if over 200 entries (setting perhaps)\n\n
-- Show splash page if no account selected\n\n
-- Add refresh to all sub-applications\n\n
-- Enable special behaviour if not connected (internet access)\n
+- Add refresh to all sub-applications (support force refresh despite API call limitations)\n\n
+- Indicate if connection to the internet is active\n
 	</string>
     
     <string name="contdesc_behaviour">[Alarm Mode icon]</string>
@@ -254,6 +252,6 @@
     <string name="contdesc_eventlist_device">[Device]</string>
     <string name="contdesc_people_keyfob">[Keyfob icon]</string>
     <string name="contdesc_alarm_warning">[Alarm activated: intruder/emergency detected]</string>
-    <string name="contdesc_splashimg">[AlertMe for Android]</string>
+    <string name="contdesc_splashimg">[Alert Droid]</string>
     <string name="contdesc_device_setting">[Device attribute setting]</string>
 </resources>

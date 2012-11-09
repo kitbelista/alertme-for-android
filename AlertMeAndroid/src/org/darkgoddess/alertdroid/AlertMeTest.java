@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package org.darkgoddess.alertme;
+package org.darkgoddess.alertdroid;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,10 +39,11 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.darkgoddess.alertme.api.AlertMeServer;
-import org.darkgoddess.alertme.api.utils.APIUtilities;
-import org.darkgoddess.alertme.api.utils.Device;
-import org.darkgoddess.alertme.api.utils.Hub;
+import org.darkgoddess.alertdroid.api.AlertMeServer;
+import org.darkgoddess.alertdroid.api.utils.APIUtilities;
+import org.darkgoddess.alertdroid.api.utils.Device;
+import org.darkgoddess.alertdroid.api.utils.Hub;
+import org.darkgoddess.alertdroid.R;
 
 public class AlertMeTest extends Activity {
 	private static final String TAG = "AlertMeTest";
